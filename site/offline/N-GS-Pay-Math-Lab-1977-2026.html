@@ -12,43 +12,45 @@
   color-scheme: light;
   --topbar-h: 64px;
   --side-w: 280px;
-  --bg: #f6f8fb;
+  --bg: #dbe5ec;
   --panel: #ffffff;
-  --panel-soft: #eef5f8;
-  --ink: #172033;
-  --muted: #637083;
-  --line: #c9d7e4;
-  --line-strong: #9fb4c8;
-  --navy: #071a2d;
-  --cyan: #0ea5c6;
-  --teal: #138f88;
-  --orange: #c65d21;
-  --magenta: #a73383;
-  --blue: #1d5fa7;
-  --green: #1d7d45;
-  --warn: #9a5a00;
-  --shadow: 0 10px 26px rgba(21, 43, 72, 0.12);
+  --panel-soft: #f4f7fa;
+  --ink: #17324d;
+  --muted: #667785;
+  --line: #d6e0e8;
+  --line-strong: #a9bac8;
+  --navy: #004b6b;
+  --blue: #0071bc;
+  --cyan: #0097a7;
+  --teal: #0097a7;
+  --red: #c8102e;
+  --orange: #e87722;
+  --green: #2e8540;
+  --magenta: #6a4c93;
+  --warn: #e87722;
+  --shadow: 0 10px 34px rgba(0, 0, 0, 0.12);
   --mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
-  --sans: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --sans: Arial, "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 html[data-theme="dark"] {
   color-scheme: dark;
-  --bg: #08131d;
-  --panel: #0e2130;
-  --panel-soft: #122c3c;
-  --ink: #edf7fb;
-  --muted: #adc0cf;
-  --line: #27475b;
-  --line-strong: #3a6b82;
-  --navy: #04101f;
-  --cyan: #36c5e0;
-  --teal: #43c5b6;
-  --orange: #f08a46;
-  --magenta: #f06bc0;
-  --blue: #73b7ff;
-  --green: #74d99a;
-  --warn: #f7c565;
+  --bg: #0b2232;
+  --panel: #102f43;
+  --panel-soft: #143b52;
+  --ink: #f4f7fa;
+  --muted: #b8c8d4;
+  --line: #345a70;
+  --line-strong: #628699;
+  --navy: #003852;
+  --blue: #57b6ee;
+  --cyan: #3cc4ce;
+  --teal: #36b9c1;
+  --red: #ff6075;
+  --orange: #f09a52;
+  --green: #7ac889;
+  --magenta: #a98ad0;
+  --warn: #f09a52;
   --shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
 }
 
@@ -79,7 +81,7 @@ body::before {
   height: 7px;
   z-index: 3;
   pointer-events: none;
-  background: linear-gradient(90deg, var(--orange), var(--magenta), var(--blue), var(--cyan), var(--teal));
+  background: linear-gradient(90deg, var(--blue) 0 67%, var(--teal) 67% 85%, var(--red) 85%);
 }
 
 a {
@@ -104,7 +106,7 @@ button {
   display: flex;
   align-items: center;
   background: var(--navy);
-  color: #f8fbff;
+  color: #ffffff;
   border-bottom: 1px solid rgba(255, 255, 255, 0.12);
 }
 
@@ -121,7 +123,7 @@ button {
   display: inline-flex;
   align-items: center;
   min-width: 0;
-  color: #f8fbff;
+  color: #ffffff;
   text-decoration: none;
   font-weight: 800;
 }
@@ -149,7 +151,7 @@ button {
 }
 
 .brand-title span {
-  color: #9bd8e7;
+  color: color-mix(in srgb, #ffffff 72%, var(--teal));
   font-size: 0.75rem;
 }
 
@@ -176,12 +178,12 @@ button {
 .topbar .text-button {
   border-color: rgba(255, 255, 255, 0.18);
   background: rgba(255, 255, 255, 0.08);
-  color: #f8fbff;
+  color: #ffffff;
 }
 
 .primary-button {
-  border-color: #0a6f7b;
-  background: #0f7f8f;
+  border-color: color-mix(in srgb, var(--blue) 72%, var(--navy));
+  background: var(--blue);
   color: #ffffff;
 }
 
@@ -241,7 +243,7 @@ button {
 .nav-list a:focus-visible {
   outline: none;
   background: var(--panel-soft);
-  color: var(--teal);
+  color: var(--blue);
 }
 
 .side-note {
@@ -284,7 +286,7 @@ main {
 
 .kicker {
   margin: 0 0 10px;
-  color: var(--teal);
+  color: var(--blue);
   font-weight: 800;
   text-transform: uppercase;
 }
@@ -455,7 +457,7 @@ main {
 }
 
 .rank-index {
-  color: var(--teal);
+  color: var(--blue);
   font-family: var(--mono);
   font-weight: 850;
 }
@@ -670,7 +672,7 @@ main {
 }
 
 .trace-list li span:first-child {
-  color: var(--teal);
+  color: var(--blue);
   font-family: var(--mono);
   font-weight: 800;
 }
@@ -680,7 +682,7 @@ main {
 }
 
 .trace-key {
-  color: var(--teal);
+  color: var(--blue);
   font-weight: 800;
 }
 
@@ -747,8 +749,8 @@ thead th {
 .cell-button:hover,
 .cell-button:focus-visible,
 .cell-button.selected {
-  border-color: var(--teal);
-  color: var(--teal);
+  border-color: var(--blue);
+  color: var(--blue);
   outline: none;
 }
 
@@ -983,17 +985,17 @@ thead th {
   background:
     linear-gradient(135deg, color-mix(in srgb, var(--navy) 92%, black), color-mix(in srgb, var(--navy) 76%, var(--teal))),
     var(--navy);
-  color: #f8fbff;
+  color: #ffffff;
 }
 
 .surface-section .kicker,
 .surface-section .tag {
-  color: #9bd8e7;
+  color: color-mix(in srgb, #ffffff 72%, var(--teal));
 }
 
 .surface-section .section-lede,
 .surface-section .field label {
-  color: #b8cad8;
+  color: color-mix(in srgb, #ffffff 68%, var(--line));
 }
 
 .surface-inner {
@@ -1051,10 +1053,10 @@ thead th {
 }
 
 .surface-panel {
-  border: 1px solid rgba(155, 216, 231, 0.28);
+  border: 1px solid color-mix(in srgb, var(--teal) 28%, transparent);
   border-radius: 8px;
   padding: 12px;
-  background: rgba(4, 16, 31, 0.58);
+  background: color-mix(in srgb, var(--navy) 58%, transparent);
 }
 
 .control-panel {
@@ -1081,7 +1083,7 @@ thead th {
 
 .surface-readouts span {
   display: block;
-  color: #b8cad8;
+  color: color-mix(in srgb, #ffffff 68%, var(--line));
   font-size: 0.72rem;
   font-weight: 800;
   text-transform: uppercase;
@@ -1175,7 +1177,7 @@ thead th {
   z-index: 40;
   display: grid;
   grid-template-columns: minmax(260px, 86vw) 1fr;
-  background: rgba(2, 8, 14, 0.55);
+  background: color-mix(in srgb, var(--ink) 55%, transparent);
 }
 
 .nav-drawer[hidden] {
@@ -1738,7 +1740,7 @@ html[data-shell="module"] .layout {
           <h2>Source notes and limitations</h2>
           <p class="section-lede">Official and reconstructed values are visibly distinguished. Reconstructed values are never described as official published tables.</p>
           <ol class="source-list" id="sourceList"></ol>
-          <p class="fine-print" id="buildMeta">Build n-gs-pay-math-lab-v0.01 | commit a63047e7b64e72d7cb0385d4150dc4007e37c6bd</p>
+          <p class="fine-print" id="buildMeta">Build n-gs-pay-math-lab-v0.01 | commit a472d1d860d99dbefc5f4526e171c273bf92b0f3</p>
         </div>
       </section>
 
