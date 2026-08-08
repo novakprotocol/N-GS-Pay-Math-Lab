@@ -1,0 +1,11 @@
+.tmp-size-lab/
+build/
+dist/
+__pycache__/
+*.pyc
+.pytest_cache/
+.DS_Store
+Thumbs.db
+comparison-output/
+generated-static-alternatives/
+*.log
