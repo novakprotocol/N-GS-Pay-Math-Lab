@@ -152,14 +152,14 @@
       <section class="section surface-section" id="pay-surface">
         <div class="section-inner surface-inner">
           <p class="kicker">3D Pay Lab</p>
-          <h2>Pay surface, locality lift, and cap pressure</h2>
-          <p class="section-lede">The selected calculator inputs drive these offline canvas views, so the visuals and proof record stay in sync.</p>
+          <h2>Career earnings, raises, locality, and cap pressure</h2>
+          <p class="section-lede">The selected calculator inputs drive realistic earnings comparisons from one year to another, including adjacent GS paths and a base-only baseline.</p>
           <div class="surface-lab">
             <div class="surface-stage">
               <div class="surface-head">
                 <div>
-                  <span class="tag">Orbitable surface</span>
-                  <h3 id="surfaceTitle">GS pay surface</h3>
+                  <span class="tag">Orbitable earnings view</span>
+                  <h3 id="surfaceTitle">Career earnings</h3>
                 </div>
                 <div class="chart-metric"><strong id="surfacePeak">$0</strong><span id="surfaceRange">selected range</span></div>
               </div>
@@ -168,14 +168,19 @@
             </div>
             <aside class="surface-controls" aria-label="3D pay lab controls">
               <div class="surface-panel control-panel">
-                <div class="field"><label for="surfaceMode">Surface metric</label><select id="surfaceMode"><option value="annual" selected>Annual with locality/cap</option><option value="base">Base pay</option><option value="hourly">Hourly</option></select></div>
-                <div class="field"><label for="surfaceYearSpan">Years shown</label><select id="surfaceYearSpan"><option value="10">10 years</option><option value="25" selected>25 years</option><option value="50">50 years</option></select></div>
+                <div class="field"><label for="surfaceMode">View</label><select id="surfaceMode"><option value="career" selected>Career earnings</option><option value="annual">Annual grade surface</option><option value="base">Base pay surface</option><option value="hourly">Hourly surface</option></select></div>
+                <div class="field"><label for="earnStart">From</label><select id="earnStart"></select></div>
+                <div class="field"><label for="earnEnd">To</label><select id="earnEnd"></select></div>
+                <div class="field"><label for="compareMode">Compare</label><select id="compareMode"><option value="grades" selected>Adjacent grades</option><option value="steps">Adjacent steps</option><option value="locality">Locality/base-only</option></select></div>
+                <div class="field"><label for="surfaceYearSpan">Surface span</label><select id="surfaceYearSpan"><option value="10">10 years</option><option value="25" selected>25 years</option><option value="50">50 years</option></select></div>
                 <div class="field"><label for="surfaceYaw">Yaw</label><input id="surfaceYaw" type="range" min="-65" max="65" step="1" value="34"></div>
                 <div class="field"><label for="surfaceTilt">Tilt</label><input id="surfaceTilt" type="range" min="18" max="62" step="1" value="38"></div>
               </div>
               <div class="surface-panel surface-readouts">
-                <div><span>Selected cell</span><strong id="surfaceSelected">$0</strong></div>
-                <div><span>Grade spread</span><strong id="surfaceSpread">$0</strong></div>
+                <div><span id="surfaceSelectedLabel">Career total</span><strong id="surfaceSelected">$0</strong></div>
+                <div><span id="surfaceSpreadLabel">Vs base-only</span><strong id="surfaceSpread">$0</strong></div>
+                <div><span>This-year raise</span><strong id="surfaceRaise">$0</strong></div>
+                <div><span>Compare spread</span><strong id="surfaceCompare">$0</strong></div>
               </div>
               <div class="surface-panel mini-chart-panel">
                 <h3>Locality lift</h3>
