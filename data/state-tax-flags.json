@@ -1,0 +1,74 @@
+{
+  "description": "Federal Census State Government Tax Collections flags for locality comparison. Flags mark locality areas that include at least one state where the 2025 Census T40 Individual Income Taxes value is X, meaning not applicable in the flat file. This is not a complete tax calculation.",
+  "as_of": "2025",
+  "source_url": "https://www2.census.gov/programs-surveys/stc/datasets/2025/FY2025-Flat-File.txt",
+  "source_page_url": "https://www.census.gov/data/tables/2025/econ/stc/2025-annual.html",
+  "source_note": "U.S. Census Bureau Annual Survey of State Government Tax Collections, FY2025 flat file, row T40 Individual Income Taxes. Only states with T40 coded X are flagged.",
+  "item_code": "T40",
+  "item_label": "Individual Income Taxes",
+  "no_individual_income_tax_collection_states": [
+    "Alaska",
+    "Florida",
+    "Nevada",
+    "South Dakota",
+    "Texas",
+    "Wyoming"
+  ],
+  "locality_area_notes": {
+    "AK": {
+      "states": ["Alaska"],
+      "note": "Statewide Alaska locality; Census 2025 T40 individual income taxes are coded X for Alaska.",
+      "no_income_tax_collection_states": ["Alaska"]
+    },
+    "AU": {
+      "states": ["Texas"],
+      "note": "Texas locality; Census 2025 T40 individual income taxes are coded X for Texas.",
+      "no_income_tax_collection_states": ["Texas"]
+    },
+    "CC": {
+      "states": ["Texas"],
+      "note": "Texas locality; Census 2025 T40 individual income taxes are coded X for Texas.",
+      "no_income_tax_collection_states": ["Texas"]
+    },
+    "DFW": {
+      "states": ["Texas", "Oklahoma"],
+      "note": "Texas portion is flagged by Census 2025 T40; Oklahoma is not.",
+      "no_income_tax_collection_states": ["Texas"]
+    },
+    "HOU": {
+      "states": ["Texas"],
+      "note": "Texas locality; Census 2025 T40 individual income taxes are coded X for Texas.",
+      "no_income_tax_collection_states": ["Texas"]
+    },
+    "LR": {
+      "states": ["Texas"],
+      "note": "Texas locality; Census 2025 T40 individual income taxes are coded X for Texas.",
+      "no_income_tax_collection_states": ["Texas"]
+    },
+    "LV": {
+      "states": ["Nevada", "Arizona"],
+      "note": "Nevada portion is flagged by Census 2025 T40; Arizona is not.",
+      "no_income_tax_collection_states": ["Nevada"]
+    },
+    "MFL": {
+      "states": ["Florida"],
+      "note": "Florida locality; Census 2025 T40 individual income taxes are coded X for Florida.",
+      "no_income_tax_collection_states": ["Florida"]
+    },
+    "PB": {
+      "states": ["Florida"],
+      "note": "Florida locality; Census 2025 T40 individual income taxes are coded X for Florida.",
+      "no_income_tax_collection_states": ["Florida"]
+    },
+    "RN": {
+      "states": ["Nevada"],
+      "note": "Nevada locality; Census 2025 T40 individual income taxes are coded X for Nevada.",
+      "no_income_tax_collection_states": ["Nevada"]
+    },
+    "SO": {
+      "states": ["Texas"],
+      "note": "Texas locality; Census 2025 T40 individual income taxes are coded X for Texas.",
+      "no_income_tax_collection_states": ["Texas"]
+    }
+  }
+}

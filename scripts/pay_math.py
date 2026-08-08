@@ -256,7 +256,6 @@ def calculation_record(
             "anchor_label": result["anchorLabel"],
             "chain": result["chain"],
             "step1": result["step1"],
-            "wgi": result["wgi"],
             "base": result["base"],
             "locality_raw": result["localityRaw"],
             "locality_rounded": result["localityRounded"],

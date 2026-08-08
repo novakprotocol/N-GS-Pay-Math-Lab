@@ -8,6 +8,8 @@ Public site target: https://novakprotocol.github.io/N-GS-Pay-Math-Lab/
 
 - Calculates annual base pay, locality pay, pay-cap effects, hourly pay, and biweekly pay.
 - Lets users choose a 2026 OPM locality area or enter a manual locality percentage.
+- Highlights the highest-paying 2026 OPM locality areas, Census T40 income-tax collection flags, and BEA RPP price-level gaps.
+- Compares selected base pay growth against BLS CPI inflation to show buying-power drift.
 - Shows formulas, substituted numbers, intermediate rounding, and final results.
 - Adds offline canvas views for the grade/year pay surface, locality lift, and cap pressure.
 - Distinguishes official tables, official checkpoints, formula reconstructions, reverse calculations, and user-entered scenarios.
@@ -19,8 +21,7 @@ Public site target: https://novakprotocol.github.io/N-GS-Pay-Math-Lab/
 Static tables are useful outputs, but they are not the calculation authority. The authority here is the formula engine plus historical checkpoint data:
 
 - Annual Step 1 update: `RHU(previous_step_1 * (1 + annual_base_raise_percent / 100))`
-- Within-grade increment: `RHU(step_1 / 30)`
-- Step calculation: `step_1 + (step - 1) * WGI`
+- Step calculation: `step_1 + (step - 1) * RHU(step_1 / 30)`
 - Locality annual: `RHU(base * (1 + locality_percent / 100))`
 - Pay cap: `min(locality_annual, cap)` when a cap is supplied
 - Hourly divisor: `2,080` before 1984 and `2,087` from 1984 forward
@@ -82,6 +83,6 @@ The private promotion path is profile-driven. A later private implementation may
 
 ## Limitations
 
-This project is an independent calculation and verification tool, not an official OPM service or payroll determination. It does not calculate special rates, law-enforcement schedules, title 38 schedules, agency payroll exceptions, taxes, deductions, or individual employment records.
+This project is an independent calculation and verification tool, not an official OPM service or payroll determination. It does not calculate special rates, law-enforcement schedules, title 38 schedules, agency payroll exceptions, tax liability, deductions, or individual employment records. Census T40 income-tax collection flags are informational only and do not account for residence, worksite, local taxes, sales taxes, property taxes, deductions, or capital-gains taxes. BEA RPP values are price-level comparisons, not OPM locality-pay or nonforeign-COLA determinations.
 
 No license is granted by publication. See `NOTICE.md`.

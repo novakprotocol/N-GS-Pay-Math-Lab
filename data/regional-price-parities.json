@@ -1,0 +1,506 @@
+{
+    "description":  "BEA Regional Price Parities used to compare federal price-level data against OPM locality percentage. RPPs are spatial price indexes, not OPM locality-pay or nonforeign-COLA determinations.",
+    "year":  2024,
+    "source_url":  "https://apps.bea.gov/regional/zip/MARPP.zip",
+    "state_source_url":  "https://apps.bea.gov/regional/zip/SARPP.zip",
+    "source_page_url":  "https://www.bea.gov/data/prices-inflation/regional-price-parities-state-and-metro-area",
+    "source_note":  "U.S. Bureau of Economic Analysis Regional Price Parities by MSA and state, line code 1 all items and line code 3 housing, latest completed BEA RPP year 2024.",
+    "comparison_note":  "Difference = OPM locality percentage minus BEA all-items RPP premium (RPP - 100). OPM locality pay is not a cost-of-living payment; this is a price-level comparison only.",
+    "by_locality_code":  {
+                             "AL":  {
+                                        "bea_table":  "MARPP",
+                                        "geo_fips":  "10580",
+                                        "bea_name":  "Albany-Schenectady-Troy, NY (Metropolitan Statistical Area)",
+                                        "rpp_all_items":  99.566,
+                                        "rpp_housing":  102.582,
+                                        "match_quality":  "direct",
+                                        "match_note":  "BEA Albany-Schenectady-Troy MSA used for the OPM Albany-Schenectady locality."
+                                    },
+                             "ATL":  {
+                                         "bea_table":  "MARPP",
+                                         "geo_fips":  "12060",
+                                         "bea_name":  "Atlanta-Sandy Springs-Roswell, GA (Metropolitan Statistical Area)",
+                                         "rpp_all_items":  100.058,
+                                         "rpp_housing":  111.022,
+                                         "match_quality":  "partial",
+                                         "match_note":  "BEA Atlanta-Sandy Springs-Roswell MSA is a partial match for the broader OPM Atlanta-Athens-Clarke County-Sandy Springs area."
+                                     },
+                             "AU":  {
+                                        "bea_table":  "MARPP",
+                                        "geo_fips":  "12420",
+                                        "bea_name":  "Austin-Round Rock-San Marcos, TX (Metropolitan Statistical Area)",
+                                        "rpp_all_items":  98.066,
+                                        "rpp_housing":  120.361,
+                                        "match_quality":  "direct",
+                                        "match_note":  "BEA Austin-Round Rock-San Marcos MSA used for the OPM Austin-Round Rock-Georgetown locality."
+                                    },
+                             "BH":  {
+                                        "bea_table":  "MARPP",
+                                        "geo_fips":  "13820",
+                                        "bea_name":  "Birmingham, AL (Metropolitan Statistical Area)",
+                                        "rpp_all_items":  91.644,
+                                        "rpp_housing":  71.851,
+                                        "match_quality":  "partial",
+                                        "match_note":  "BEA Birmingham MSA is a partial match for the OPM Birmingham-Hoover-Talladega locality."
+                                    },
+                             "BOS":  {
+                                         "bea_table":  "MARPP",
+                                         "geo_fips":  "14460",
+                                         "bea_name":  "Boston-Cambridge-Newton, MA-NH (Metropolitan Statistical Area)",
+                                         "rpp_all_items":  108.266,
+                                         "rpp_housing":  148.424,
+                                         "match_quality":  "partial",
+                                         "match_note":  "BEA Boston-Cambridge-Newton MSA is a partial match for the broader OPM Boston-Worcester-Providence area."
+                                     },
+                             "BU":  {
+                                        "bea_table":  "MARPP",
+                                        "geo_fips":  "15380",
+                                        "bea_name":  "Buffalo-Cheektowaga, NY (Metropolitan Statistical Area)",
+                                        "rpp_all_items":  95.844,
+                                        "rpp_housing":  80.989,
+                                        "match_quality":  "partial",
+                                        "match_note":  "BEA Buffalo-Cheektowaga MSA is a partial match for the OPM Buffalo-Cheektowaga-Olean locality."
+                                    },
+                             "BN":  {
+                                        "bea_table":  "MARPP",
+                                        "geo_fips":  "15540",
+                                        "bea_name":  "Burlington-South Burlington, VT (Metropolitan Statistical Area)",
+                                        "rpp_all_items":  100.949,
+                                        "rpp_housing":  103.842,
+                                        "match_quality":  "partial",
+                                        "match_note":  "BEA Burlington-South Burlington MSA is a partial match for the OPM Burlington-South Burlington-Barre locality."
+                                    },
+                             "CT":  {
+                                        "bea_table":  "MARPP",
+                                        "geo_fips":  "16740",
+                                        "bea_name":  "Charlotte-Concord-Gastonia, NC-SC (Metropolitan Statistical Area)",
+                                        "rpp_all_items":  97.348,
+                                        "rpp_housing":  97.635,
+                                        "match_quality":  "direct",
+                                        "match_note":  "BEA Charlotte-Concord-Gastonia MSA used for the OPM Charlotte-Concord locality."
+                                    },
+                             "CHI":  {
+                                         "bea_table":  "MARPP",
+                                         "geo_fips":  "16980",
+                                         "bea_name":  "Chicago-Naperville-Elgin, IL-IN (Metropolitan Statistical Area)",
+                                         "rpp_all_items":  103.595,
+                                         "rpp_housing":  112.01,
+                                         "match_quality":  "partial",
+                                         "match_note":  "BEA Chicago-Naperville-Elgin MSA is a partial match for the OPM Chicago-Naperville locality."
+                                     },
+                             "CIN":  {
+                                         "bea_table":  "MARPP",
+                                         "geo_fips":  "17140",
+                                         "bea_name":  "Cincinnati, OH-KY-IN (Metropolitan Statistical Area)",
+                                         "rpp_all_items":  95.37,
+                                         "rpp_housing":  87.608,
+                                         "match_quality":  "partial",
+                                         "match_note":  "BEA Cincinnati MSA is a partial match for the OPM Cincinnati-Wilmington-Maysville locality."
+                                     },
+                             "CS":  {
+                                        "bea_table":  "MARPP",
+                                        "geo_fips":  "17820",
+                                        "bea_name":  "Colorado Springs, CO (Metropolitan Statistical Area)",
+                                        "rpp_all_items":  100.707,
+                                        "rpp_housing":  116.207,
+                                        "match_quality":  "direct",
+                                        "match_note":  "BEA Colorado Springs MSA used for the OPM Colorado Springs locality."
+                                    },
+                             "COL":  {
+                                         "bea_table":  "MARPP",
+                                         "geo_fips":  "18140",
+                                         "bea_name":  "Columbus, OH (Metropolitan Statistical Area)",
+                                         "rpp_all_items":  95.469,
+                                         "rpp_housing":  87.945,
+                                         "match_quality":  "partial",
+                                         "match_note":  "BEA Columbus MSA is a partial match for the OPM Columbus-Marion-Zanesville locality."
+                                     },
+                             "CC":  {
+                                        "bea_table":  "MARPP",
+                                        "geo_fips":  "18580",
+                                        "bea_name":  "Corpus Christi, TX (Metropolitan Statistical Area)",
+                                        "rpp_all_items":  92.671,
+                                        "rpp_housing":  84.905,
+                                        "match_quality":  "partial",
+                                        "match_note":  "BEA Corpus Christi MSA is a partial match for the OPM Corpus Christi-Kingsville-Alice locality."
+                                    },
+                             "DFW":  {
+                                         "bea_table":  "MARPP",
+                                         "geo_fips":  "19100",
+                                         "bea_name":  "Dallas-Fort Worth-Arlington, TX (Metropolitan Statistical Area)",
+                                         "rpp_all_items":  103.09,
+                                         "rpp_housing":  117.874,
+                                         "match_quality":  "partial",
+                                         "match_note":  "BEA Dallas-Fort Worth-Arlington MSA is a partial match because the OPM locality also includes Oklahoma."
+                                     },
+                             "DV":  {
+                                        "bea_table":  "MARPP",
+                                        "geo_fips":  "19340",
+                                        "bea_name":  "Davenport-Moline-Rock Island, IA-IL (Metropolitan Statistical Area)",
+                                        "rpp_all_items":  89.079,
+                                        "rpp_housing":  68.346,
+                                        "match_quality":  "direct",
+                                        "match_note":  "BEA Davenport-Moline-Rock Island MSA used for the OPM Davenport-Moline locality."
+                                    },
+                             "DAY":  {
+                                         "bea_table":  "MARPP",
+                                         "geo_fips":  "19430",
+                                         "bea_name":  "Dayton-Kettering-Beavercreek, OH (Metropolitan Statistical Area)",
+                                         "rpp_all_items":  92.694,
+                                         "rpp_housing":  72.712,
+                                         "match_quality":  "partial",
+                                         "match_note":  "BEA Dayton-Kettering-Beavercreek MSA used for the OPM Dayton-Springfield-Kettering locality."
+                                     },
+                             "DEN":  {
+                                         "bea_table":  "MARPP",
+                                         "geo_fips":  "19740",
+                                         "bea_name":  "Denver-Aurora-Centennial, CO (Metropolitan Statistical Area)",
+                                         "rpp_all_items":  105.782,
+                                         "rpp_housing":  146.919,
+                                         "match_quality":  "direct",
+                                         "match_note":  "BEA Denver-Aurora-Centennial MSA used for the OPM Denver-Aurora locality."
+                                     },
+                             "DM":  {
+                                        "bea_table":  "MARPP",
+                                        "geo_fips":  "19780",
+                                        "bea_name":  "Des Moines-West Des Moines, IA (Metropolitan Statistical Area)",
+                                        "rpp_all_items":  91.701,
+                                        "rpp_housing":  84.741,
+                                        "match_quality":  "partial",
+                                        "match_note":  "BEA Des Moines-West Des Moines MSA used for the OPM Des Moines-Ames-West Des Moines locality."
+                                    },
+                             "DET":  {
+                                         "bea_table":  "MARPP",
+                                         "geo_fips":  "19820",
+                                         "bea_name":  "Detroit-Warren-Dearborn, MI (Metropolitan Statistical Area)",
+                                         "rpp_all_items":  100.298,
+                                         "rpp_housing":  94.69,
+                                         "match_quality":  "partial",
+                                         "match_note":  "BEA Detroit-Warren-Dearborn MSA used for the OPM Detroit-Warren-Ann Arbor locality."
+                                     },
+                             "FN":  {
+                                        "bea_table":  "MARPP",
+                                        "geo_fips":  "23420",
+                                        "bea_name":  "Fresno, CA (Metropolitan Statistical Area)",
+                                        "rpp_all_items":  102.158,
+                                        "rpp_housing":  95.725,
+                                        "match_quality":  "partial",
+                                        "match_note":  "BEA Fresno MSA used for the OPM Fresno-Madera-Hanford locality."
+                                    },
+                             "HB":  {
+                                        "bea_table":  "MARPP",
+                                        "geo_fips":  "25540",
+                                        "bea_name":  "Hartford-West Hartford-East Hartford, CT (Metropolitan Statistical Area)",
+                                        "rpp_all_items":  102.746,
+                                        "rpp_housing":  110.234,
+                                        "match_quality":  "direct",
+                                        "match_note":  "BEA Hartford-West Hartford-East Hartford MSA used for the OPM Hartford-East Hartford locality."
+                                    },
+                             "HAR":  {
+                                         "bea_table":  "MARPP",
+                                         "geo_fips":  "25420",
+                                         "bea_name":  "Harrisburg-Carlisle, PA (Metropolitan Statistical Area)",
+                                         "rpp_all_items":  98.65,
+                                         "rpp_housing":  96.28,
+                                         "match_quality":  "partial",
+                                         "match_note":  "BEA Harrisburg-Carlisle MSA is a partial match for the OPM Harrisburg-Lebanon locality."
+                                     },
+                             "HOU":  {
+                                         "bea_table":  "MARPP",
+                                         "geo_fips":  "26420",
+                                         "bea_name":  "Houston-Pasadena-The Woodlands, TX (Metropolitan Statistical Area)",
+                                         "rpp_all_items":  98.629,
+                                         "rpp_housing":  104.51,
+                                         "match_quality":  "direct",
+                                         "match_note":  "BEA Houston-Pasadena-The Woodlands MSA used for the OPM Houston-The Woodlands locality."
+                                     },
+                             "HNT":  {
+                                         "bea_table":  "MARPP",
+                                         "geo_fips":  "26620",
+                                         "bea_name":  "Huntsville, AL (Metropolitan Statistical Area)",
+                                         "rpp_all_items":  93.072,
+                                         "rpp_housing":  77.946,
+                                         "match_quality":  "partial",
+                                         "match_note":  "BEA Huntsville MSA is a partial match for the OPM Huntsville-Decatur locality."
+                                     },
+                             "IND":  {
+                                         "bea_table":  "MARPP",
+                                         "geo_fips":  "26900",
+                                         "bea_name":  "Indianapolis-Carmel-Greenwood, IN (Metropolitan Statistical Area)",
+                                         "rpp_all_items":  95.696,
+                                         "rpp_housing":  88.917,
+                                         "match_quality":  "partial",
+                                         "match_note":  "BEA Indianapolis-Carmel-Greenwood MSA used for the OPM Indianapolis-Carmel-Muncie locality."
+                                     },
+                             "KC":  {
+                                        "bea_table":  "MARPP",
+                                        "geo_fips":  "28140",
+                                        "bea_name":  "Kansas City, MO-KS (Metropolitan Statistical Area)",
+                                        "rpp_all_items":  92.543,
+                                        "rpp_housing":  86.642,
+                                        "match_quality":  "direct",
+                                        "match_note":  "BEA Kansas City MSA used for the OPM Kansas City-Overland Park-Kansas City locality."
+                                    },
+                             "LR":  {
+                                        "bea_table":  "MARPP",
+                                        "geo_fips":  "29700",
+                                        "bea_name":  "Laredo, TX (Metropolitan Statistical Area)",
+                                        "rpp_all_items":  86.956,
+                                        "rpp_housing":  59.746,
+                                        "match_quality":  "direct",
+                                        "match_note":  "BEA Laredo MSA used for the OPM Laredo locality."
+                                    },
+                             "LV":  {
+                                        "bea_table":  "MARPP",
+                                        "geo_fips":  "29820",
+                                        "bea_name":  "Las Vegas-Henderson-North Las Vegas, NV (Metropolitan Statistical Area)",
+                                        "rpp_all_items":  100.215,
+                                        "rpp_housing":  115.538,
+                                        "match_quality":  "partial",
+                                        "match_note":  "BEA Las Vegas-Henderson-North Las Vegas MSA is a partial match for the OPM Las Vegas-Henderson locality."
+                                    },
+                             "LA":  {
+                                        "bea_table":  "MARPP",
+                                        "geo_fips":  "31080",
+                                        "bea_name":  "Los Angeles-Long Beach-Anaheim, CA (Metropolitan Statistical Area)",
+                                        "rpp_all_items":  113.566,
+                                        "rpp_housing":  170.433,
+                                        "match_quality":  "direct",
+                                        "match_note":  "BEA Los Angeles-Long Beach-Anaheim MSA used for the OPM Los Angeles-Long Beach locality."
+                                    },
+                             "MFL":  {
+                                         "bea_table":  "MARPP",
+                                         "geo_fips":  "33100",
+                                         "bea_name":  "Miami-Fort Lauderdale-West Palm Beach, FL (Metropolitan Statistical Area)",
+                                         "rpp_all_items":  114.155,
+                                         "rpp_housing":  155.551,
+                                         "match_quality":  "partial",
+                                         "match_note":  "BEA Miami-Fort Lauderdale-West Palm Beach MSA is a partial match for the OPM Miami-Port St. Lucie-Fort Lauderdale locality."
+                                     },
+                             "MIL":  {
+                                         "bea_table":  "MARPP",
+                                         "geo_fips":  "33340",
+                                         "bea_name":  "Milwaukee-Waukesha, WI (Metropolitan Statistical Area)",
+                                         "rpp_all_items":  96.937,
+                                         "rpp_housing":  97.111,
+                                         "match_quality":  "partial",
+                                         "match_note":  "BEA Milwaukee-Waukesha MSA is a partial match for the OPM Milwaukee-Racine-Waukesha locality."
+                                     },
+                             "MSP":  {
+                                         "bea_table":  "MARPP",
+                                         "geo_fips":  "33460",
+                                         "bea_name":  "Minneapolis-St. Paul-Bloomington, MN-WI (Metropolitan Statistical Area)",
+                                         "rpp_all_items":  104.822,
+                                         "rpp_housing":  111.838,
+                                         "match_quality":  "direct",
+                                         "match_note":  "BEA Minneapolis-St. Paul-Bloomington MSA used for the OPM Minneapolis-St. Paul locality."
+                                     },
+                             "NY":  {
+                                        "bea_table":  "MARPP",
+                                        "geo_fips":  "35620",
+                                        "bea_name":  "New York-Newark-Jersey City, NY-NJ (Metropolitan Statistical Area)",
+                                        "rpp_all_items":  112.563,
+                                        "rpp_housing":  148.616,
+                                        "match_quality":  "partial",
+                                        "match_note":  "BEA New York-Newark-Jersey City MSA is a partial match for the OPM New York-Newark locality."
+                                    },
+                             "OM":  {
+                                        "bea_table":  "MARPP",
+                                        "geo_fips":  "36540",
+                                        "bea_name":  "Omaha, NE-IA (Metropolitan Statistical Area)",
+                                        "rpp_all_items":  91.911,
+                                        "rpp_housing":  86.404,
+                                        "match_quality":  "partial",
+                                        "match_note":  "BEA Omaha MSA is a partial match for the OPM Omaha-Council Bluffs-Fremont locality."
+                                    },
+                             "PB":  {
+                                        "bea_table":  "MARPP",
+                                        "geo_fips":  "37340",
+                                        "bea_name":  "Palm Bay-Melbourne-Titusville, FL (Metropolitan Statistical Area)",
+                                        "rpp_all_items":  100.005,
+                                        "rpp_housing":  111.731,
+                                        "match_quality":  "direct",
+                                        "match_note":  "BEA Palm Bay-Melbourne-Titusville MSA used for the OPM Palm Bay-Melbourne-Titusville locality."
+                                    },
+                             "PHL":  {
+                                         "bea_table":  "MARPP",
+                                         "geo_fips":  "37980",
+                                         "bea_name":  "Philadelphia-Camden-Wilmington, PA-NJ-DE-MD (Metropolitan Statistical Area)",
+                                         "rpp_all_items":  102.554,
+                                         "rpp_housing":  113.141,
+                                         "match_quality":  "partial",
+                                         "match_note":  "BEA Philadelphia-Camden-Wilmington MSA used for the OPM Philadelphia-Reading-Camden locality."
+                                     },
+                             "PX":  {
+                                        "bea_table":  "MARPP",
+                                        "geo_fips":  "38060",
+                                        "bea_name":  "Phoenix-Mesa-Chandler, AZ (Metropolitan Statistical Area)",
+                                        "rpp_all_items":  103.316,
+                                        "rpp_housing":  121.236,
+                                        "match_quality":  "direct",
+                                        "match_note":  "BEA Phoenix-Mesa-Chandler MSA used for the OPM Phoenix-Mesa locality."
+                                    },
+                             "PIT":  {
+                                         "bea_table":  "MARPP",
+                                         "geo_fips":  "38300",
+                                         "bea_name":  "Pittsburgh, PA (Metropolitan Statistical Area)",
+                                         "rpp_all_items":  94.671,
+                                         "rpp_housing":  71.986,
+                                         "match_quality":  "partial",
+                                         "match_note":  "BEA Pittsburgh MSA is a partial match for the OPM Pittsburgh-New Castle-Weirton locality."
+                                     },
+                             "POR":  {
+                                         "bea_table":  "MARPP",
+                                         "geo_fips":  "38900",
+                                         "bea_name":  "Portland-Vancouver-Hillsboro, OR-WA (Metropolitan Statistical Area)",
+                                         "rpp_all_items":  105.421,
+                                         "rpp_housing":  125.114,
+                                         "match_quality":  "partial",
+                                         "match_note":  "BEA Portland-Vancouver-Hillsboro MSA is a partial match for the OPM Portland-Vancouver-Salem locality."
+                                     },
+                             "RA":  {
+                                        "bea_table":  "MARPP",
+                                        "geo_fips":  "39580",
+                                        "bea_name":  "Raleigh-Cary, NC (Metropolitan Statistical Area)",
+                                        "rpp_all_items":  98.157,
+                                        "rpp_housing":  103.476,
+                                        "match_quality":  "partial",
+                                        "match_note":  "BEA Raleigh-Cary MSA is a partial match for the OPM Raleigh-Durham-Cary locality."
+                                    },
+                             "RN":  {
+                                        "bea_table":  "MARPP",
+                                        "geo_fips":  "39900",
+                                        "bea_name":  "Reno, NV (Metropolitan Statistical Area)",
+                                        "rpp_all_items":  101.014,
+                                        "rpp_housing":  123.478,
+                                        "match_quality":  "partial",
+                                        "match_note":  "BEA Reno MSA used for the OPM Reno-Fernley locality."
+                                    },
+                             "RCH":  {
+                                         "bea_table":  "MARPP",
+                                         "geo_fips":  "40060",
+                                         "bea_name":  "Richmond, VA (Metropolitan Statistical Area)",
+                                         "rpp_all_items":  97.858,
+                                         "rpp_housing":  99.136,
+                                         "match_quality":  "direct",
+                                         "match_note":  "BEA Richmond MSA used for the OPM Richmond locality."
+                                     },
+                             "RT":  {
+                                        "bea_table":  "MARPP",
+                                        "geo_fips":  "40380",
+                                        "bea_name":  "Rochester, NY (Metropolitan Statistical Area)",
+                                        "rpp_all_items":  97.035,
+                                        "rpp_housing":  87.481,
+                                        "match_quality":  "partial",
+                                        "match_note":  "BEA Rochester MSA is a partial match for the OPM Rochester-Batavia-Seneca Falls locality."
+                                    },
+                             "SAC":  {
+                                         "bea_table":  "MARPP",
+                                         "geo_fips":  "40900",
+                                         "bea_name":  "Sacramento-Roseville-Folsom, CA (Metropolitan Statistical Area)",
+                                         "rpp_all_items":  106.67,
+                                         "rpp_housing":  130.23,
+                                         "match_quality":  "partial",
+                                         "match_note":  "BEA Sacramento-Roseville-Folsom MSA is a partial match for the OPM Sacramento-Roseville locality."
+                                     },
+                             "SO":  {
+                                        "bea_table":  "MARPP",
+                                        "geo_fips":  "41700",
+                                        "bea_name":  "San Antonio-New Braunfels, TX (Metropolitan Statistical Area)",
+                                        "rpp_all_items":  94.716,
+                                        "rpp_housing":  94.575,
+                                        "match_quality":  "partial",
+                                        "match_note":  "BEA San Antonio-New Braunfels MSA used for the OPM San Antonio-New Braunfels-Pearsall locality."
+                                    },
+                             "SD":  {
+                                        "bea_table":  "MARPP",
+                                        "geo_fips":  "41740",
+                                        "bea_name":  "San Diego-Chula Vista-Carlsbad, CA (Metropolitan Statistical Area)",
+                                        "rpp_all_items":  111.887,
+                                        "rpp_housing":  179.267,
+                                        "match_quality":  "direct",
+                                        "match_note":  "BEA San Diego-Chula Vista-Carlsbad MSA used for the OPM San Diego-Chula Vista-Carlsbad locality."
+                                    },
+                             "SF":  {
+                                        "bea_table":  "MARPP",
+                                        "geo_fips":  "41860",
+                                        "bea_name":  "San Francisco-Oakland-Fremont, CA (Metropolitan Statistical Area)",
+                                        "rpp_all_items":  115.613,
+                                        "rpp_housing":  194.718,
+                                        "match_quality":  "partial",
+                                        "match_note":  "BEA San Francisco-Oakland-Fremont MSA is a partial match for the OPM San Jose-San Francisco-Oakland locality."
+                                    },
+                             "SEA":  {
+                                         "bea_table":  "MARPP",
+                                         "geo_fips":  "42660",
+                                         "bea_name":  "Seattle-Tacoma-Bellevue, WA (Metropolitan Statistical Area)",
+                                         "rpp_all_items":  111.133,
+                                         "rpp_housing":  151.314,
+                                         "match_quality":  "direct",
+                                         "match_note":  "BEA Seattle-Tacoma-Bellevue MSA used for the OPM Seattle-Tacoma locality."
+                                     },
+                             "SN":  {
+                                        "bea_table":  "MARPP",
+                                        "geo_fips":  "44060",
+                                        "bea_name":  "Spokane-Spokane Valley, WA (Metropolitan Statistical Area)",
+                                        "rpp_all_items":  100.346,
+                                        "rpp_housing":  97.059,
+                                        "match_quality":  "partial",
+                                        "match_note":  "BEA Spokane-Spokane Valley MSA is a partial match for the OPM Spokane-Spokane Valley-Coeur d\u0027Alene locality."
+                                    },
+                             "SL":  {
+                                        "bea_table":  "MARPP",
+                                        "geo_fips":  "41180",
+                                        "bea_name":  "St. Louis, MO-IL (Metropolitan Statistical Area)",
+                                        "rpp_all_items":  95.088,
+                                        "rpp_housing":  79.024,
+                                        "match_quality":  "partial",
+                                        "match_note":  "BEA St. Louis MSA used for the OPM St. Louis-St. Charles-Farmington locality."
+                                    },
+                             "AK":  {
+                                        "bea_table":  "SARPP",
+                                        "geo_fips":  "02000",
+                                        "bea_name":  "Alaska",
+                                        "rpp_all_items":  102.359,
+                                        "rpp_housing":  93.784,
+                                        "match_quality":  "state",
+                                        "match_note":  "BEA statewide Alaska RPP used for the OPM State of Alaska locality."
+                                    },
+                             "HI":  {
+                                        "bea_table":  "SARPP",
+                                        "geo_fips":  "15000",
+                                        "bea_name":  "Hawaii",
+                                        "rpp_all_items":  109.951,
+                                        "rpp_housing":  125.304,
+                                        "match_quality":  "state",
+                                        "match_note":  "BEA statewide Hawaii RPP used for the OPM State of Hawaii locality."
+                                    },
+                             "TU":  {
+                                        "bea_table":  "MARPP",
+                                        "geo_fips":  "46060",
+                                        "bea_name":  "Tucson, AZ (Metropolitan Statistical Area)",
+                                        "rpp_all_items":  96.896,
+                                        "rpp_housing":  91.765,
+                                        "match_quality":  "partial",
+                                        "match_note":  "BEA Tucson MSA used for the OPM Tucson-Nogales locality."
+                                    },
+                             "VB":  {
+                                        "bea_table":  "MARPP",
+                                        "geo_fips":  "47260",
+                                        "bea_name":  "Virginia Beach-Chesapeake-Norfolk, VA-NC (Metropolitan Statistical Area)",
+                                        "rpp_all_items":  97.941,
+                                        "rpp_housing":  99.805,
+                                        "match_quality":  "direct",
+                                        "match_note":  "BEA Virginia Beach-Chesapeake-Norfolk MSA used for the OPM Virginia Beach-Norfolk locality."
+                                    },
+                             "DCB":  {
+                                         "bea_table":  "MARPP",
+                                         "geo_fips":  "47900",
+                                         "bea_name":  "Washington-Arlington-Alexandria, DC-VA-MD-WV (Metropolitan Statistical Area)",
+                                         "rpp_all_items":  108.884,
+                                         "rpp_housing":  151.134,
+                                         "match_quality":  "partial",
+                                         "match_note":  "BEA Washington-Arlington-Alexandria MSA is a partial match because the OPM locality also includes Baltimore."
+                                     }
+                         }
+}

@@ -1,6 +1,7 @@
 {
   "disclaimer": "Independent calculation and verification tool; not an official OPM service or payroll determination.",
   "formula_version": "n-gs-pay-math-lab-v0.01",
+  "source_policy": "Public data and comparison sources must be OPM or federal .gov sources only.",
   "sources": [
     {
       "id": "opm-2026-base",
@@ -21,6 +22,24 @@
       "note": "Used for the 17.06 percent locality example."
     },
     {
+      "id": "bls-cpi-u",
+      "title": "BLS CPI-U annual average data series CUUR0000SA0",
+      "url": "https://download.bls.gov/pub/time.series/CU/cu.data.1.AllItems",
+      "note": "Used for the inflation comparison. 2026 is omitted until BLS publishes a complete annual average."
+    },
+    {
+      "id": "census-2025-state-tax-collections",
+      "title": "Census 2025 State Government Tax Collections flat file",
+      "url": "https://www2.census.gov/programs-surveys/stc/datasets/2025/FY2025-Flat-File.txt",
+      "note": "Used only to flag states where Census item T40 Individual Income Taxes is coded X; this is not tax advice."
+    },
+    {
+      "id": "bea-rpp-2024",
+      "title": "BEA 2024 Regional Price Parities",
+      "url": "https://www.bea.gov/data/prices-inflation/regional-price-parities-state-and-metro-area",
+      "note": "Used for price-level comparisons between BEA all-items RPP premiums and OPM locality percentages; this is not an OPM COLA determination."
+    },
+    {
       "id": "opm-fact-sheets",
       "title": "OPM pay administration fact sheets",
       "url": "https://www.opm.gov/policy-data-oversight/pay-leave/pay-administration/fact-sheets/",
@@ -31,12 +50,6 @@
       "title": "Federal Register 1979 GS schedule checkpoint",
       "url": "https://www.federalregister.gov/",
       "note": "Used for the 1979 nonuniform historical checkpoint represented in the source implementation."
-    },
-    {
-      "id": "source-html",
-      "title": "Existing GS Pay Math Lab source file",
-      "url": "",
-      "note": "Local user-supplied working implementation preserved as the formula and fixture source."
     }
   ]
 }

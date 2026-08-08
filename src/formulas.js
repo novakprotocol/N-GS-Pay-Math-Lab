@@ -178,7 +178,7 @@
     lines.push(`<span class="trace-key">Input</span> ${result.year} ${g} Step ${result.step}; locality ${pct(result.localityPct)}; ${result.capIsValid ? `cap ${money2.format(result.cap)}` : "no cap"}.`);
     lines.push(`<span class="trace-key">Provenance</span> ${escapeHtml(result.status)}; anchor ${result.anchorYear}: ${escapeHtml(result.anchorLabel)}.`);
     if (result.lowGrade) {
-      lines.push(`<span class="trace-warn">Low-grade rule</span> GS-1 and GS-2 use direct cell treatment when WGI varies.`);
+      lines.push(`<span class="trace-warn">Low-grade rule</span> GS-1 and GS-2 use direct cell treatment when step spacing varies.`);
     }
     for (const link of result.chain) {
       if (link.exact) {
@@ -190,12 +190,7 @@
         lines.push(`${link.year} annual Step 1 update = RHU(${money0.format(link.before)} x ${factorText(link.rate)}) = <strong>${money0.format(link.after)}</strong>.`);
       }
     }
-    if (!result.lowGrade) {
-      lines.push(`Within-grade increment = RHU(${money0.format(result.step1)} / 30) = RHU(${num6.format(result.step1 / 30)}) = <strong>${money0.format(result.wgi)}</strong>.`);
-      lines.push(`${g} Step ${result.step} = ${money0.format(result.step1)} + (${result.step} - 1) x ${money0.format(result.wgi)} = <strong>${money0.format(result.base)}</strong>.`);
-    } else {
-      lines.push(`${g} Step ${result.step} base cell = <strong>${money0.format(result.base)}</strong>.`);
-    }
+    lines.push(`${g} Step ${result.step} base cell = <strong>${money0.format(result.base)}</strong>.`);
     lines.push(`Locality raw = ${money0.format(result.base)} x (1 + ${num2.format(result.localityPct)} / 100) = ${money4.format(result.localityRaw)}.`);
     lines.push(`Locality multiplication rounded = RHU(${money4.format(result.localityRaw)}) = <strong>${money0.format(result.localityRounded)}</strong>.`);
     if (result.capIsValid) {
@@ -232,7 +227,6 @@
         anchor_label: result.anchorLabel,
         chain: result.chain,
         step1: result.step1,
-        wgi: result.wgi,
         base: result.base,
         locality_raw: result.localityRaw,
         locality_rounded: result.localityRounded,

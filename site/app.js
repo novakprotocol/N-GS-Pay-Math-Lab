@@ -29,6 +29,17 @@
     statusBadge: $("statusBadge"),
     resultNote: $("resultNote"),
     payPicture: $("payPicture"),
+    highestAreaPay: $("highestAreaPay"),
+    highestAreaName: $("highestAreaName"),
+    highestPayList: $("highestPayList"),
+    noTaxAreaPay: $("noTaxAreaPay"),
+    noTaxAreaName: $("noTaxAreaName"),
+    noTaxAreaList: $("noTaxAreaList"),
+    taxHighlightNote: $("taxHighlightNote"),
+    costAreaGap: $("costAreaGap"),
+    costAreaName: $("costAreaName"),
+    costAreaList: $("costAreaList"),
+    costHighlightNote: $("costHighlightNote"),
     traceList: $("traceList"),
     tracePlain: $("tracePlain"),
     scheduleTitle: $("scheduleTitle"),
@@ -39,6 +50,15 @@
     chartMetric: $("chartMetric"),
     chartDelta: $("chartDelta"),
     timelineChart: $("timelineChart"),
+    inflationSummary: $("inflationSummary"),
+    inflationActual: $("inflationActual"),
+    inflationTarget: $("inflationTarget"),
+    inflationGap: $("inflationGap"),
+    inflationPower: $("inflationPower"),
+    inflationTitle: $("inflationTitle"),
+    inflationVerdict: $("inflationVerdict"),
+    inflationNote: $("inflationNote"),
+    inflationChart: $("inflationChart"),
     ledgerTitle: $("ledgerTitle"),
     ledgerTable: $("ledgerTable"),
     auditExact: $("auditExact"),
@@ -53,8 +73,6 @@
     earnEnd: $("earnEnd"),
     compareMode: $("compareMode"),
     surfaceYearSpan: $("surfaceYearSpan"),
-    surfaceYaw: $("surfaceYaw"),
-    surfaceTilt: $("surfaceTilt"),
     surfaceTitle: $("surfaceTitle"),
     surfacePeak: $("surfacePeak"),
     surfaceRange: $("surfaceRange"),
@@ -73,6 +91,7 @@
 
   let lastRecord = null;
   const surfaceDrag = { active: false, pointerId: null, x: 0, y: 0 };
+  const surfaceView = { yaw: 34, tilt: 38 };
   let resizeTimer = null;
 
   function setText(el, value) {
@@ -278,6 +297,118 @@
       </g>`;
   }
 
+  function stateTaxInfoFor(area) {
+    const notes = math.DATA.stateTaxFlags && math.DATA.stateTaxFlags.locality_area_notes;
+    return area && notes ? notes[area.code] || null : null;
+  }
+
+  function rppInfoFor(area) {
+    const byCode = math.DATA.regionalPriceParities && math.DATA.regionalPriceParities.by_locality_code;
+    return area && byCode ? byCode[area.code] || null : null;
+  }
+
+  function noIncomeTaxStates(taxInfo) {
+    return taxInfo && Array.isArray(taxInfo.no_income_tax_collection_states) ? taxInfo.no_income_tax_collection_states : [];
+  }
+
+  function localityCandidateRows(input) {
+    return localityAreasForYear(input.year)
+      .filter((area) => area.code !== "RUS")
+      .map((area) => {
+        const result = math.computePay(input.year, input.grade, input.step, area.percentage, input.capValue, input.applyCap);
+        return { area, annual: result.annual, taxInfo: stateTaxInfoFor(area), costInfo: rppInfoFor(area) };
+      })
+      .sort((a, b) => b.annual - a.annual || b.area.percentage - a.area.percentage || a.area.name.localeCompare(b.area.name));
+  }
+
+  function signedPercent(value, digits = 1) {
+    const numeric = Number(value);
+    if (!Number.isFinite(numeric)) return "N/A";
+    return `${numeric >= 0 ? "+" : ""}${numeric.toFixed(digits)}%`;
+  }
+
+  function signedPoints(value, digits = 1) {
+    const numeric = Number(value);
+    if (!Number.isFinite(numeric)) return "N/A";
+    return `${numeric >= 0 ? "+" : ""}${numeric.toFixed(digits)} pts`;
+  }
+
+  function pricePremium(costInfo) {
+    const rpp = costInfo ? Number(costInfo.rpp_all_items) : NaN;
+    return Number.isFinite(rpp) ? rpp - 100 : NaN;
+  }
+
+  function localityVsPriceGap(row) {
+    const premium = pricePremium(row.costInfo);
+    return Number.isFinite(premium) ? row.area.percentage - premium : NaN;
+  }
+
+  function rankRow(row, index, selectedCode, showTaxBadge) {
+    const isSelected = selectedCode && row.area.code === selectedCode;
+    const states = noIncomeTaxStates(row.taxInfo);
+    const badge = showTaxBadge && states.length ? `<span class="rank-badge">${math.escapeHtml(states.join(" / "))}</span>` : "";
+    const meta = `${math.pct(row.area.percentage)} OPM locality${row.taxInfo && row.taxInfo.note ? ` | ${row.taxInfo.note}` : ""}`;
+    return `<div class="rank-row${isSelected ? " is-selected" : ""}"><span class="rank-index">#${index + 1}</span><span class="rank-main"><span class="rank-title">${math.escapeHtml(row.area.code)} | ${math.escapeHtml(row.area.name)}</span><span class="rank-meta">${math.escapeHtml(meta)}</span>${badge}</span><span class="rank-value">${math.money0.format(row.annual)}</span></div>`;
+  }
+
+  function costRankRow(row, index, selectedCode) {
+    const isSelected = selectedCode && row.area.code === selectedCode;
+    const premium = pricePremium(row.costInfo);
+    const gap = localityVsPriceGap(row);
+    const housing = Number(row.costInfo.rpp_housing);
+    const quality = row.costInfo.match_quality ? `${row.costInfo.match_quality} BEA match` : "BEA match";
+    const metaParts = [
+      `${math.pct(row.area.percentage)} OPM locality`,
+      `BEA all-items ${signedPercent(premium)}`,
+      Number.isFinite(housing) ? `housing RPP ${housing.toFixed(1)}` : "housing RPP N/A",
+      quality
+    ];
+    return `<div class="rank-row${isSelected ? " is-selected" : ""}"><span class="rank-index">#${index + 1}</span><span class="rank-main"><span class="rank-title">${math.escapeHtml(row.area.code)} | ${math.escapeHtml(row.area.name)}</span><span class="rank-meta">${math.escapeHtml(metaParts.join(" | "))}</span></span><span class="rank-value">${signedPoints(gap)}</span></div>`;
+  }
+
+  function renderLocalityHighlights(input) {
+    if (!els.highestPayList || !els.noTaxAreaList) return;
+    const rows = localityCandidateRows(input);
+    const selectedCode = input.localityArea ? input.localityArea.code : null;
+    if (!rows.length) {
+      setText(els.highestAreaPay, "N/A");
+      setText(els.highestAreaName, "2026 locality list only");
+      setText(els.noTaxAreaPay, "N/A");
+      setText(els.noTaxAreaName, "2026 locality list only");
+      setText(els.costAreaGap, "N/A");
+      setText(els.costAreaName, "2024 BEA RPP");
+      const emptyRow = `<div class="rank-row"><span class="rank-index">--</span><span class="rank-main"><span class="rank-title">No locality table is loaded for ${input.year}</span><span class="rank-meta">Use 2026 to compare OPM locality areas.</span></span></div>`;
+      els.highestPayList.innerHTML = emptyRow;
+      els.noTaxAreaList.innerHTML = emptyRow;
+      if (els.costAreaList) els.costAreaList.innerHTML = emptyRow;
+      setText(els.taxHighlightNote, "Census T40 collection flags are informational only and are not payroll or tax determinations.");
+      setText(els.costHighlightNote, "BEA Regional Price Parities are loaded for 2024 and are price-level measures, not OPM locality-pay or nonforeign-COLA determinations.");
+      return;
+    }
+    const top = rows.slice(0, 5);
+    const noIncomeTaxRows = rows.filter((row) => noIncomeTaxStates(row.taxInfo).length).slice(0, 5);
+    const costRows = rows
+      .filter((row) => Number.isFinite(localityVsPriceGap(row)))
+      .sort((a, b) => localityVsPriceGap(b) - localityVsPriceGap(a) || b.area.percentage - a.area.percentage || a.area.name.localeCompare(b.area.name))
+      .slice(0, 5);
+    const firstTop = top[0];
+    const firstTax = noIncomeTaxRows[0];
+    const firstCost = costRows[0];
+    setText(els.highestAreaPay, firstTop ? math.money0.format(firstTop.annual) : "N/A");
+    setText(els.highestAreaName, firstTop ? `${firstTop.area.code} | ${math.pct(firstTop.area.percentage)}` : "No area loaded");
+    setText(els.noTaxAreaPay, firstTax ? math.money0.format(firstTax.annual) : "N/A");
+    setText(els.noTaxAreaName, firstTax ? `${firstTax.area.code} | ${noIncomeTaxStates(firstTax.taxInfo).join("/")}` : "No flagged area");
+    setText(els.costAreaGap, firstCost ? signedPoints(localityVsPriceGap(firstCost)) : "N/A");
+    setText(els.costAreaName, firstCost ? `${firstCost.area.code} | BEA ${signedPercent(pricePremium(firstCost.costInfo))}` : "No BEA match loaded");
+    els.highestPayList.innerHTML = top.map((row, index) => rankRow(row, index, selectedCode, false)).join("");
+    els.noTaxAreaList.innerHTML = noIncomeTaxRows.length ? noIncomeTaxRows.map((row, index) => rankRow(row, index, selectedCode, true)).join("") : `<div class="rank-row"><span class="rank-index">--</span><span class="rank-main"><span class="rank-title">No Census T40 income-tax collection flag is loaded for ${input.year}</span><span class="rank-meta">The Census flag table is currently mapped to the 2026 OPM locality list.</span></span></div>`;
+    if (els.costAreaList) {
+      els.costAreaList.innerHTML = costRows.length ? costRows.map((row, index) => costRankRow(row, index, selectedCode)).join("") : `<div class="rank-row"><span class="rank-index">--</span><span class="rank-main"><span class="rank-title">No BEA RPP locality match is loaded for ${input.year}</span><span class="rank-meta">RUS and manual percentages do not have a single BEA price-level match.</span></span></div>`;
+    }
+    setText(els.taxHighlightNote, "Census FY2025 T40 flags mean the state individual income tax collection item is coded X. This does not model residence, duty station, local taxes, sales taxes, property taxes, deductions, or capital-gains taxes.");
+    setText(els.costHighlightNote, "BEA 2024 RPP compares local price levels with the U.S. average. Difference shown is OPM locality percent minus BEA all-items price premium; it is not an OPM COLA calculation.");
+  }
+
   function renderTrace(result) {
     const lines = math.traceFor(result);
     els.traceList.innerHTML = lines.map((line, index) => `<li><span>${String(index + 1).padStart(2, "0")}</span><p>${line}</p></li>`).join("");
@@ -290,17 +421,16 @@
     const detail = math.deriveFromAnchor(year, activeGrade, activeStep);
     let html = "<thead><tr><th>Grade</th>";
     for (let step = 1; step <= 10; step += 1) html += `<th>Step ${step}</th>`;
-    html += "<th>WGI</th></tr></thead><tbody>";
+    html += "</tr></thead><tbody>";
     schedule.forEach((row, gIndex) => {
       const grade = gIndex + 1;
-      const d = math.deriveFromAnchor(year, grade, 1);
       html += `<tr class="${grade <= 2 ? "low-grade" : ""}"><th scope="row">GS-${grade}</th>`;
       row.forEach((value, sIndex) => {
         const step = sIndex + 1;
         const selected = grade === activeGrade && step === activeStep;
         html += `<td><button class="cell-button${selected ? " selected" : ""}" data-grade="${grade}" data-step="${step}">${math.money0.format(value)}</button></td>`;
       });
-      html += `<td>${d.lowGrade ? "VARIES" : math.money0.format(d.wgi)}</td></tr>`;
+      html += "</tr>";
     });
     html += "</tbody>";
     els.scheduleTable.innerHTML = html;
@@ -355,17 +485,127 @@
     els.chartDelta.textContent = `${delta >= 0 ? "+" : "-"}${math.money0.format(Math.abs(delta))} | ${deltaPct >= 0 ? "+" : ""}${deltaPct.toFixed(1)}% from 1977`;
   }
 
+  function cpiForYear(year) {
+    const values = math.DATA.inflation && math.DATA.inflation.by_year;
+    const value = values ? Number(values[String(year)]) : NaN;
+    return Number.isFinite(value) && value > 0 ? value : null;
+  }
+
+  function latestCpiYear() {
+    const metaYear = math.DATA.inflation && Number(math.DATA.inflation.latest_completed_year);
+    if (Number.isFinite(metaYear) && cpiForYear(metaYear)) return metaYear;
+    const values = math.DATA.inflation && math.DATA.inflation.by_year;
+    if (!values) return null;
+    return Object.keys(values).map(Number).filter((year) => Number.isFinite(year) && cpiForYear(year)).sort((a, b) => b - a)[0] || null;
+  }
+
+  function cpiComparableYear(requestedYear) {
+    if (cpiForYear(requestedYear)) return requestedYear;
+    const latest = latestCpiYear();
+    return latest && requestedYear > latest ? latest : null;
+  }
+
+  function pointPath(points) {
+    return points.map((point, index) => `${index === 0 ? "M" : "L"}${point.x.toFixed(2)},${point.y.toFixed(2)}`).join(" ");
+  }
+
+  function renderInflation(input) {
+    if (!els.inflationChart) return;
+    const requestedBaseYear = input.compareYear;
+    const requestedTargetYear = input.year;
+    const baseYear = cpiComparableYear(requestedBaseYear);
+    const targetYear = cpiComparableYear(requestedTargetYear);
+    const baseCpi = baseYear ? cpiForYear(baseYear) : null;
+    const targetCpi = targetYear ? cpiForYear(targetYear) : null;
+    const startPay = baseYear ? math.deriveFromAnchor(baseYear, input.grade, input.step).base : NaN;
+    const endPay = targetYear ? math.deriveFromAnchor(targetYear, input.grade, input.step).base : NaN;
+    if (!baseCpi || !targetCpi || !Number.isFinite(startPay) || !Number.isFinite(endPay)) {
+      setText(els.inflationSummary, "BLS CPI comparison is unavailable for the selected years.");
+      setText(els.inflationActual, "N/A");
+      setText(els.inflationTarget, "N/A");
+      setText(els.inflationGap, "N/A");
+      setText(els.inflationPower, "N/A");
+      setText(els.inflationVerdict, "Unavailable");
+      setText(els.inflationNote, "Missing official BLS annual CPI");
+      els.inflationChart.innerHTML = "";
+      return;
+    }
+    const neededPay = startPay * (targetCpi / baseCpi);
+    const gap = endPay - neededPay;
+    const actualPct = startPay ? ((endPay / startPay) - 1) * 100 : 0;
+    const cpiPct = baseCpi ? ((targetCpi / baseCpi) - 1) * 100 : 0;
+    const buyingPower = neededPay ? (endPay / neededPay) * 100 : 0;
+    const latest = latestCpiYear();
+    const fallbackNote = requestedBaseYear !== baseYear || requestedTargetYear !== targetYear ? ` BLS annual CPI is loaded through ${latest}; using ${baseYear}-${targetYear}.` : "";
+    const summary = `GS-${input.grade} Step ${input.step} base pay: ${baseYear} ${math.money0.format(startPay)} to ${targetYear} ${math.money0.format(endPay)}. CPI target for the same buying power is ${math.money0.format(neededPay)}.${fallbackNote}`;
+    setText(els.inflationSummary, summary);
+    setText(els.inflationActual, `${actualPct >= 0 ? "+" : ""}${actualPct.toFixed(1)}%`);
+    setText(els.inflationTarget, `${cpiPct >= 0 ? "+" : ""}${cpiPct.toFixed(1)}%`);
+    setText(els.inflationGap, `${gap >= 0 ? "+" : "-"}${math.money0.format(Math.abs(gap))}`);
+    setText(els.inflationPower, `${buyingPower.toFixed(1)}%`);
+    setText(els.inflationTitle, `GS-${input.grade} Step ${input.step} base pay vs BLS CPI target`);
+    setText(els.inflationVerdict, gap >= 0 ? "Kept up" : "Behind CPI");
+    setText(els.inflationNote, requestedBaseYear !== baseYear || requestedTargetYear !== targetYear ? `Official BLS annual CPI through ${latest}` : `${Math.min(baseYear, targetYear)}-${Math.max(baseYear, targetYear)}`);
+
+    const firstYear = Math.min(baseYear, targetYear);
+    const lastYear = Math.max(baseYear, targetYear);
+    const years = math.YEARS.filter((year) => year >= firstYear && year <= lastYear && cpiForYear(year));
+    const actualValues = years.map((year) => math.deriveFromAnchor(year, input.grade, input.step).base);
+    const targetValues = years.map((year) => startPay * (cpiForYear(year) / baseCpi));
+    const allValues = actualValues.concat(targetValues);
+    const width = 980;
+    const height = 340;
+    const margin = { left: 76, right: 30, top: 24, bottom: 46 };
+    const innerW = width - margin.left - margin.right;
+    const innerH = height - margin.top - margin.bottom;
+    const minValue = Math.min(...allValues);
+    const maxValue = Math.max(...allValues);
+    const pad = Math.max(500, (maxValue - minValue) * 0.08);
+    const yMin = Math.max(0, minValue - pad);
+    const yMax = maxValue + pad;
+    const denom = Math.max(1, lastYear - firstYear);
+    const x = (year) => margin.left + ((year - firstYear) / denom) * innerW;
+    const y = (value) => margin.top + (1 - (value - yMin) / Math.max(1, yMax - yMin)) * innerH;
+    const actualPoints = years.map((year, index) => ({ x: x(year), y: y(actualValues[index]), year, value: actualValues[index] }));
+    const targetPoints = years.map((year, index) => ({ x: x(year), y: y(targetValues[index]), year, value: targetValues[index] }));
+    let svg = "";
+    for (let i = 0; i <= 4; i += 1) {
+      const val = yMin + ((yMax - yMin) * i) / 4;
+      const yy = y(val);
+      svg += `<line class="chart-grid" x1="${margin.left}" x2="${width - margin.right}" y1="${yy}" y2="${yy}"></line><text class="chart-axis" x="${margin.left - 10}" y="${yy + 4}" text-anchor="end">${math.money0.format(val)}</text>`;
+    }
+    years.forEach((year) => {
+      if (year === firstYear || year === lastYear || year % 5 === 0) {
+        svg += `<text class="chart-axis" x="${x(year)}" y="${height - 16}" text-anchor="middle">${year}</text>`;
+      }
+    });
+    if (actualPoints.length > 1) {
+      const area = `${pointPath(actualPoints)} ${pointPath(targetPoints.slice().reverse()).replace(/^M/, "L")} Z`;
+      svg += `<path class="inflation-area" d="${area}"></path>`;
+      svg += `<path class="inflation-line target" d="${pointPath(targetPoints)}"></path>`;
+      svg += `<path class="inflation-line actual" d="${pointPath(actualPoints)}"></path>`;
+    }
+    const selectedActual = actualPoints.find((point) => point.year === targetYear) || actualPoints[actualPoints.length - 1];
+    const selectedTarget = targetPoints.find((point) => point.year === targetYear) || targetPoints[targetPoints.length - 1];
+    if (selectedActual && selectedTarget) {
+      svg += `<circle class="inflation-dot actual" cx="${selectedActual.x}" cy="${selectedActual.y}" r="6"><title>${targetYear} actual ${math.money0.format(endPay)}</title></circle>`;
+      svg += `<circle class="inflation-dot target" cx="${selectedTarget.x}" cy="${selectedTarget.y}" r="6"><title>${targetYear} CPI target ${math.money0.format(neededPay)}</title></circle>`;
+    }
+    svg += `<g class="inflation-legend"><line class="inflation-line actual" x1="${width - 268}" x2="${width - 224}" y1="30" y2="30"></line><text x="${width - 214}" y="34">Actual base pay</text><line class="inflation-line target" x1="${width - 268}" x2="${width - 224}" y1="54" y2="54"></line><text x="${width - 214}" y="58">BLS CPI target</text></g>`;
+    els.inflationChart.innerHTML = svg;
+  }
+
   function DATA_CHECKPOINT_YEARS() {
     return math.DATA.checkpoints.anchor_years;
   }
 
   function renderLedger(grade, step) {
-    let html = `<thead><tr><th>Year</th><th>Base adj.</th><th>Status</th><th>Step 1</th><th>WGI</th><th>GS-${grade}/${step}</th><th>YoY</th></tr></thead><tbody>`;
+    let html = `<thead><tr><th>Year</th><th>Base adj.</th><th>Status</th><th>Step 1</th><th>GS-${grade}/${step}</th><th>YoY</th></tr></thead><tbody>`;
     let previous = null;
     math.YEARS.forEach((year) => {
       const d = math.deriveFromAnchor(year, grade, step);
       const yoy = previous === null ? null : d.base - previous;
-      html += `<tr><td>${year}</td><td>${math.pct(d.adjustment)}</td><td><span class="mini-status" data-status-class="${d.statusClass}">${math.escapeHtml(d.status)}</span></td><td>${d.lowGrade ? "N/A" : math.money0.format(d.step1)}</td><td>${d.lowGrade ? "VARIES" : math.money0.format(d.wgi)}</td><td>${math.money0.format(d.base)}</td><td>${yoy === null ? "N/A" : `${yoy >= 0 ? "+" : "-"}${math.money0.format(Math.abs(yoy))}`}</td></tr>`;
+      html += `<tr><td>${year}</td><td>${math.pct(d.adjustment)}</td><td><span class="mini-status" data-status-class="${d.statusClass}">${math.escapeHtml(d.status)}</span></td><td>${d.lowGrade ? "N/A" : math.money0.format(d.step1)}</td><td>${math.money0.format(d.base)}</td><td>${yoy === null ? "N/A" : `${yoy >= 0 ? "+" : "-"}${math.money0.format(Math.abs(yoy))}`}</td></tr>`;
       previous = d.base;
     });
     html += "</tbody>";
@@ -537,8 +777,8 @@
     const minValue = Math.min(...flat);
     const maxValue = Math.max(...flat);
     const span = Math.max(1, maxValue - minValue);
-    const yaw = (Number(els.surfaceYaw.value) || 0) * Math.PI / 180;
-    const tilt = (Number(els.surfaceTilt.value) || 38) * Math.PI / 180;
+    const yaw = surfaceView.yaw * Math.PI / 180;
+    const tilt = surfaceView.tilt * Math.PI / 180;
     const scale = Math.min(width * 0.34, height * 0.43);
     const centerX = width * 0.5;
     const baseY = height * 0.76;
@@ -739,8 +979,8 @@
     const primary = series.find((item) => item.scenario.primary) || series[series.length - 1];
     const baseline = series.find((item) => item.scenario.key === "base") || series[0];
     const minTotal = Math.min(...series.map((item) => item.total));
-    const yaw = Number(els.surfaceYaw.value) || 34;
-    const tilt = Number(els.surfaceTilt.value) || 38;
+    const yaw = surfaceView.yaw;
+    const tilt = surfaceView.tilt;
     const depthMagnitude = (width > 720 ? 16 : 10) + (Math.abs(yaw) / 65) * (width > 720 ? 22 : 14);
     const depthX = (yaw < 0 ? -1 : 1) * depthMagnitude;
     const depthY = (width > 720 ? 7 : 5) + (tilt / 62) * (width > 720 ? 15 : 10);
@@ -978,9 +1218,11 @@
     } : null;
     renderSummary(result, compare);
     renderPayPicture(result);
+    renderLocalityHighlights(input);
     renderTrace(result);
     renderSchedule(input.year, input.grade, input.step);
     renderChart(input.year, input.grade, input.step);
+    renderInflation(input);
     renderLedger(input.grade, input.step);
     render3DLab(input);
   }
@@ -1022,8 +1264,8 @@
       els.earnEnd.value = "2026";
       els.compareMode.value = "grades";
       els.surfaceYearSpan.value = "25";
-      els.surfaceYaw.value = "34";
-      els.surfaceTilt.value = "38";
+      surfaceView.yaw = 34;
+      surfaceView.tilt = 38;
       renderAll();
     });
     els.year.addEventListener("change", () => {
@@ -1040,7 +1282,6 @@
     });
     [els.grade, els.step, els.compareYear, els.cap, els.applyCap].forEach((el) => el.addEventListener("change", renderAll));
     [els.surfaceMode, els.earnStart, els.earnEnd, els.compareMode, els.surfaceYearSpan].forEach((el) => el.addEventListener("change", renderAll));
-    [els.surfaceYaw, els.surfaceTilt].forEach((el) => el.addEventListener("input", renderAll));
     els.scheduleTable.addEventListener("click", (event) => {
       const button = event.target.closest(".cell-button");
       if (!button) return;
@@ -1070,8 +1311,8 @@
       const dy = event.clientY - surfaceDrag.y;
       surfaceDrag.x = event.clientX;
       surfaceDrag.y = event.clientY;
-      els.surfaceYaw.value = String(Math.round(clamp(Number(els.surfaceYaw.value) + dx * 0.35, -65, 65)));
-      els.surfaceTilt.value = String(Math.round(clamp(Number(els.surfaceTilt.value) - dy * 0.25, 18, 62)));
+      surfaceView.yaw = Math.round(clamp(surfaceView.yaw + dx * 0.35, -65, 65));
+      surfaceView.tilt = Math.round(clamp(surfaceView.tilt - dy * 0.25, 18, 62));
       renderAll();
     });
     ["pointerup", "pointercancel", "pointerleave"].forEach((type) => {
@@ -1084,12 +1325,10 @@
       });
     });
     els.paySurfaceCanvas.addEventListener("keydown", (event) => {
-      const yaw = Number(els.surfaceYaw.value);
-      const tilt = Number(els.surfaceTilt.value);
-      if (event.key === "ArrowLeft") els.surfaceYaw.value = String(clamp(yaw - 3, -65, 65));
-      else if (event.key === "ArrowRight") els.surfaceYaw.value = String(clamp(yaw + 3, -65, 65));
-      else if (event.key === "ArrowUp") els.surfaceTilt.value = String(clamp(tilt + 3, 18, 62));
-      else if (event.key === "ArrowDown") els.surfaceTilt.value = String(clamp(tilt - 3, 18, 62));
+      if (event.key === "ArrowLeft") surfaceView.yaw = Math.round(clamp(surfaceView.yaw - 3, -65, 65));
+      else if (event.key === "ArrowRight") surfaceView.yaw = Math.round(clamp(surfaceView.yaw + 3, -65, 65));
+      else if (event.key === "ArrowUp") surfaceView.tilt = Math.round(clamp(surfaceView.tilt + 3, 18, 62));
+      else if (event.key === "ArrowDown") surfaceView.tilt = Math.round(clamp(surfaceView.tilt - 3, 18, 62));
       else return;
       event.preventDefault();
       renderAll();

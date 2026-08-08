@@ -244,40 +244,6 @@ button {
 
 main {
   min-width: 0;
-  display: flex;
-  flex-direction: column;
-}
-
-main > #calculator {
-  order: 1;
-}
-
-main > #pay-surface {
-  order: 2;
-}
-
-main > #ledger {
-  order: 3;
-}
-
-main > #formula-proof {
-  order: 4;
-}
-
-main > #home {
-  order: 5;
-}
-
-main > #math-vs-files {
-  order: 6;
-}
-
-main > #validation {
-  order: 7;
-}
-
-main > #sources {
-  order: 8;
 }
 
 .section {
@@ -290,18 +256,6 @@ main > #sources {
   margin: 0 auto;
 }
 
-.hero {
-  position: relative;
-  min-height: 360px;
-  display: flex;
-  align-items: center;
-  overflow: hidden;
-  background:
-    linear-gradient(90deg, color-mix(in srgb, var(--panel) 92%, transparent), color-mix(in srgb, var(--panel-soft) 84%, transparent)),
-    repeating-linear-gradient(0deg, transparent 0 32px, rgba(14, 165, 198, 0.08) 33px),
-    repeating-linear-gradient(90deg, transparent 0 42px, rgba(19, 143, 136, 0.08) 43px);
-}
-
 .watermark {
   position: fixed;
   right: clamp(8px, 5vw, 72px);
@@ -312,15 +266,10 @@ main > #sources {
   pointer-events: none;
 }
 
-.hero h1,
 .section h2 {
   margin: 0 0 12px;
-  font-size: 2.55rem;
-  line-height: 1.08;
-}
-
-.section h2 {
   font-size: 1.9rem;
+  line-height: 1.08;
 }
 
 .kicker {
@@ -330,13 +279,6 @@ main > #sources {
   text-transform: uppercase;
 }
 
-.hero-copy {
-  max-width: 760px;
-  color: var(--muted);
-  font-size: 1.15rem;
-}
-
-.hero-actions,
 .button-row {
   display: flex;
   flex-wrap: wrap;
@@ -344,11 +286,11 @@ main > #sources {
   margin-top: 20px;
 }
 
-.hero-metrics,
 .result-grid,
 .proof-grid,
 .validation-grid,
-.size-totals {
+.size-totals,
+.inflation-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 12px;
@@ -448,7 +390,8 @@ main > #sources {
 }
 
 .pay-picture-panel,
-.pay-table-panel {
+.pay-table-panel,
+.locality-highlights {
   margin-top: 18px;
 }
 
@@ -458,6 +401,90 @@ main > #sources {
   overflow: hidden;
   background: var(--panel);
   box-shadow: var(--shadow);
+}
+
+.locality-highlights {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 14px;
+}
+
+.highlight-card {
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px;
+  background: var(--panel);
+  box-shadow: var(--shadow);
+}
+
+.highlight-card h3 {
+  margin: 0;
+}
+
+.rank-list {
+  display: grid;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.rank-row {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) minmax(94px, auto);
+  gap: 10px;
+  align-items: center;
+  padding: 9px 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--panel-soft);
+}
+
+.rank-row.is-selected {
+  border-color: var(--orange);
+  box-shadow: inset 4px 0 0 var(--orange);
+}
+
+.rank-index {
+  color: var(--teal);
+  font-family: var(--mono);
+  font-weight: 850;
+}
+
+.rank-main {
+  min-width: 0;
+}
+
+.rank-title,
+.rank-value {
+  display: block;
+  color: var(--ink);
+  font-weight: 850;
+}
+
+.rank-title {
+  overflow-wrap: anywhere;
+}
+
+.rank-meta,
+.rank-badge {
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
+.rank-badge {
+  display: inline-flex;
+  width: fit-content;
+  margin-top: 3px;
+  border: 1px solid color-mix(in srgb, var(--green) 54%, var(--line));
+  border-radius: 999px;
+  padding: 2px 7px;
+  color: var(--green);
+  background: color-mix(in srgb, var(--green) 10%, var(--panel));
+}
+
+.rank-value {
+  text-align: right;
 }
 
 #payPicture {
@@ -745,7 +772,8 @@ thead th {
 }
 
 .chart svg,
-#timelineChart {
+#timelineChart,
+#inflationChart {
   width: 100%;
   height: auto;
   min-height: 240px;
@@ -783,6 +811,52 @@ thead th {
 .chart-dot.active {
   fill: var(--orange);
   stroke: var(--orange);
+}
+
+.inflation-section {
+  background: linear-gradient(180deg, var(--bg), color-mix(in srgb, var(--panel-soft) 70%, var(--bg)));
+}
+
+.inflation-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.inflation-line {
+  fill: none;
+  stroke-width: 4;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.inflation-line.actual {
+  stroke: var(--teal);
+}
+
+.inflation-line.target {
+  stroke: var(--orange);
+  stroke-dasharray: 8 7;
+}
+
+.inflation-area {
+  fill: color-mix(in srgb, var(--orange) 18%, transparent);
+}
+
+.inflation-dot.actual {
+  fill: var(--teal);
+  stroke: var(--panel);
+  stroke-width: 2;
+}
+
+.inflation-dot.target {
+  fill: var(--orange);
+  stroke: var(--panel);
+  stroke-width: 2;
+}
+
+.inflation-legend text {
+  fill: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
 }
 
 .surface-section {
@@ -1010,8 +1084,7 @@ html[data-shell="module"] .return-link {
   display: inline-flex;
 }
 
-html[data-shell="module"] .sidebar,
-html[data-shell="module"] .hero .hero-metrics {
+html[data-shell="module"] .sidebar {
   display: none;
 }
 
@@ -1019,19 +1092,15 @@ html[data-shell="module"] .layout {
   grid-template-columns: minmax(0, 1fr);
 }
 
-html[data-shell="module"] .hero {
-  min-height: auto;
-}
-
 @media (max-width: 1040px) {
   :root {
     --side-w: 238px;
   }
 
-  .hero-metrics,
   .result-grid,
   .validation-grid,
-  .size-totals {
+  .size-totals,
+  .inflation-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -1073,10 +1142,6 @@ html[data-shell="module"] .hero {
     display: none;
   }
 
-  .hero {
-    min-height: auto;
-  }
-
   .watermark {
     right: 8px;
     top: calc(var(--topbar-h) + 12px);
@@ -1102,20 +1167,16 @@ html[data-shell="module"] .hero {
     padding: 26px 12px;
   }
 
-  .hero h1,
   .section h2 {
     font-size: 1.65rem;
   }
 
-  .hero-copy {
-    font-size: 1rem;
-  }
-
-  .hero-metrics,
   .result-grid,
   .proof-grid,
   .validation-grid,
   .size-totals,
+  .inflation-grid,
+  .locality-highlights,
   .columns {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -1144,6 +1205,15 @@ html[data-shell="module"] .hero {
     grid-column: auto;
   }
 
+  .rank-row {
+    grid-template-columns: 30px minmax(0, 1fr);
+  }
+
+  .rank-value {
+    grid-column: 2;
+    text-align: left;
+  }
+
   #paySurfaceCanvas {
     height: 390px;
   }
@@ -1166,7 +1236,6 @@ html[data-shell="module"] .hero {
   body::before,
   .topbar,
   .sidebar,
-  .hero-actions,
   .button-row,
   .nav-drawer,
   .watermark {
@@ -1184,10 +1253,6 @@ html[data-shell="module"] .hero {
 
   .section-inner {
     width: 100%;
-  }
-
-  .hero {
-    min-height: auto;
   }
 
   .table-wrap {

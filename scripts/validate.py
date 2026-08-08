@@ -1,9 +1,10 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 import json
 import re
 import sys
 from pathlib import Path
+from urllib.parse import urlparse
 
 from pay_math import DATA, build_schedule, calculation_record, compute_pay, derive_from_anchor, validation_receipt, years
 from receipt_utils import ROOT, write_json
@@ -15,11 +16,45 @@ SECRET_PATTERNS = [
     re.compile(r"github_pat_[A-Za-z0-9_]{20,}"),
     re.compile(r"-----BEGIN (RSA |OPENSSH |EC )?PRIVATE KEY-----"),
 ]
+FORBIDDEN_DATA_SOURCE_TEXT = (
+    "taxfoundation",
+    "minneapolisfed.org",
+    "federal reserve bank of minneapolis",
+)
 
 
 def assert_true(condition: bool, message: str) -> None:
     if not condition:
         raise AssertionError(message)
+
+
+def walk_json_values(value):
+    if isinstance(value, dict):
+        for item in value.values():
+            yield from walk_json_values(item)
+    elif isinstance(value, list):
+        for item in value:
+            yield from walk_json_values(item)
+    else:
+        yield value
+
+
+def data_source_policy_findings() -> list[str]:
+    findings: list[str] = []
+    for path in (ROOT / "data").glob("*.json"):
+        text = path.read_text(encoding="utf-8-sig")
+        lowered = text.lower()
+        for needle in FORBIDDEN_DATA_SOURCE_TEXT:
+            if needle in lowered:
+                findings.append(f"removed non-gov source text in {path.relative_to(ROOT)}: {needle}")
+        payload = json.loads(text)
+        for value in walk_json_values(payload):
+            if not isinstance(value, str) or not value.startswith(("http://", "https://")):
+                continue
+            host = (urlparse(value).hostname or "").lower()
+            if not host.endswith(".gov"):
+                findings.append(f"non-.gov data source URL in {path.relative_to(ROOT)}: {value}")
+    return findings
 
 
 def scan_site_text() -> list[str]:
@@ -86,10 +121,11 @@ def main() -> None:
         assert_true(label in status_labels, f"missing status label {label}")
     assert_true(calculation_record(2026, 12, 10)["classification"] != "Formula reconstruction", "official fixture mislabeled")
 
+    data_source_findings = data_source_policy_findings()
     site_findings = scan_site_text()
     link_findings = local_links_resolve()
-    if site_findings or link_findings:
-        raise AssertionError(json.dumps({"site_findings": site_findings, "link_findings": link_findings}, indent=2))
+    if data_source_findings or site_findings or link_findings:
+        raise AssertionError(json.dumps({"data_source_findings": data_source_findings, "site_findings": site_findings, "link_findings": link_findings}, indent=2))
 
     print("validation passed: 50 years, 7,500 cells, 150/150 official 2026 cells")
 
@@ -100,5 +136,3 @@ if __name__ == "__main__":
     except Exception as exc:
         print(f"validation failed: {exc}", file=sys.stderr)
         raise
-
-
