@@ -380,6 +380,10 @@ main {
   color: var(--ink);
 }
 
+.wide-field {
+  grid-column: span 2;
+}
+
 .check-field {
   min-height: 40px;
   display: flex;
@@ -596,6 +600,122 @@ thead th {
   stroke: var(--orange);
 }
 
+.surface-section {
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--navy) 92%, black), color-mix(in srgb, var(--navy) 76%, var(--teal))),
+    var(--navy);
+  color: #f8fbff;
+}
+
+.surface-section .kicker,
+.surface-section .tag {
+  color: #9bd8e7;
+}
+
+.surface-section .section-lede,
+.surface-section .field label {
+  color: #b8cad8;
+}
+
+.surface-inner {
+  width: min(1380px, 100%);
+}
+
+.surface-lab {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 340px);
+  gap: 18px;
+  align-items: start;
+  margin-top: 18px;
+}
+
+.surface-stage {
+  min-width: 0;
+}
+
+.surface-head {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.surface-head h3,
+.mini-chart-panel h3 {
+  margin: 6px 0 0;
+}
+
+#paySurfaceCanvas {
+  width: 100%;
+  height: clamp(380px, 48vw, 660px);
+  display: block;
+  border-radius: 8px;
+  cursor: grab;
+  touch-action: none;
+}
+
+#paySurfaceCanvas:active {
+  cursor: grabbing;
+}
+
+#paySurfaceCanvas:focus-visible,
+.mini-chart-panel canvas:focus-visible {
+  outline: 3px solid var(--orange);
+  outline-offset: 3px;
+}
+
+.surface-controls {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+
+.surface-panel {
+  border: 1px solid rgba(155, 216, 231, 0.28);
+  border-radius: 8px;
+  padding: 12px;
+  background: rgba(4, 16, 31, 0.58);
+}
+
+.control-panel {
+  display: grid;
+  gap: 10px;
+}
+
+.control-panel input[type="range"] {
+  accent-color: var(--orange);
+}
+
+.surface-readouts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.surface-readouts span {
+  display: block;
+  color: #b8cad8;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.surface-readouts strong {
+  display: block;
+  margin-top: 3px;
+  color: #ffffff;
+  font-size: 1.2rem;
+}
+
+.mini-chart-panel canvas {
+  width: 100%;
+  height: 190px;
+  display: block;
+  margin-top: 10px;
+  border-radius: 6px;
+}
+
 .size-bars {
   display: grid;
   gap: 10px;
@@ -726,6 +846,19 @@ html[data-shell="module"] .hero {
   .form-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
+
+  .surface-lab {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .surface-controls {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .control-panel,
+  .surface-readouts {
+    grid-column: 1 / -1;
+  }
 }
 
 @media (max-width: 820px) {
@@ -796,6 +929,23 @@ html[data-shell="module"] .hero {
 
   .form-grid {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .wide-field {
+    grid-column: auto;
+  }
+
+  .surface-head {
+    display: grid;
+  }
+
+  .surface-controls,
+  .surface-readouts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #paySurfaceCanvas {
+    height: 390px;
   }
 
   .bar-row {

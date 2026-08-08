@@ -17,6 +17,7 @@ class PayData:
     checkpoints: dict[str, Any]
     validation: dict[str, Any]
     locality: dict[str, Any]
+    locality_rates: dict[str, Any]
     sources: dict[str, Any]
 
 
@@ -26,6 +27,7 @@ def load_pay_data(root: Path = ROOT) -> PayData:
         checkpoints=read_json(root / "data" / "historical-checkpoints.json"),
         validation=read_json(root / "data" / "official-validation.json"),
         locality=read_json(root / "data" / "locality-examples.json"),
+        locality_rates=read_json(root / "data" / "locality-rates.json"),
         sources=read_json(root / "data" / "sources.json"),
     )
 

@@ -35,6 +35,7 @@
         <a href="#calculator">Calculator</a>
         <a href="#formula-proof">Formula Proof</a>
         <a href="#ledger">Fifty-Year Ledger</a>
+        <a href="#pay-surface">3D Pay Lab</a>
         <a href="#full-schedule">Full Schedule</a>
         <a href="#math-vs-files">Math vs. Files</a>
         <a href="#validation">Validation</a>
@@ -51,6 +52,7 @@
         <a href="#calculator">Calculator</a>
         <a href="#formula-proof">Formula Proof</a>
         <a href="#ledger">Fifty-Year Ledger</a>
+        <a href="#pay-surface">3D Pay Lab</a>
         <a href="#full-schedule">Full Schedule</a>
         <a href="#math-vs-files">Math vs. Files</a>
         <a href="#validation">Validation</a>
@@ -86,11 +88,12 @@
         <div class="section-inner">
           <p class="kicker">Calculator</p>
           <h2>Run a pay-cell proof</h2>
-          <p class="section-lede">Select a year, grade, step, locality percentage, and cap. The visible result and downloadable calculation record come from the same formula functions.</p>
+          <p class="section-lede">Select a year, grade, step, locality area or percentage, and cap. The visible result and downloadable calculation record come from the same formula functions.</p>
           <div class="form-grid">
             <div class="field"><label for="year">Year</label><select id="year"></select></div>
             <div class="field"><label for="grade">Grade</label><select id="grade"></select></div>
             <div class="field"><label for="step">Step</label><select id="step"></select></div>
+            <div class="field wide-field"><label for="localityArea">Locality area</label><select id="localityArea"></select></div>
             <div class="field"><label for="locality">Locality percent</label><input id="locality" type="number" min="0" max="100" step="0.01" value="17.06" inputmode="decimal"></div>
             <div class="field"><label for="cap">Annual cap</label><input id="cap" type="number" min="0" step="1" value="197200" inputmode="numeric"></div>
             <label class="check-field"><input id="applyCap" type="checkbox" checked> Apply cap</label>
@@ -142,6 +145,47 @@
           </div>
           <div class="table-wrap">
             <table id="ledgerTable"></table>
+          </div>
+        </div>
+      </section>
+
+      <section class="section surface-section" id="pay-surface">
+        <div class="section-inner surface-inner">
+          <p class="kicker">3D Pay Lab</p>
+          <h2>Pay surface, locality lift, and cap pressure</h2>
+          <p class="section-lede">The selected calculator inputs drive these offline canvas views, so the visuals and proof record stay in sync.</p>
+          <div class="surface-lab">
+            <div class="surface-stage">
+              <div class="surface-head">
+                <div>
+                  <span class="tag">Orbitable surface</span>
+                  <h3 id="surfaceTitle">GS pay surface</h3>
+                </div>
+                <div class="chart-metric"><strong id="surfacePeak">$0</strong><span id="surfaceRange">selected range</span></div>
+              </div>
+              <canvas id="paySurfaceCanvas" width="1200" height="660" tabindex="0" role="img" aria-describedby="paySurfaceDescription">Your browser does not support Canvas.</canvas>
+              <p id="paySurfaceDescription" class="sr-output">Three-dimensional pay surface by year and grade for the selected step, locality percentage, and cap settings.</p>
+            </div>
+            <aside class="surface-controls" aria-label="3D pay lab controls">
+              <div class="surface-panel control-panel">
+                <div class="field"><label for="surfaceMode">Surface metric</label><select id="surfaceMode"><option value="annual" selected>Annual with locality/cap</option><option value="base">Base pay</option><option value="hourly">Hourly</option></select></div>
+                <div class="field"><label for="surfaceYearSpan">Years shown</label><select id="surfaceYearSpan"><option value="10">10 years</option><option value="25" selected>25 years</option><option value="50">50 years</option></select></div>
+                <div class="field"><label for="surfaceYaw">Yaw</label><input id="surfaceYaw" type="range" min="-65" max="65" step="1" value="34"></div>
+                <div class="field"><label for="surfaceTilt">Tilt</label><input id="surfaceTilt" type="range" min="18" max="62" step="1" value="38"></div>
+              </div>
+              <div class="surface-panel surface-readouts">
+                <div><span>Selected cell</span><strong id="surfaceSelected">$0</strong></div>
+                <div><span>Grade spread</span><strong id="surfaceSpread">$0</strong></div>
+              </div>
+              <div class="surface-panel mini-chart-panel">
+                <h3>Locality lift</h3>
+                <canvas id="localityLiftCanvas" width="520" height="280" role="img" aria-label="Locality lift chart">Your browser does not support Canvas.</canvas>
+              </div>
+              <div class="surface-panel mini-chart-panel">
+                <h3>Cap pressure</h3>
+                <canvas id="capPressureCanvas" width="520" height="280" role="img" aria-label="Cap pressure chart">Your browser does not support Canvas.</canvas>
+              </div>
+            </aside>
           </div>
         </div>
       </section>

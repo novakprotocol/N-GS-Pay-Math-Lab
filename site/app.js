@@ -10,6 +10,7 @@
     compareYear: $("compareYear"),
     grade: $("grade"),
     step: $("step"),
+    localityArea: $("localityArea"),
     locality: $("locality"),
     cap: $("cap"),
     applyCap: $("applyCap"),
@@ -46,14 +47,32 @@
     sizeStamp: $("sizeStamp"),
     sizeTable: $("sizeTable"),
     sizeBars: $("sizeBars"),
+    surfaceMode: $("surfaceMode"),
+    surfaceYearSpan: $("surfaceYearSpan"),
+    surfaceYaw: $("surfaceYaw"),
+    surfaceTilt: $("surfaceTilt"),
+    surfaceTitle: $("surfaceTitle"),
+    surfacePeak: $("surfacePeak"),
+    surfaceRange: $("surfaceRange"),
+    surfaceSelected: $("surfaceSelected"),
+    surfaceSpread: $("surfaceSpread"),
+    paySurfaceCanvas: $("paySurfaceCanvas"),
+    localityLiftCanvas: $("localityLiftCanvas"),
+    capPressureCanvas: $("capPressureCanvas"),
     sourceList: $("sourceList"),
     buildMeta: $("buildMeta")
   };
 
   let lastRecord = null;
+  const surfaceDrag = { active: false, pointerId: null, x: 0, y: 0 };
+  let resizeTimer = null;
 
   function setText(el, value) {
     if (el) el.textContent = value;
+  }
+
+  function clamp(value, min, max) {
+    return Math.min(max, Math.max(min, value));
   }
 
   function option(label, value) {
@@ -61,6 +80,49 @@
     node.textContent = label;
     node.value = value;
     return node;
+  }
+
+  function localityAreasForYear(year) {
+    const rates = math.DATA.localityRates && math.DATA.localityRates.by_year;
+    const areas = rates ? rates[String(year)] : null;
+    return Array.isArray(areas) ? areas : [];
+  }
+
+  function localityAreaByCode(year, code) {
+    return localityAreasForYear(year).find((area) => area.code === code) || null;
+  }
+
+  function fillLocalityAreas(year, preferredCode) {
+    const areas = localityAreasForYear(year);
+    els.localityArea.innerHTML = "";
+    els.localityArea.appendChild(option("Manual / custom percentage", "custom"));
+    areas.forEach((area) => {
+      els.localityArea.appendChild(option(`${area.name} (${math.pct(area.percentage)})`, area.code));
+    });
+    if (!areas.length) {
+      els.localityArea.value = "custom";
+      return;
+    }
+    const fallback = localityAreaByCode(year, preferredCode) ? preferredCode : "RUS";
+    els.localityArea.value = localityAreaByCode(year, fallback) ? fallback : areas[0].code;
+  }
+
+  function selectedLocalityArea() {
+    const inputYear = Number(els.year.value || 2026);
+    return localityAreaByCode(inputYear, els.localityArea.value);
+  }
+
+  function syncLocalityFromArea() {
+    const area = selectedLocalityArea();
+    if (area) els.locality.value = area.percentage.toFixed(2);
+  }
+
+  function syncAreaFromManualPercent() {
+    const area = selectedLocalityArea();
+    const value = Number(els.locality.value);
+    if (area && (!Number.isFinite(value) || Math.abs(value - area.percentage) > 0.005)) {
+      els.localityArea.value = "custom";
+    }
   }
 
   function fillControls() {
@@ -78,6 +140,8 @@
     els.compareYear.value = "1977";
     els.grade.value = "12";
     els.step.value = "10";
+    fillLocalityAreas(2026, "RUS");
+    syncLocalityFromArea();
   }
 
   function knownCap(year) {
@@ -86,7 +150,14 @@
   }
 
   function setYearDefaults(year) {
-    els.locality.value = year === 2026 ? "17.06" : year < 1994 ? "0" : els.locality.value;
+    const previousArea = els.localityArea.value || "RUS";
+    fillLocalityAreas(year, previousArea);
+    const area = selectedLocalityArea();
+    if (area) {
+      els.locality.value = area.percentage.toFixed(2);
+    } else if (year < 1994) {
+      els.locality.value = "0";
+    }
     const cap = knownCap(year);
     els.cap.value = Number.isFinite(cap) ? String(cap) : "";
   }
@@ -102,6 +173,7 @@
       grade,
       step,
       localityPct,
+      localityArea: selectedLocalityArea(),
       capValue,
       applyCap: els.applyCap.checked,
       compareYear: Number(els.compareYear.value)
@@ -126,7 +198,9 @@
     els.statusBadge.dataset.statusClass = result.statusClass;
     const diff = result.base - compare.base;
     const diffPct = compare.base ? (diff / compare.base) * 100 : 0;
-    els.resultNote.textContent = `${eraDescription(result)}. ${diff >= 0 ? "+" : "-"}${math.money0.format(Math.abs(diff))} (${diffPct >= 0 ? "+" : ""}${diffPct.toFixed(1)}%) vs. ${compare.year}.`;
+    const area = selectedLocalityArea();
+    const areaText = area ? `${area.name} locality (${math.pct(area.percentage)})` : `manual locality (${math.pct(result.localityPct)})`;
+    els.resultNote.textContent = `${areaText}. ${eraDescription(result)}. ${diff >= 0 ? "+" : "-"}${math.money0.format(Math.abs(diff))} (${diffPct >= 0 ? "+" : ""}${diffPct.toFixed(1)}%) vs. ${compare.year}.`;
   }
 
   function renderTrace(result) {
@@ -259,6 +333,333 @@
     }).join("");
   }
 
+
+  function themeColors() {
+    const root = getComputedStyle(document.documentElement);
+    const read = (name, fallback) => root.getPropertyValue(name).trim() || fallback;
+    return {
+      bg: read("--navy", "#071a2d"),
+      panel: read("--panel", "#ffffff"),
+      ink: read("--ink", "#172033"),
+      muted: read("--muted", "#637083"),
+      line: read("--line", "#c9d7e4"),
+      teal: read("--teal", "#138f88"),
+      cyan: read("--cyan", "#0ea5c6"),
+      blue: read("--blue", "#1d5fa7"),
+      orange: read("--orange", "#c65d21"),
+      magenta: read("--magenta", "#a73383"),
+      green: read("--green", "#1d7d45")
+    };
+  }
+
+  function rgbParts(color) {
+    const value = String(color).trim();
+    const hex = value.match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i);
+    if (hex) {
+      const raw = hex[1].length === 3 ? hex[1].split("").map((c) => c + c).join("") : hex[1];
+      return [0, 2, 4].map((i) => parseInt(raw.slice(i, i + 2), 16));
+    }
+    const rgb = value.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/i);
+    if (rgb) return [Number(rgb[1]), Number(rgb[2]), Number(rgb[3])];
+    return [19, 143, 136];
+  }
+
+  function rgbaColor(color, alpha) {
+    const [r, g, b] = rgbParts(color);
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  }
+
+  function blendColor(a, b, t) {
+    const left = rgbParts(a);
+    const right = rgbParts(b);
+    const mix = left.map((value, index) => Math.round(value + (right[index] - value) * Math.max(0, Math.min(1, t))));
+    return `rgb(${mix[0]}, ${mix[1]}, ${mix[2]})`;
+  }
+
+  function canvasMetrics(canvas, minHeight) {
+    const rect = canvas.getBoundingClientRect();
+    const cssWidth = Math.max(320, rect.width || canvas.clientWidth || canvas.width || 320);
+    const cssHeight = Math.max(minHeight, rect.height || canvas.clientHeight || minHeight);
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const pixelWidth = Math.round(cssWidth * dpr);
+    const pixelHeight = Math.round(cssHeight * dpr);
+    if (canvas.width !== pixelWidth || canvas.height !== pixelHeight) {
+      canvas.width = pixelWidth;
+      canvas.height = pixelHeight;
+    }
+    const ctx = canvas.getContext("2d");
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return { ctx, width: cssWidth, height: cssHeight };
+  }
+
+  function clearCanvas(ctx, width, height, colors) {
+    const bg = ctx.createLinearGradient(0, 0, width, height);
+    bg.addColorStop(0, rgbaColor(colors.bg, 0.96));
+    bg.addColorStop(0.55, rgbaColor(colors.blue, 0.32));
+    bg.addColorStop(1, rgbaColor(colors.teal, 0.24));
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, width, height);
+    ctx.strokeStyle = rgbaColor(colors.cyan, 0.16);
+    ctx.lineWidth = 1;
+    for (let x = -height; x < width + height; x += 44) {
+      ctx.beginPath();
+      ctx.moveTo(x, height);
+      ctx.lineTo(x + height, 0);
+      ctx.stroke();
+    }
+  }
+
+  function surfaceYears(selectedYear, span) {
+    const selectedIndex = math.YEARS.indexOf(selectedYear);
+    const endIndex = selectedIndex >= 0 ? selectedIndex : math.YEARS.length - 1;
+    const startIndex = Math.max(0, endIndex - span + 1);
+    let years = math.YEARS.slice(startIndex, endIndex + 1);
+    if (years.length < 2) years = math.YEARS.slice(0, Math.min(span, math.YEARS.length));
+    return years;
+  }
+
+  function surfaceMetricValue(year, grade, step, input, mode) {
+    if (mode === "base") return math.deriveFromAnchor(year, grade, step).base;
+    const result = math.computePay(year, grade, step, input.localityPct, input.capValue, input.applyCap);
+    return mode === "hourly" ? result.hourly : result.annual;
+  }
+
+  function surfaceMoney(value, mode) {
+    return mode === "hourly" ? math.money2.format(value) : math.money0.format(value);
+  }
+
+  function surfaceLabel(mode) {
+    if (mode === "base") return "Base pay";
+    if (mode === "hourly") return "Hourly";
+    return "Annual with locality/cap";
+  }
+
+  function polygon(ctx, points, fill, stroke, lineWidth = 1) {
+    ctx.beginPath();
+    points.forEach((point, index) => {
+      if (index === 0) ctx.moveTo(point.x, point.y);
+      else ctx.lineTo(point.x, point.y);
+    });
+    ctx.closePath();
+    ctx.fillStyle = fill;
+    ctx.fill();
+    ctx.strokeStyle = stroke;
+    ctx.lineWidth = lineWidth;
+    ctx.stroke();
+  }
+
+  function renderPaySurface(input) {
+    const canvas = els.paySurfaceCanvas;
+    if (!canvas) return;
+    const colors = themeColors();
+    const { ctx, width, height } = canvasMetrics(canvas, 360);
+    clearCanvas(ctx, width, height, colors);
+    const mode = els.surfaceMode.value || "annual";
+    const years = surfaceYears(input.year, Number(els.surfaceYearSpan.value) || 25);
+    const grades = Array.from({ length: 15 }, (_, index) => index + 1);
+    const values = years.map((year) => grades.map((grade) => surfaceMetricValue(year, grade, input.step, input, mode)));
+    const flat = values.flat();
+    const minValue = Math.min(...flat);
+    const maxValue = Math.max(...flat);
+    const span = Math.max(1, maxValue - minValue);
+    const yaw = (Number(els.surfaceYaw.value) || 0) * Math.PI / 180;
+    const tilt = (Number(els.surfaceTilt.value) || 38) * Math.PI / 180;
+    const scale = Math.min(width * 0.34, height * 0.43);
+    const centerX = width * 0.5;
+    const baseY = height * 0.76;
+
+    function project(ix, iz, value) {
+      const xNorm = years.length <= 1 ? 0 : (ix / (years.length - 1) - 0.5) * 2.25;
+      const zNorm = (iz / (grades.length - 1) - 0.5) * 1.5;
+      const vNorm = (value - minValue) / span;
+      const yNorm = 0.08 + vNorm * 1.26;
+      const rx = xNorm * Math.cos(yaw) - zNorm * Math.sin(yaw);
+      const rz = xNorm * Math.sin(yaw) + zNorm * Math.cos(yaw);
+      return {
+        x: centerX + rx * scale,
+        y: baseY + rz * scale * Math.sin(tilt) - yNorm * height * 0.42,
+        depth: rz + yNorm * 0.12,
+        vNorm
+      };
+    }
+
+    const cells = [];
+    for (let ix = 0; ix < years.length - 1; ix += 1) {
+      for (let iz = 0; iz < grades.length - 1; iz += 1) {
+        const corners = [
+          project(ix, iz, values[ix][iz]),
+          project(ix + 1, iz, values[ix + 1][iz]),
+          project(ix + 1, iz + 1, values[ix + 1][iz + 1]),
+          project(ix, iz + 1, values[ix][iz + 1])
+        ];
+        const avg = (values[ix][iz] + values[ix + 1][iz] + values[ix + 1][iz + 1] + values[ix][iz + 1]) / 4;
+        cells.push({ corners, value: avg, depth: corners.reduce((sum, point) => sum + point.depth, 0) / 4 });
+      }
+    }
+    cells.sort((a, b) => a.depth - b.depth).forEach((cell) => {
+      const t = (cell.value - minValue) / span;
+      const fill = rgbaColor(blendColor(colors.blue, colors.orange, t), 0.78);
+      polygon(ctx, cell.corners, fill, rgbaColor(colors.cyan, 0.38), 0.9);
+    });
+
+    const baseValue = minValue;
+    const axisCorners = [project(0, 0, baseValue), project(years.length - 1, 0, baseValue), project(years.length - 1, grades.length - 1, baseValue), project(0, grades.length - 1, baseValue)];
+    ctx.strokeStyle = rgbaColor(colors.ink, 0.75);
+    ctx.lineWidth = 1.6;
+    ctx.beginPath();
+    axisCorners.forEach((point, index) => index === 0 ? ctx.moveTo(point.x, point.y) : ctx.lineTo(point.x, point.y));
+    ctx.closePath();
+    ctx.stroke();
+
+    const selectedYearIndex = Math.max(0, years.indexOf(input.year));
+    const selectedGradeIndex = input.grade - 1;
+    const selectedValue = surfaceMetricValue(input.year, input.grade, input.step, input, mode);
+    const selectedPoint = project(selectedYearIndex >= 0 ? selectedYearIndex : years.length - 1, selectedGradeIndex, selectedValue);
+    const floorPoint = project(selectedYearIndex >= 0 ? selectedYearIndex : years.length - 1, selectedGradeIndex, baseValue);
+    ctx.strokeStyle = rgbaColor(colors.orange, 0.86);
+    ctx.setLineDash([5, 5]);
+    ctx.beginPath();
+    ctx.moveTo(floorPoint.x, floorPoint.y);
+    ctx.lineTo(selectedPoint.x, selectedPoint.y);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.beginPath();
+    ctx.arc(selectedPoint.x, selectedPoint.y, 7, 0, Math.PI * 2);
+    ctx.fillStyle = colors.orange;
+    ctx.fill();
+    ctx.strokeStyle = rgbaColor(colors.panel, 0.92);
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    ctx.font = "700 12px Segoe UI, system-ui, sans-serif";
+    ctx.fillStyle = rgbaColor(colors.ink, 0.92);
+    ctx.textAlign = "left";
+    ctx.fillText(String(years[0]), Math.max(10, axisCorners[0].x - 18), Math.min(height - 14, axisCorners[0].y + 22));
+    ctx.textAlign = "right";
+    ctx.fillText(String(years[years.length - 1]), Math.min(width - 10, axisCorners[1].x + 18), Math.min(height - 14, axisCorners[1].y + 22));
+    ctx.textAlign = "center";
+    ctx.fillText("GS-15", axisCorners[2].x, Math.max(18, axisCorners[2].y - 8));
+    ctx.fillText(`GS-${input.grade} / ${input.year}`, selectedPoint.x, Math.max(18, selectedPoint.y - 14));
+
+    const gradeLow = surfaceMetricValue(input.year, 1, input.step, input, mode);
+    const gradeHigh = surfaceMetricValue(input.year, 15, input.step, input, mode);
+    setText(els.surfaceTitle, `${surfaceLabel(mode)} surface | Step ${input.step}`);
+    setText(els.surfacePeak, surfaceMoney(maxValue, mode));
+    setText(els.surfaceRange, `${years[0]}-${years[years.length - 1]} | GS-1 to GS-15`);
+    setText(els.surfaceSelected, surfaceMoney(selectedValue, mode));
+    setText(els.surfaceSpread, surfaceMoney(Math.abs(gradeHigh - gradeLow), mode));
+  }
+
+  function drawExtrudedBar(ctx, x, bottom, width, height, depth, color, colors) {
+    const top = bottom - height;
+    ctx.fillStyle = rgbaColor(color, 0.86);
+    ctx.fillRect(x, top, width, height);
+    polygon(ctx, [
+      { x: x + width, y: top },
+      { x: x + width + depth, y: top - depth },
+      { x: x + width + depth, y: bottom - depth },
+      { x: x + width, y: bottom }
+    ], rgbaColor(color, 0.54), rgbaColor(colors.line, 0.55));
+    polygon(ctx, [
+      { x, y: top },
+      { x: x + depth, y: top - depth },
+      { x: x + width + depth, y: top - depth },
+      { x: x + width, y: top }
+    ], rgbaColor(color, 0.72), rgbaColor(colors.line, 0.55));
+  }
+
+  function renderLocalityLift(input) {
+    const canvas = els.localityLiftCanvas;
+    if (!canvas) return;
+    const colors = themeColors();
+    const { ctx, width, height } = canvasMetrics(canvas, 180);
+    clearCanvas(ctx, width, height, colors);
+    const base = math.computePay(input.year, input.grade, input.step, 0, NaN, false).annual;
+    const selected = math.computePay(input.year, input.grade, input.step, input.localityPct, input.capValue, input.applyCap).annual;
+    const areas = localityAreasForYear(input.year);
+    const maxArea = areas.reduce((best, area) => (!best || area.percentage > best.percentage ? area : best), null);
+    const scenarios = [
+      { label: "Base", value: base, color: colors.blue },
+      { label: input.localityArea ? input.localityArea.code : "Manual", value: selected, color: colors.orange }
+    ];
+    if (maxArea) {
+      scenarios.push({ label: `Max ${maxArea.code}`, value: math.computePay(input.year, input.grade, input.step, maxArea.percentage, input.capValue, input.applyCap).annual, color: colors.magenta });
+    }
+    const maxValue = Math.max(...scenarios.map((item) => item.value), 1);
+    const bottom = height - 34;
+    const topPad = 28;
+    const barW = Math.min(64, (width - 72) / scenarios.length - 18);
+    const gap = (width - 42 - scenarios.length * barW) / Math.max(1, scenarios.length - 1);
+    ctx.font = "700 12px Segoe UI, system-ui, sans-serif";
+    scenarios.forEach((item, index) => {
+      const x = 20 + index * (barW + gap);
+      const h = Math.max(6, (item.value / maxValue) * (bottom - topPad));
+      drawExtrudedBar(ctx, x, bottom, barW, h, 10, item.color, colors);
+      ctx.fillStyle = rgbaColor(colors.ink, 0.92);
+      ctx.textAlign = "center";
+      ctx.fillText(item.label, x + barW / 2 + 4, bottom + 18);
+      ctx.fillText(math.money0.format(item.value), x + barW / 2 + 4, Math.max(14, bottom - h - 16));
+    });
+  }
+
+  function renderCapPressure(input) {
+    const canvas = els.capPressureCanvas;
+    if (!canvas) return;
+    const colors = themeColors();
+    const { ctx, width, height } = canvasMetrics(canvas, 180);
+    clearCanvas(ctx, width, height, colors);
+    const grades = Array.from({ length: 15 }, (_, index) => index + 1);
+    const rows = grades.map((grade) => {
+      const uncapped = math.computePay(input.year, grade, input.step, input.localityPct, input.capValue, false).localityRounded;
+      const capped = math.computePay(input.year, grade, input.step, input.localityPct, input.capValue, input.applyCap);
+      return { grade, uncapped, annual: capped.annual, capped: capped.capped };
+    });
+    const capValue = Number.isFinite(input.capValue) && input.capValue > 0 ? input.capValue : null;
+    const maxValue = Math.max(...rows.map((row) => row.uncapped), capValue || 0, 1);
+    const left = 22;
+    const right = 18;
+    const bottom = height - 32;
+    const top = 24;
+    const barW = Math.max(5, (width - left - right) / rows.length - 5);
+    rows.forEach((row, index) => {
+      const x = left + index * ((width - left - right) / rows.length);
+      const h = Math.max(4, (row.annual / maxValue) * (bottom - top));
+      drawExtrudedBar(ctx, x, bottom, barW, h, 5, row.capped ? colors.orange : colors.teal, colors);
+      if (row.grade === 1 || row.grade === 8 || row.grade === 15) {
+        ctx.fillStyle = rgbaColor(colors.ink, 0.88);
+        ctx.font = "700 11px Segoe UI, system-ui, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(`G${row.grade}`, x + barW / 2, bottom + 17);
+      }
+    });
+    if (capValue) {
+      const y = bottom - (capValue / maxValue) * (bottom - top);
+      ctx.strokeStyle = rgbaColor(colors.orange, 0.92);
+      ctx.lineWidth = 2;
+      ctx.setLineDash([6, 5]);
+      ctx.beginPath();
+      ctx.moveTo(left, y);
+      ctx.lineTo(width - right, y);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = rgbaColor(colors.ink, 0.94);
+      ctx.font = "700 12px Segoe UI, system-ui, sans-serif";
+      ctx.textAlign = "left";
+      const cappedCount = rows.filter((row) => row.capped).length;
+      ctx.fillText(`Cap ${math.money0.format(capValue)} | ${cappedCount} capped`, left, Math.max(14, y - 8));
+    } else {
+      ctx.fillStyle = rgbaColor(colors.ink, 0.9);
+      ctx.font = "700 12px Segoe UI, system-ui, sans-serif";
+      ctx.fillText("No annual cap selected", left, top);
+    }
+  }
+
+  function render3DLab(input) {
+    renderPaySurface(input);
+    renderLocalityLift(input);
+    renderCapPressure(input);
+  }
+
   function renderSources() {
     els.sourceList.innerHTML = math.DATA.sources.sources.map((source) => {
       const title = math.escapeHtml(source.title);
@@ -285,11 +686,17 @@
     const result = math.computePay(input.year, input.grade, input.step, input.localityPct, input.capValue, input.applyCap);
     const compare = math.computePay(input.compareYear, input.grade, input.step, 0, NaN, false);
     lastRecord = math.calculationRecord(result);
+    lastRecord.inputs.locality_area = input.localityArea ? {
+      code: input.localityArea.code,
+      name: input.localityArea.name,
+      percentage: input.localityArea.percentage
+    } : null;
     renderSummary(result, compare);
     renderTrace(result);
     renderSchedule(input.year, input.grade, input.step);
     renderChart(input.year, input.grade, input.step);
     renderLedger(input.grade, input.step);
+    render3DLab(input);
   }
 
   function applyTheme(theme) {
@@ -320,16 +727,31 @@
       els.compareYear.value = "1977";
       els.grade.value = "12";
       els.step.value = "10";
-      els.locality.value = "17.06";
+      fillLocalityAreas(2026, "RUS");
+      syncLocalityFromArea();
       els.cap.value = "197200";
       els.applyCap.checked = true;
+      els.surfaceMode.value = "annual";
+      els.surfaceYearSpan.value = "25";
+      els.surfaceYaw.value = "34";
+      els.surfaceTilt.value = "38";
       renderAll();
     });
     els.year.addEventListener("change", () => {
       setYearDefaults(Number(els.year.value));
       renderAll();
     });
-    [els.grade, els.step, els.compareYear, els.locality, els.cap, els.applyCap].forEach((el) => el.addEventListener("change", renderAll));
+    els.localityArea.addEventListener("change", () => {
+      syncLocalityFromArea();
+      renderAll();
+    });
+    els.locality.addEventListener("input", () => {
+      syncAreaFromManualPercent();
+      renderAll();
+    });
+    [els.grade, els.step, els.compareYear, els.cap, els.applyCap].forEach((el) => el.addEventListener("change", renderAll));
+    [els.surfaceMode, els.surfaceYearSpan].forEach((el) => el.addEventListener("change", renderAll));
+    [els.surfaceYaw, els.surfaceTilt].forEach((el) => el.addEventListener("input", renderAll));
     els.scheduleTable.addEventListener("click", (event) => {
       const button = event.target.closest(".cell-button");
       if (!button) return;
@@ -342,7 +764,51 @@
       if (lastRecord) downloadJson(`N-GS-Pay-Math-Lab-${lastRecord.inputs.year}-GS${lastRecord.inputs.grade}-S${lastRecord.inputs.step}.json`, lastRecord);
     });
     els.printPage.addEventListener("click", () => window.print());
-    els.themeToggle.addEventListener("click", () => applyTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark"));
+    els.themeToggle.addEventListener("click", () => {
+      applyTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark");
+      renderAll();
+    });
+    els.paySurfaceCanvas.addEventListener("pointerdown", (event) => {
+      surfaceDrag.active = true;
+      surfaceDrag.pointerId = event.pointerId;
+      surfaceDrag.x = event.clientX;
+      surfaceDrag.y = event.clientY;
+      els.paySurfaceCanvas.setPointerCapture(event.pointerId);
+    });
+    els.paySurfaceCanvas.addEventListener("pointermove", (event) => {
+      if (!surfaceDrag.active || event.pointerId !== surfaceDrag.pointerId) return;
+      const dx = event.clientX - surfaceDrag.x;
+      const dy = event.clientY - surfaceDrag.y;
+      surfaceDrag.x = event.clientX;
+      surfaceDrag.y = event.clientY;
+      els.surfaceYaw.value = String(Math.round(clamp(Number(els.surfaceYaw.value) + dx * 0.35, -65, 65)));
+      els.surfaceTilt.value = String(Math.round(clamp(Number(els.surfaceTilt.value) - dy * 0.25, 18, 62)));
+      renderAll();
+    });
+    ["pointerup", "pointercancel", "pointerleave"].forEach((type) => {
+      els.paySurfaceCanvas.addEventListener(type, (event) => {
+        if (event.pointerId === surfaceDrag.pointerId && els.paySurfaceCanvas.hasPointerCapture(event.pointerId)) {
+          els.paySurfaceCanvas.releasePointerCapture(event.pointerId);
+        }
+        surfaceDrag.active = false;
+        surfaceDrag.pointerId = null;
+      });
+    });
+    els.paySurfaceCanvas.addEventListener("keydown", (event) => {
+      const yaw = Number(els.surfaceYaw.value);
+      const tilt = Number(els.surfaceTilt.value);
+      if (event.key === "ArrowLeft") els.surfaceYaw.value = String(clamp(yaw - 3, -65, 65));
+      else if (event.key === "ArrowRight") els.surfaceYaw.value = String(clamp(yaw + 3, -65, 65));
+      else if (event.key === "ArrowUp") els.surfaceTilt.value = String(clamp(tilt + 3, 18, 62));
+      else if (event.key === "ArrowDown") els.surfaceTilt.value = String(clamp(tilt - 3, 18, 62));
+      else return;
+      event.preventDefault();
+      renderAll();
+    });
+    window.addEventListener("resize", () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(renderAll, 90);
+    });
     els.menuToggle.addEventListener("click", () => {
       els.navDrawer.hidden = false;
       els.navDrawer.dataset.open = "true";

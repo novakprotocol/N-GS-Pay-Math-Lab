@@ -390,6 +390,10 @@ main {
   color: var(--ink);
 }
 
+.wide-field {
+  grid-column: span 2;
+}
+
 .check-field {
   min-height: 40px;
   display: flex;
@@ -606,6 +610,122 @@ thead th {
   stroke: var(--orange);
 }
 
+.surface-section {
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--navy) 92%, black), color-mix(in srgb, var(--navy) 76%, var(--teal))),
+    var(--navy);
+  color: #f8fbff;
+}
+
+.surface-section .kicker,
+.surface-section .tag {
+  color: #9bd8e7;
+}
+
+.surface-section .section-lede,
+.surface-section .field label {
+  color: #b8cad8;
+}
+
+.surface-inner {
+  width: min(1380px, 100%);
+}
+
+.surface-lab {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 340px);
+  gap: 18px;
+  align-items: start;
+  margin-top: 18px;
+}
+
+.surface-stage {
+  min-width: 0;
+}
+
+.surface-head {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.surface-head h3,
+.mini-chart-panel h3 {
+  margin: 6px 0 0;
+}
+
+#paySurfaceCanvas {
+  width: 100%;
+  height: clamp(380px, 48vw, 660px);
+  display: block;
+  border-radius: 8px;
+  cursor: grab;
+  touch-action: none;
+}
+
+#paySurfaceCanvas:active {
+  cursor: grabbing;
+}
+
+#paySurfaceCanvas:focus-visible,
+.mini-chart-panel canvas:focus-visible {
+  outline: 3px solid var(--orange);
+  outline-offset: 3px;
+}
+
+.surface-controls {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+
+.surface-panel {
+  border: 1px solid rgba(155, 216, 231, 0.28);
+  border-radius: 8px;
+  padding: 12px;
+  background: rgba(4, 16, 31, 0.58);
+}
+
+.control-panel {
+  display: grid;
+  gap: 10px;
+}
+
+.control-panel input[type="range"] {
+  accent-color: var(--orange);
+}
+
+.surface-readouts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.surface-readouts span {
+  display: block;
+  color: #b8cad8;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.surface-readouts strong {
+  display: block;
+  margin-top: 3px;
+  color: #ffffff;
+  font-size: 1.2rem;
+}
+
+.mini-chart-panel canvas {
+  width: 100%;
+  height: 190px;
+  display: block;
+  margin-top: 10px;
+  border-radius: 6px;
+}
+
 .size-bars {
   display: grid;
   gap: 10px;
@@ -736,6 +856,19 @@ html[data-shell="module"] .hero {
   .form-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
+
+  .surface-lab {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .surface-controls {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .control-panel,
+  .surface-readouts {
+    grid-column: 1 / -1;
+  }
 }
 
 @media (max-width: 820px) {
@@ -806,6 +939,23 @@ html[data-shell="module"] .hero {
 
   .form-grid {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .wide-field {
+    grid-column: auto;
+  }
+
+  .surface-head {
+    display: grid;
+  }
+
+  .surface-controls,
+  .surface-readouts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #paySurfaceCanvas {
+    height: 390px;
   }
 
   .bar-row {
@@ -893,6 +1043,7 @@ html[data-shell="module"] .hero {
         <a href="#calculator">Calculator</a>
         <a href="#formula-proof">Formula Proof</a>
         <a href="#ledger">Fifty-Year Ledger</a>
+        <a href="#pay-surface">3D Pay Lab</a>
         <a href="#full-schedule">Full Schedule</a>
         <a href="#math-vs-files">Math vs. Files</a>
         <a href="#validation">Validation</a>
@@ -909,6 +1060,7 @@ html[data-shell="module"] .hero {
         <a href="#calculator">Calculator</a>
         <a href="#formula-proof">Formula Proof</a>
         <a href="#ledger">Fifty-Year Ledger</a>
+        <a href="#pay-surface">3D Pay Lab</a>
         <a href="#full-schedule">Full Schedule</a>
         <a href="#math-vs-files">Math vs. Files</a>
         <a href="#validation">Validation</a>
@@ -944,11 +1096,12 @@ html[data-shell="module"] .hero {
         <div class="section-inner">
           <p class="kicker">Calculator</p>
           <h2>Run a pay-cell proof</h2>
-          <p class="section-lede">Select a year, grade, step, locality percentage, and cap. The visible result and downloadable calculation record come from the same formula functions.</p>
+          <p class="section-lede">Select a year, grade, step, locality area or percentage, and cap. The visible result and downloadable calculation record come from the same formula functions.</p>
           <div class="form-grid">
             <div class="field"><label for="year">Year</label><select id="year"></select></div>
             <div class="field"><label for="grade">Grade</label><select id="grade"></select></div>
             <div class="field"><label for="step">Step</label><select id="step"></select></div>
+            <div class="field wide-field"><label for="localityArea">Locality area</label><select id="localityArea"></select></div>
             <div class="field"><label for="locality">Locality percent</label><input id="locality" type="number" min="0" max="100" step="0.01" value="17.06" inputmode="decimal"></div>
             <div class="field"><label for="cap">Annual cap</label><input id="cap" type="number" min="0" step="1" value="197200" inputmode="numeric"></div>
             <label class="check-field"><input id="applyCap" type="checkbox" checked> Apply cap</label>
@@ -1000,6 +1153,47 @@ html[data-shell="module"] .hero {
           </div>
           <div class="table-wrap">
             <table id="ledgerTable"></table>
+          </div>
+        </div>
+      </section>
+
+      <section class="section surface-section" id="pay-surface">
+        <div class="section-inner surface-inner">
+          <p class="kicker">3D Pay Lab</p>
+          <h2>Pay surface, locality lift, and cap pressure</h2>
+          <p class="section-lede">The selected calculator inputs drive these offline canvas views, so the visuals and proof record stay in sync.</p>
+          <div class="surface-lab">
+            <div class="surface-stage">
+              <div class="surface-head">
+                <div>
+                  <span class="tag">Orbitable surface</span>
+                  <h3 id="surfaceTitle">GS pay surface</h3>
+                </div>
+                <div class="chart-metric"><strong id="surfacePeak">$0</strong><span id="surfaceRange">selected range</span></div>
+              </div>
+              <canvas id="paySurfaceCanvas" width="1200" height="660" tabindex="0" role="img" aria-describedby="paySurfaceDescription">Your browser does not support Canvas.</canvas>
+              <p id="paySurfaceDescription" class="sr-output">Three-dimensional pay surface by year and grade for the selected step, locality percentage, and cap settings.</p>
+            </div>
+            <aside class="surface-controls" aria-label="3D pay lab controls">
+              <div class="surface-panel control-panel">
+                <div class="field"><label for="surfaceMode">Surface metric</label><select id="surfaceMode"><option value="annual" selected>Annual with locality/cap</option><option value="base">Base pay</option><option value="hourly">Hourly</option></select></div>
+                <div class="field"><label for="surfaceYearSpan">Years shown</label><select id="surfaceYearSpan"><option value="10">10 years</option><option value="25" selected>25 years</option><option value="50">50 years</option></select></div>
+                <div class="field"><label for="surfaceYaw">Yaw</label><input id="surfaceYaw" type="range" min="-65" max="65" step="1" value="34"></div>
+                <div class="field"><label for="surfaceTilt">Tilt</label><input id="surfaceTilt" type="range" min="18" max="62" step="1" value="38"></div>
+              </div>
+              <div class="surface-panel surface-readouts">
+                <div><span>Selected cell</span><strong id="surfaceSelected">$0</strong></div>
+                <div><span>Grade spread</span><strong id="surfaceSpread">$0</strong></div>
+              </div>
+              <div class="surface-panel mini-chart-panel">
+                <h3>Locality lift</h3>
+                <canvas id="localityLiftCanvas" width="520" height="280" role="img" aria-label="Locality lift chart">Your browser does not support Canvas.</canvas>
+              </div>
+              <div class="surface-panel mini-chart-panel">
+                <h3>Cap pressure</h3>
+                <canvas id="capPressureCanvas" width="520" height="280" role="img" aria-label="Cap pressure chart">Your browser does not support Canvas.</canvas>
+              </div>
+            </aside>
           </div>
         </div>
       </section>
@@ -1062,7 +1256,7 @@ html[data-shell="module"] .hero {
           <h2>Source notes and limitations</h2>
           <p class="section-lede">Official and reconstructed values are visibly distinguished. Reconstructed values are never described as official published tables.</p>
           <ol class="source-list" id="sourceList"></ol>
-          <p class="fine-print" id="buildMeta">Build n-gs-pay-math-lab-v0.01 | commit 5225e3a1beb088f8b60d36dbc89f7e3e2b157d56</p>
+          <p class="fine-print" id="buildMeta">Build n-gs-pay-math-lab-v0.01 | commit b46a75e60aed70ba474d4568bbbae95bec17d1ab</p>
         </div>
       </section>
     </main>
@@ -1074,9 +1268,9 @@ html[data-shell="module"] .hero {
   
   
 <script>
-window.NGSPayData = {"adjustments":{"base_raise_percent":{"1977":7.05,"1978":5.5,"1979":7.0,"1980":9.11,"1981":4.8,"1982":4.0,"1983":0.0,"1984":4.0,"1985":3.5,"1986":0.0,"1987":3.0,"1988":2.0,"1989":4.1,"1990":3.6,"1991":4.1,"1992":4.2,"1993":3.7,"1994":0.0,"1995":2.0,"1996":2.0,"1997":2.3,"1998":2.3,"1999":3.1,"2000":3.8,"2001":2.7,"2002":3.6,"2003":3.1,"2004":2.7,"2005":2.5,"2006":2.1,"2007":1.7,"2008":2.5,"2009":2.9,"2010":1.5,"2011":0.0,"2012":0.0,"2013":0.0,"2014":1.0,"2015":1.0,"2016":1.0,"2017":1.0,"2018":1.4,"2019":1.4,"2020":2.6,"2021":1.0,"2022":2.2,"2023":4.1,"2024":4.7,"2025":1.7,"2026":1.0},"coverage":{"annual_cells":150,"first_year":1977,"grades":15,"last_year":2026,"steps":10,"total_cells":7500},"known_pay_caps":{"2010":155500,"2011":155500,"2012":155500,"2013":155500,"2014":157100,"2015":158700,"2016":160300,"2017":161900,"2018":164200,"2019":166500,"2020":170800,"2021":172500,"2022":176300,"2023":183500,"2024":191900,"2025":195200,"2026":197200}},"checkpoints":{"anchor_years":[1977,1978,1979,1991,1997,2014,2023,2024,2025,2026],"anchors":{"1977":{"label":"1977 published regular-grade range checkpoint","low":{"1":[6219,6427,6634,6842,7049,7257,7464,7672,7880,8087],"2":[7035,7269,7503,7737,7972,8206,8440,8674,8908,9142]},"low_modeled":true,"low_status":"Reverse calculation","schedule_badge":"Published checkpoint; GS-1 and GS-2 reconstructed","status":"Official checkpoint","step1":[null,null,null,7930,8901,9959,11101,12336,13663,15090,16618,18259,21883,26022,30751,36171]},"1978":{"label":"1978 published salary-range checkpoint","low":{"1":[6561,6780,6999,7218,7437,7656,7875,8094,8313,8532],"2":[7422,7669,7916,8163,8410,8657,8904,9151,9398,9645]},"low_modeled":true,"low_status":"Formula reconstruction","schedule_badge":"Published range checkpoint","status":"Official checkpoint","step1":[null,null,null,8366,9391,10507,11712,13014,14414,15920,17532,19263,23087,27453,32442,38160]},"1979":{"label":"1979 Federal Register schedule checkpoint","low":{"1":[7210,7450,7690,7930,8170,8410,8650,8890,8902,9126],"2":[8128,8399,8670,8902,9002,9267,9532,9797,10062,10327]},"schedule_badge":"Official Federal Register checkpoint","status":"Official checkpoint","step1":[null,null,null,8952,10049,11243,12531,13925,15423,17035,18760,20611,24703,29375,34713,40832]},"1991":{"label":"1991 official schedule checkpoint","low":{"1":[11015,11383,11749,12114,12482,12697,13058,13422,13439,13776],"2":[12385,12679,13090,13439,13590,13990,14390,14790,15190,15590]},"schedule_badge":"Official checkpoint","status":"Official checkpoint","step1":[null,null,null,13515,15171,16973,18919,21023,23284,25717,28322,31116,37294,44348,52406,61643]},"1997":{"label":"1997 published schedule checkpoint","low":{"1":[12669,13091,13512,13932,14355,14602,15017,15436,15454,15844],"2":[14243,14583,15055,15454,15628,16088,16548,17008,17468,17928]},"schedule_badge":"Official checkpoint","status":"Official checkpoint","step1":[null,null,null,15542,17447,19520,21758,24178,26777,29577,32571,35786,42890,51003,60270,70894]},"2014":{"label":"2014 official OPM checkpoint","low":{"1":[17981,18582,19180,19775,20373,20724,21315,21911,21934,22494],"2":[20217,20698,21367,21934,22179,22831,23483,24135,24787,25439]},"schedule_badge":"Official table","status":"Official checkpoint","step1":[null,null,null,22058,24763,27705,30883,34319,38007,41979,46229,50790,60877,72391,85544,100624]},"2023":{"label":"2023 official OPM checkpoint","low":{"1":[20999,21704,22401,23097,23794,24202,24893,25589,25617,26273],"2":[23612,24174,24956,25617,25906,26668,27430,28192,28954,29716]},"schedule_badge":"Official table","status":"Official checkpoint","step1":[null,null,null,25764,28921,32357,36070,40082,44389,49028,53990,59319,71099,84546,99908,117518]},"2024":{"label":"2024 official OPM checkpoint","low":{"1":[21986,22724,23454,24183,24912,25339,26063,26792,26821,27502],"2":[24722,25310,26129,26821,27124,27922,28720,29518,30316,31114]},"schedule_badge":"Official table","status":"Official checkpoint","step1":[null,null,null,26975,30280,33878,37765,41966,46475,51332,56528,62107,74441,88520,104604,123041]},"2025":{"label":"2025 official OPM checkpoint","low":{"1":[22360,23110,23853,24594,25336,25770,26506,27247,27277,27970],"2":[25142,25740,26573,27277,27583,28394,29205,30016,30827,31638]},"schedule_badge":"Official table","status":"Official checkpoint","step1":[null,null,null,27434,30795,34454,38407,42679,47265,52205,57489,63163,75706,90025,106382,125133]},"2026":{"label":"2026 official OPM checkpoint","low":{"1":[22584,23341,24092,24840,25589,26028,26771,27519,27550,28248],"2":[25393,25997,26839,27550,27858,28677,29496,30315,31134,31953]},"schedule_badge":"Official table","status":"Official checkpoint","step1":[null,null,null,27708,31103,34799,38791,43106,47738,52727,58064,63795,76463,90925,107446,126384]}},"status_labels":["Official table","Official checkpoint","Formula reconstruction","Reverse calculation","User-entered scenario"]},"locality":{"examples":[{"annual":116362,"base":99404,"biweekly":4460.8,"classification":"Official checkpoint","grade":12,"hourly":55.76,"id":"2026-rest-of-us-gs12-step10","locality_percent":17.06,"step":10,"year":2026}]},"sources":{"disclaimer":"Independent calculation and verification tool; not an official OPM service or payroll determination.","formula_version":"n-gs-pay-math-lab-v0.01","sources":[{"id":"opm-2026-base","note":"Used for the official 2026 checkpoint fixture.","title":"OPM 2026 General Schedule base table","url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/2026/general-schedule/"},{"id":"opm-2026-rus","note":"Used for the 17.06 percent locality example.","title":"OPM 2026 Rest of U.S. locality schedule","url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/2026/locality-pay-area-definitions/"},{"id":"opm-fact-sheets","note":"Used for divisor, hourly rounding, and biweekly calculation context.","title":"OPM pay administration fact sheets","url":"https://www.opm.gov/policy-data-oversight/pay-leave/pay-administration/fact-sheets/"},{"id":"federal-register-1979","note":"Used for the 1979 nonuniform historical checkpoint represented in the source implementation.","title":"Federal Register 1979 GS schedule checkpoint","url":"https://www.federalregister.gov/"},{"id":"source-html","note":"Local user-supplied working implementation preserved as the formula and fixture source.","title":"Existing GS Pay Math Lab source file","url":""}]},"validation":{"official_2025":[[22360,23110,23853,24594,25336,25770,26506,27247,27277,27970],[25142,25740,26573,27277,27583,28394,29205,30016,30827,31638],[27434,28348,29262,30176,31090,32004,32918,33832,34746,35660],[30795,31822,32849,33876,34903,35930,36957,37984,39011,40038],[34454,35602,36750,37898,39046,40194,41342,42490,43638,44786],[38407,39687,40967,42247,43527,44807,46087,47367,48647,49927],[42679,44102,45525,46948,48371,49794,51217,52640,54063,55486],[47265,48841,50417,51993,53569,55145,56721,58297,59873,61449],[52205,53945,55685,57425,59165,60905,62645,64385,66125,67865],[57489,59405,61321,63237,65153,67069,68985,70901,72817,74733],[63163,65268,67373,69478,71583,73688,75793,77898,80003,82108],[75706,78230,80754,83278,85802,88326,90850,93374,95898,98422],[90025,93026,96027,99028,102029,105030,108031,111032,114033,117034],[106382,109928,113474,117020,120566,124112,127658,131204,134750,138296],[125133,129304,133475,137646,141817,145988,150159,154330,158501,162672]],"official_2026":[[22584,23341,24092,24840,25589,26028,26771,27519,27550,28248],[25393,25997,26839,27550,27858,28677,29496,30315,31134,31953],[27708,28632,29556,30480,31404,32328,33252,34176,35100,36024],[31103,32140,33177,34214,35251,36288,37325,38362,39399,40436],[34799,35959,37119,38279,39439,40599,41759,42919,44079,45239],[38791,40084,41377,42670,43963,45256,46549,47842,49135,50428],[43106,44543,45980,47417,48854,50291,51728,53165,54602,56039],[47738,49329,50920,52511,54102,55693,57284,58875,60466,62057],[52727,54485,56243,58001,59759,61517,63275,65033,66791,68549],[58064,59999,61934,63869,65804,67739,69674,71609,73544,75479],[63795,65922,68049,70176,72303,74430,76557,78684,80811,82938],[76463,79012,81561,84110,86659,89208,91757,94306,96855,99404],[90925,93956,96987,100018,103049,106080,109111,112142,115173,118204],[107446,111028,114610,118192,121774,125356,128938,132520,136102,139684],[126384,130597,134810,139023,143236,147449,151662,155875,160088,164301]],"required_proofs":{"gs12_step10_2026_base":99404,"hourly_divisor_1984_forward":2087,"hourly_divisor_before_1984":2080,"rest_of_us_2026_gs12_step10_annual":116362,"rest_of_us_2026_gs12_step10_hourly":55.76,"rest_of_us_2026_locality_percent":17.06}}};
+window.NGSPayData = {"adjustments":{"base_raise_percent":{"1977":7.05,"1978":5.5,"1979":7.0,"1980":9.11,"1981":4.8,"1982":4.0,"1983":0.0,"1984":4.0,"1985":3.5,"1986":0.0,"1987":3.0,"1988":2.0,"1989":4.1,"1990":3.6,"1991":4.1,"1992":4.2,"1993":3.7,"1994":0.0,"1995":2.0,"1996":2.0,"1997":2.3,"1998":2.3,"1999":3.1,"2000":3.8,"2001":2.7,"2002":3.6,"2003":3.1,"2004":2.7,"2005":2.5,"2006":2.1,"2007":1.7,"2008":2.5,"2009":2.9,"2010":1.5,"2011":0.0,"2012":0.0,"2013":0.0,"2014":1.0,"2015":1.0,"2016":1.0,"2017":1.0,"2018":1.4,"2019":1.4,"2020":2.6,"2021":1.0,"2022":2.2,"2023":4.1,"2024":4.7,"2025":1.7,"2026":1.0},"coverage":{"annual_cells":150,"first_year":1977,"grades":15,"last_year":2026,"steps":10,"total_cells":7500},"known_pay_caps":{"2010":155500,"2011":155500,"2012":155500,"2013":155500,"2014":157100,"2015":158700,"2016":160300,"2017":161900,"2018":164200,"2019":166500,"2020":170800,"2021":172500,"2022":176300,"2023":183500,"2024":191900,"2025":195200,"2026":197200}},"checkpoints":{"anchor_years":[1977,1978,1979,1991,1997,2014,2023,2024,2025,2026],"anchors":{"1977":{"label":"1977 published regular-grade range checkpoint","low":{"1":[6219,6427,6634,6842,7049,7257,7464,7672,7880,8087],"2":[7035,7269,7503,7737,7972,8206,8440,8674,8908,9142]},"low_modeled":true,"low_status":"Reverse calculation","schedule_badge":"Published checkpoint; GS-1 and GS-2 reconstructed","status":"Official checkpoint","step1":[null,null,null,7930,8901,9959,11101,12336,13663,15090,16618,18259,21883,26022,30751,36171]},"1978":{"label":"1978 published salary-range checkpoint","low":{"1":[6561,6780,6999,7218,7437,7656,7875,8094,8313,8532],"2":[7422,7669,7916,8163,8410,8657,8904,9151,9398,9645]},"low_modeled":true,"low_status":"Formula reconstruction","schedule_badge":"Published range checkpoint","status":"Official checkpoint","step1":[null,null,null,8366,9391,10507,11712,13014,14414,15920,17532,19263,23087,27453,32442,38160]},"1979":{"label":"1979 Federal Register schedule checkpoint","low":{"1":[7210,7450,7690,7930,8170,8410,8650,8890,8902,9126],"2":[8128,8399,8670,8902,9002,9267,9532,9797,10062,10327]},"schedule_badge":"Official Federal Register checkpoint","status":"Official checkpoint","step1":[null,null,null,8952,10049,11243,12531,13925,15423,17035,18760,20611,24703,29375,34713,40832]},"1991":{"label":"1991 official schedule checkpoint","low":{"1":[11015,11383,11749,12114,12482,12697,13058,13422,13439,13776],"2":[12385,12679,13090,13439,13590,13990,14390,14790,15190,15590]},"schedule_badge":"Official checkpoint","status":"Official checkpoint","step1":[null,null,null,13515,15171,16973,18919,21023,23284,25717,28322,31116,37294,44348,52406,61643]},"1997":{"label":"1997 published schedule checkpoint","low":{"1":[12669,13091,13512,13932,14355,14602,15017,15436,15454,15844],"2":[14243,14583,15055,15454,15628,16088,16548,17008,17468,17928]},"schedule_badge":"Official checkpoint","status":"Official checkpoint","step1":[null,null,null,15542,17447,19520,21758,24178,26777,29577,32571,35786,42890,51003,60270,70894]},"2014":{"label":"2014 official OPM checkpoint","low":{"1":[17981,18582,19180,19775,20373,20724,21315,21911,21934,22494],"2":[20217,20698,21367,21934,22179,22831,23483,24135,24787,25439]},"schedule_badge":"Official table","status":"Official checkpoint","step1":[null,null,null,22058,24763,27705,30883,34319,38007,41979,46229,50790,60877,72391,85544,100624]},"2023":{"label":"2023 official OPM checkpoint","low":{"1":[20999,21704,22401,23097,23794,24202,24893,25589,25617,26273],"2":[23612,24174,24956,25617,25906,26668,27430,28192,28954,29716]},"schedule_badge":"Official table","status":"Official checkpoint","step1":[null,null,null,25764,28921,32357,36070,40082,44389,49028,53990,59319,71099,84546,99908,117518]},"2024":{"label":"2024 official OPM checkpoint","low":{"1":[21986,22724,23454,24183,24912,25339,26063,26792,26821,27502],"2":[24722,25310,26129,26821,27124,27922,28720,29518,30316,31114]},"schedule_badge":"Official table","status":"Official checkpoint","step1":[null,null,null,26975,30280,33878,37765,41966,46475,51332,56528,62107,74441,88520,104604,123041]},"2025":{"label":"2025 official OPM checkpoint","low":{"1":[22360,23110,23853,24594,25336,25770,26506,27247,27277,27970],"2":[25142,25740,26573,27277,27583,28394,29205,30016,30827,31638]},"schedule_badge":"Official table","status":"Official checkpoint","step1":[null,null,null,27434,30795,34454,38407,42679,47265,52205,57489,63163,75706,90025,106382,125133]},"2026":{"label":"2026 official OPM checkpoint","low":{"1":[22584,23341,24092,24840,25589,26028,26771,27519,27550,28248],"2":[25393,25997,26839,27550,27858,28677,29496,30315,31134,31953]},"schedule_badge":"Official table","status":"Official checkpoint","step1":[null,null,null,27708,31103,34799,38791,43106,47738,52727,58064,63795,76463,90925,107446,126384]}},"status_labels":["Official table","Official checkpoint","Formula reconstruction","Reverse calculation","User-entered scenario"]},"locality":{"examples":[{"annual":116362,"base":99404,"biweekly":4460.8,"classification":"Official checkpoint","grade":12,"hourly":55.76,"id":"2026-rest-of-us-gs12-step10","locality_percent":17.06,"step":10,"year":2026}]},"localityRates":{"by_year":{"2026":[{"code":"RUS","name":"Rest of U.S.","percentage":17.06,"source_url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/RUS.aspx"},{"code":"AL","name":"Albany-Schenectady, NY-MA","percentage":20.77,"source_url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/AL.aspx"},{"code":"AQ","name":"Albuquerque-Santa Fe-Las Vegas, NM","percentage":18.33,"source_url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/AQ.aspx"},{"code":"ATL","name":"Atlanta--Athens-Clarke County--Sandy Springs, GA-AL","percentage":23.79,"source_url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/ATL.aspx"},{"code":"AU","name":"Austin-Round Rock-Georgetown, TX","percentage":20.35,"source_url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/AU.aspx"},{"code":"BH","name":"Birmingham-Hoover-Talladega, AL","percentage":18.24,"source_url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/BH.aspx"},{"code":"BOS","name":"Boston-Worcester-Providence, MA-RI-NH-CT-ME-VT","percentage":32.58,"source_url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/BOS.aspx"},{"code":"BU","name":"Buffalo-Cheektowaga-Olean, NY","percentage":22.41,"source_url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/BU.aspx"},{"code":"BN","name":"Burlington-South Burlington-Barre, VT","percentage":19.45,"source_url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/BN.aspx"},{"code":"CT","name":"Charlotte-Concord, NC-SC","percentage":19.67,"source_url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/CT.aspx"},{"code":"CHI","name":"Chicago-Naperville, IL-IN-WI","percentage":30.86,"source_url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/CHI.aspx"},{"code":"CIN","name":"Cincinnati-Wilmington-Maysville, OH-KY-IN","percentage":21.93,"source_url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/CIN.aspx"},{"code":"CLE","name":"Cleveland-Akron-Canton, OH-PA","percentage":22.23,"source_url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/CLE.aspx"},{"code":"CS","name":"Colorado Springs, CO","percentage":20.15,"source_url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/CS.aspx"},{"code":"COL","name":"Columbus-Marion-Zanesville, OH","percentage":22.15,"source_url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/COL.aspx"},{"code":"CC","name":"Corpus Christi-Kingsville-Alice, TX","percentage":17.63,"source_url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/CC.aspx"},{"code":"DFW","name":"Dallas-Fort Worth, TX-OK","percentage":27.26,"source_url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/DFW.aspx"},{"code":"DV","name":"Davenport-Moline, IA-IL","percentage":18.93,"source_url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/DV.aspx"},{"code":"DAY","name":"Dayton-Springfield-Kettering, OH","percentage":21.42,"source_url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/DAY.aspx"},{"code":"DEN","name":"Denver-Aurora, CO","percentage":30.52,"source_url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/DEN.aspx"},{"code":"DM","name":"Des Moines-Ames-West Des Moines, IA","percentage":18.01,"source_url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/DM.aspx"},{"code":"DET","name":"Detroit-Warren-Ann Arbor, MI","percentage":29.12,"source_url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/DET.aspx"},{"code":"FN","name":"Fresno-Madera-Hanford, CA","percentage":17.65,"source_url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/FN.aspx"},{"code":"HB","name":"Harrisburg-Lebanon, PA","percentage":19.43,"source_url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/HB.aspx"},{"code":"HAR","name":"Hartford-East Hartford, CT-MA","percentage":32.08,"source_url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/HAR.aspx"},{"code":"HOU","name":"Houston-The Woodlands, TX","percentage":35.0,"source_url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/HOU.aspx"},{"code":"HNT","name":"Huntsville-Decatur, AL-TN","percentage":21.91,"source_url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/HNT.aspx"},{"code":"IND","name":"Indianapolis-Carmel-Muncie, IN","percentage":18.15,"source_url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/IND.aspx"},{"code":"KC","name":"Kansas City-Overland Park-Kansas City, MO-KS","percentage":18.97,"source_url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/KC.aspx"},{"code":"LR","name":"Laredo, TX","percentage":21.59,"source_url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/LR.aspx"},{"code":"LV","name":"Las Vegas-Henderson, NV-AZ","percentage":19.57,"source_url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/LV.aspx"},{"code":"LA","name":"Los Angeles-Long Beach, CA","percentage":36.47,"source_url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/LA.aspx"},{"code":"MFL","name":"Miami-Port St. Lucie-Fort Lauderdale, FL","percentage":24.67,"source_url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/MFL.aspx"},{"code":"MIL","name":"Milwaukee-Racine-Waukesha, WI","percentage":22.42,"source_url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/MIL.aspx"},{"code":"MSP","name":"Minneapolis-St. Paul, MN-WI","percentage":27.62,"source_url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/MSP.aspx"},{"code":"NY","name":"New York-Newark, NY-NJ-CT-PA","percentage":37.95,"source_url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/NY.aspx"},{"code":"OM","name":"Omaha-Council Bluffs-Fremont, NE-IA","percentage":18.23,"source_url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/OM.aspx"},{"code":"PB","name":"Palm Bay-Melbourne-Titusville, FL","percentage":17.93,"source_url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/PB.aspx"},{"code":"PHL","name":"Philadelphia-Reading-Camden, PA-NJ-DE-MD","percentage":28.99,"source_url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/PHL.aspx"},{"code":"PX","name":"Phoenix-Mesa, AZ","percentage":22.45,"source_url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/PX.aspx"},{"code":"PIT","name":"Pittsburgh-New Castle-Weirton, PA-OH-WV","percentage":21.03,"source_url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/PIT.aspx"},{"code":"POR","name":"Portland-Vancouver-Salem, OR-WA","percentage":26.13,"source_url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/POR.aspx"},{"code":"RA","name":"Raleigh-Durham-Cary, NC","percentage":22.24,"source_url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/RA.aspx"},{"code":"RN","name":"Reno-Fernley, NV","percentage":17.52,"source_url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/RN.aspx"},{"code":"RCH","name":"Richmond, VA","percentage":22.28,"source_url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/RCH.aspx"},{"code":"RT","name":"Rochester-Batavia-Seneca Falls, NY","percentage":17.88,"source_url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/RT.aspx"},{"code":"SAC","name":"Sacramento-Roseville, CA-NV","percentage":29.76,"source_url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/SAC.aspx"},{"code":"SO","name":"San Antonio-New Braunfels-Pearsall, TX","percentage":18.78,"source_url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/SO.aspx"},{"code":"SD","name":"San Diego-Chula Vista-Carlsbad, CA","percentage":33.72,"source_url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/SD.aspx"},{"code":"SF","name":"San Jose-San Francisco-Oakland, CA","percentage":46.34,"source_url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/SF.aspx"},{"code":"SEA","name":"Seattle-Tacoma, WA","percentage":31.57,"source_url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/SEA.aspx"},{"code":"SN","name":"Spokane-Spokane Valley-Coeur d'Alene, WA-ID","percentage":17.67,"source_url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/SN.aspx"},{"code":"SL","name":"St. Louis-St. Charles-Farmington, MO-IL","percentage":20.03,"source_url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/SL.aspx"},{"code":"AK","name":"State of Alaska","percentage":32.36,"source_url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/AK.aspx"},{"code":"HI","name":"State of Hawaii","percentage":22.21,"source_url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/HI.aspx"},{"code":"TU","name":"Tucson-Nogales, AZ","percentage":19.28,"source_url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/TU.aspx"},{"code":"VB","name":"Virginia Beach-Norfolk, VA-NC","percentage":18.8,"source_url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/VB.aspx"},{"code":"DCB","name":"Washington-Baltimore-Arlington, DC-MD-VA-WV-PA","percentage":33.94,"source_url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/DCB.aspx"}]},"description":"OPM 2026 General Schedule locality pay area percentages used by the public calculator locality selector.","source_url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/2026/general-schedule/"},"sources":{"disclaimer":"Independent calculation and verification tool; not an official OPM service or payroll determination.","formula_version":"n-gs-pay-math-lab-v0.01","sources":[{"id":"opm-2026-base","note":"Used for the official 2026 checkpoint fixture.","title":"OPM 2026 General Schedule base table","url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/2026/general-schedule/"},{"id":"opm-2026-locality-tables","note":"Used for the locality area selector and 2026 locality percentages.","title":"OPM 2026 General Schedule locality pay tables","url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/2026/general-schedule/"},{"id":"opm-2026-rus","note":"Used for the 17.06 percent locality example.","title":"OPM 2026 Rest of U.S. locality schedule","url":"https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/2026/locality-pay-area-definitions/"},{"id":"opm-fact-sheets","note":"Used for divisor, hourly rounding, and biweekly calculation context.","title":"OPM pay administration fact sheets","url":"https://www.opm.gov/policy-data-oversight/pay-leave/pay-administration/fact-sheets/"},{"id":"federal-register-1979","note":"Used for the 1979 nonuniform historical checkpoint represented in the source implementation.","title":"Federal Register 1979 GS schedule checkpoint","url":"https://www.federalregister.gov/"},{"id":"source-html","note":"Local user-supplied working implementation preserved as the formula and fixture source.","title":"Existing GS Pay Math Lab source file","url":""}]},"validation":{"official_2025":[[22360,23110,23853,24594,25336,25770,26506,27247,27277,27970],[25142,25740,26573,27277,27583,28394,29205,30016,30827,31638],[27434,28348,29262,30176,31090,32004,32918,33832,34746,35660],[30795,31822,32849,33876,34903,35930,36957,37984,39011,40038],[34454,35602,36750,37898,39046,40194,41342,42490,43638,44786],[38407,39687,40967,42247,43527,44807,46087,47367,48647,49927],[42679,44102,45525,46948,48371,49794,51217,52640,54063,55486],[47265,48841,50417,51993,53569,55145,56721,58297,59873,61449],[52205,53945,55685,57425,59165,60905,62645,64385,66125,67865],[57489,59405,61321,63237,65153,67069,68985,70901,72817,74733],[63163,65268,67373,69478,71583,73688,75793,77898,80003,82108],[75706,78230,80754,83278,85802,88326,90850,93374,95898,98422],[90025,93026,96027,99028,102029,105030,108031,111032,114033,117034],[106382,109928,113474,117020,120566,124112,127658,131204,134750,138296],[125133,129304,133475,137646,141817,145988,150159,154330,158501,162672]],"official_2026":[[22584,23341,24092,24840,25589,26028,26771,27519,27550,28248],[25393,25997,26839,27550,27858,28677,29496,30315,31134,31953],[27708,28632,29556,30480,31404,32328,33252,34176,35100,36024],[31103,32140,33177,34214,35251,36288,37325,38362,39399,40436],[34799,35959,37119,38279,39439,40599,41759,42919,44079,45239],[38791,40084,41377,42670,43963,45256,46549,47842,49135,50428],[43106,44543,45980,47417,48854,50291,51728,53165,54602,56039],[47738,49329,50920,52511,54102,55693,57284,58875,60466,62057],[52727,54485,56243,58001,59759,61517,63275,65033,66791,68549],[58064,59999,61934,63869,65804,67739,69674,71609,73544,75479],[63795,65922,68049,70176,72303,74430,76557,78684,80811,82938],[76463,79012,81561,84110,86659,89208,91757,94306,96855,99404],[90925,93956,96987,100018,103049,106080,109111,112142,115173,118204],[107446,111028,114610,118192,121774,125356,128938,132520,136102,139684],[126384,130597,134810,139023,143236,147449,151662,155875,160088,164301]],"required_proofs":{"gs12_step10_2026_base":99404,"hourly_divisor_1984_forward":2087,"hourly_divisor_before_1984":2080,"rest_of_us_2026_gs12_step10_annual":116362,"rest_of_us_2026_gs12_step10_hourly":55.76,"rest_of_us_2026_locality_percent":17.06}}};
 
-window.NGSPaySizeReceipt = {"calculation_package_without_brand_imagery":736587,"complete_deployed_package_with_brand_imagery":1190080,"equations":{"bytes_per_pay_cell":"artifact_bytes / represented_pay_cells","static_to_formula_multiple":"static_equivalent_bytes / formula_artifact_bytes","storage_reduction_percent":"100 * (1 - formula_artifact_bytes / static_equivalent_bytes)"},"formula_artifact_bytes":736587,"generated_at":"2026-08-08T00:00:00Z","measurements":[{"bytes_per_pay_cell":3.0858666666666665,"file_count":2,"gzip_bytes":6090,"id":"core_calculation_engine","kib":22.6,"label":"Core calculation engine","mib":0.0221,"notes":"","raw_bytes":23144,"represented_pay_cells":7500,"short_label":"Core calculation engine","show_in_ui":false,"static_to_formula_multiple":0.031420592543718526,"storage_reduction_percent":-3082.6261666090563},{"bytes_per_pay_cell":1.4734666666666667,"file_count":5,"gzip_bytes":4086,"id":"historical_data_checkpoints","kib":10.79,"label":"Historical data and checkpoints","mib":0.0105,"notes":"","raw_bytes":11051,"represented_pay_cells":7500,"short_label":"Historical data and checkpoints","show_in_ui":false,"static_to_formula_multiple":0.015002979960276247,"storage_reduction_percent":-6565.342502940911},{"bytes_per_pay_cell":3.3954666666666666,"file_count":2,"gzip_bytes":6945,"id":"html","kib":24.87,"label":"HTML bytes","mib":0.0243,"notes":"","raw_bytes":25466,"represented_pay_cells":7500,"short_label":"HTML bytes","show_in_ui":false,"static_to_formula_multiple":0.03457296965599447,"storage_reduction_percent":-2792.4330479855494},{"bytes_per_pay_cell":null,"file_count":1,"gzip_bytes":3497,"id":"css","kib":13.19,"label":"CSS bytes","mib":0.0129,"notes":"","raw_bytes":13509,"represented_pay_cells":0,"short_label":"CSS bytes","show_in_ui":false,"static_to_formula_multiple":0.018339992424520116,"storage_reduction_percent":-5352.564956695536},{"bytes_per_pay_cell":5.003333333333333,"file_count":4,"gzip_bytes":12053,"id":"javascript","kib":36.65,"label":"JavaScript bytes","mib":0.0358,"notes":"","raw_bytes":37525,"represented_pay_cells":7500,"short_label":"JavaScript bytes","show_in_ui":false,"static_to_formula_multiple":0.05094442340144477,"storage_reduction_percent":-1862.9233844103928},{"bytes_per_pay_cell":null,"file_count":3,"gzip_bytes":2842,"id":"source_metadata","kib":5.52,"label":"Source/reference metadata bytes","mib":0.0054,"notes":"","raw_bytes":5654,"represented_pay_cells":0,"short_label":"Source/reference metadata bytes","show_in_ui":false,"static_to_formula_multiple":0.007675943235490173,"storage_reduction_percent":-12927.71489211178},{"bytes_per_pay_cell":null,"file_count":3,"gzip_bytes":453085,"id":"optimized_brand_assets","kib":442.86,"label":"Optimized N brand assets bytes","mib":0.4325,"notes":"","raw_bytes":453493,"represented_pay_cells":0,"short_label":"Optimized N brand assets bytes","show_in_ui":false,"static_to_formula_multiple":0.6156679387499372,"storage_reduction_percent":-62.42521935288967},{"bytes_per_pay_cell":98.2116,"file_count":9,"gzip_bytes":491778,"id":"calculation_without_brand","kib":719.32,"label":"Calculation package without brand imagery","mib":0.7025,"notes":"","raw_bytes":736587,"represented_pay_cells":7500,"short_label":"Formula package","show_in_ui":true,"static_to_formula_multiple":1.0,"storage_reduction_percent":0.0},{"bytes_per_pay_cell":158.67733333333334,"file_count":12,"gzip_bytes":944863,"id":"complete_with_brand","kib":1162.19,"label":"Complete deployed package with brand imagery","mib":1.1349,"notes":"","raw_bytes":1190080,"represented_pay_cells":7500,"short_label":"Complete package","show_in_ui":true,"static_to_formula_multiple":1.6156679387499373,"storage_reduction_percent":38.10609370798602},{"bytes_per_pay_cell":248.49106666666665,"file_count":0,"gzip_bytes":null,"id":"repository_worktree","kib":1820.0,"label":"Full repository working-tree bytes excluding .git","mib":1.7773,"notes":"","raw_bytes":1863683,"represented_pay_cells":7500,"short_label":"Full repository working-tree bytes excluding .git","show_in_ui":false,"static_to_formula_multiple":2.530160048982673,"storage_reduction_percent":60.476808555961505},{"bytes_per_pay_cell":88.00706666666666,"file_count":1,"gzip_bytes":469229,"id":"offline_single_file","kib":644.58,"label":"Single-file offline build","mib":0.6295,"notes":"","raw_bytes":660053,"represented_pay_cells":7500,"short_label":"Offline HTML","show_in_ui":true,"static_to_formula_multiple":0.8960964556800487,"storage_reduction_percent":-11.595129482026433},{"bytes_per_pay_cell":null,"file_count":1,"gzip_bytes":1868802,"id":"original_public_n_image","kib":1832.62,"label":"Original Public N Image","mib":1.7897,"notes":"","raw_bytes":1876603,"represented_pay_cells":0,"short_label":"Original Public N Image","show_in_ui":false,"static_to_formula_multiple":2.547700407419626,"storage_reduction_percent":60.74891705917555},{"bytes_per_pay_cell":null,"file_count":1,"gzip_bytes":19654,"id":"original_pay_lab_html","kib":70.61,"label":"Original Pay Lab Html","mib":0.069,"notes":"","raw_bytes":72305,"represented_pay_cells":0,"short_label":"Original Pay Lab Html","show_in_ui":false,"static_to_formula_multiple":0.09816219944147805,"storage_reduction_percent":-918.7220800774497},{"bytes_per_pay_cell":null,"file_count":1,"gzip_bytes":797886,"id":"portal_reference_html","kib":1133.15,"label":"Portal Reference Html","mib":1.1066,"notes":"","raw_bytes":1160342,"represented_pay_cells":0,"short_label":"Portal Reference Html","show_in_ui":false,"static_to_formula_multiple":1.5752952468615384,"storage_reduction_percent":36.51983639306342},{"bytes_per_pay_cell":7.424,"file_count":50,"gzip_bytes":27445,"id":"annual_csv_tables","kib":54.38,"label":"Fifty separate annual CSV tables","mib":0.0531,"notes":"","raw_bytes":55680,"represented_pay_cells":7500,"short_label":"50 CSV","show_in_ui":true,"static_to_formula_multiple":0.07559188527628101,"storage_reduction_percent":-1222.8933189655172},{"bytes_per_pay_cell":7.430666666666666,"file_count":50,"gzip_bytes":27115,"id":"annual_json_tables","kib":54.42,"label":"Fifty separate annual JSON tables","mib":0.0531,"notes":"","raw_bytes":55730,"represented_pay_cells":7500,"short_label":"50 JSON","show_in_ui":true,"static_to_formula_multiple":0.07565976592038687,"storage_reduction_percent":-1221.7064417728332},{"bytes_per_pay_cell":18.364,"file_count":50,"gzip_bytes":37680,"id":"annual_html_tables","kib":134.5,"label":"Fifty separate annual static HTML table pages","mib":0.1313,"notes":"","raw_bytes":137730,"represented_pay_cells":7500,"short_label":"50 HTML","show_in_ui":true,"static_to_formula_multiple":0.18698402225399036,"storage_reduction_percent":-434.8050533652799},{"bytes_per_pay_cell":7.2976,"file_count":1,"gzip_bytes":20614,"id":"combined_static_json","kib":53.45,"label":"One combined static JSON export containing all 7,500 cells","mib":0.0522,"notes":"","raw_bytes":54732,"represented_pay_cells":7500,"short_label":"Combined JSON","show_in_ui":true,"static_to_formula_multiple":0.07430486826403399,"storage_reduction_percent":-1245.8068406051304},{"bytes_per_pay_cell":17.959066666666665,"file_count":1,"gzip_bytes":23563,"id":"combined_static_html","kib":131.54,"label":"One combined static HTML export containing all 7,500 cells","mib":0.1285,"notes":"","raw_bytes":134693,"represented_pay_cells":7500,"short_label":"Combined HTML","show_in_ui":true,"static_to_formula_multiple":0.1828609519310007,"storage_reduction_percent":-446.86360835381197},{"bytes_per_pay_cell":null,"file_count":0,"gzip_bytes":null,"id":"printable_pdfs","kib":null,"label":"Fifty printable PDFs","mib":null,"notes":"{\"browser_executable\": \"C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe\", \"browser_version\": \"unavailable\", \"reason\": \"browser version check failed: Command '['C:\\\\\\\\Program Files\\\\\\\\Google\\\\\\\\Chrome\\\\\\\\Application\\\\\\\\chrome.exe', '--version']' timed out after 10 seconds\", \"status\": \"unavailable\"}","raw_bytes":null,"represented_pay_cells":7500,"short_label":"50 PDFs","show_in_ui":true,"static_to_formula_multiple":null,"storage_reduction_percent":null}],"optimized_brand_assets_bytes":453493,"represented_pay_cells":7500};
+window.NGSPaySizeReceipt = {"calculation_package_without_brand_imagery":844398,"complete_deployed_package_with_brand_imagery":1297891,"equations":{"bytes_per_pay_cell":"artifact_bytes / represented_pay_cells","static_to_formula_multiple":"static_equivalent_bytes / formula_artifact_bytes","storage_reduction_percent":"100 * (1 - formula_artifact_bytes / static_equivalent_bytes)"},"formula_artifact_bytes":844398,"generated_at":"2026-08-08T00:00:00Z","measurements":[{"bytes_per_pay_cell":3.1417333333333333,"file_count":2,"gzip_bytes":6123,"id":"core_calculation_engine","kib":23.01,"label":"Core calculation engine","mib":0.0225,"notes":"","raw_bytes":23563,"represented_pay_cells":7500,"short_label":"Core calculation engine","show_in_ui":false,"static_to_formula_multiple":0.027905087411386573,"storage_reduction_percent":-3483.5759453380297},{"bytes_per_pay_cell":3.4974666666666665,"file_count":6,"gzip_bytes":6292,"id":"historical_data_checkpoints","kib":25.62,"label":"Historical data and checkpoints","mib":0.025,"notes":"","raw_bytes":26231,"represented_pay_cells":7500,"short_label":"Historical data and checkpoints","show_in_ui":false,"static_to_formula_multiple":0.031064734876207666,"storage_reduction_percent":-3119.0842895810297},{"bytes_per_pay_cell":4.290133333333333,"file_count":2,"gzip_bytes":8362,"id":"html","kib":31.42,"label":"HTML bytes","mib":0.0307,"notes":"","raw_bytes":32176,"represented_pay_cells":7500,"short_label":"HTML bytes","show_in_ui":false,"static_to_formula_multiple":0.038105253683689444,"storage_reduction_percent":-2524.3100447538536},{"bytes_per_pay_cell":null,"file_count":1,"gzip_bytes":3979,"id":"css","kib":16.51,"label":"CSS bytes","mib":0.0161,"notes":"","raw_bytes":16909,"represented_pay_cells":0,"short_label":"CSS bytes","show_in_ui":false,"static_to_formula_multiple":0.02002491715991748,"storage_reduction_percent":-4893.778461174522},{"bytes_per_pay_cell":9.348266666666667,"file_count":4,"gzip_bytes":18935,"id":"javascript","kib":68.47,"label":"JavaScript bytes","mib":0.0669,"notes":"","raw_bytes":70112,"represented_pay_cells":7500,"short_label":"JavaScript bytes","show_in_ui":false,"static_to_formula_multiple":0.08303193517748739,"storage_reduction_percent":-1104.3558877225012},{"bytes_per_pay_cell":null,"file_count":3,"gzip_bytes":2842,"id":"source_metadata","kib":5.52,"label":"Source/reference metadata bytes","mib":0.0054,"notes":"","raw_bytes":5654,"represented_pay_cells":0,"short_label":"Source/reference metadata bytes","show_in_ui":false,"static_to_formula_multiple":0.006695894589991923,"storage_reduction_percent":-14834.524230633182},{"bytes_per_pay_cell":null,"file_count":3,"gzip_bytes":453085,"id":"optimized_brand_assets","kib":442.86,"label":"Optimized N brand assets bytes","mib":0.4325,"notes":"","raw_bytes":453493,"represented_pay_cells":0,"short_label":"Optimized N brand assets bytes","show_in_ui":false,"static_to_formula_multiple":0.5370607225502666,"storage_reduction_percent":-86.19868443393834},{"bytes_per_pay_cell":112.5864,"file_count":10,"gzip_bytes":514957,"id":"calculation_without_brand","kib":824.61,"label":"Calculation package without brand imagery","mib":0.8053,"notes":"","raw_bytes":844398,"represented_pay_cells":7500,"short_label":"Formula package","show_in_ui":true,"static_to_formula_multiple":1.0,"storage_reduction_percent":0.0},{"bytes_per_pay_cell":173.05213333333333,"file_count":13,"gzip_bytes":968042,"id":"complete_with_brand","kib":1267.47,"label":"Complete deployed package with brand imagery","mib":1.2378,"notes":"","raw_bytes":1297891,"represented_pay_cells":7500,"short_label":"Complete package","show_in_ui":true,"static_to_formula_multiple":1.5370607225502666,"storage_reduction_percent":34.94076158937847},{"bytes_per_pay_cell":658.0637333333333,"file_count":0,"gzip_bytes":null,"id":"repository_worktree","kib":4819.8,"label":"Full repository working-tree bytes excluding .git","mib":4.7068,"notes":"","raw_bytes":4935478,"represented_pay_cells":7500,"short_label":"Full repository working-tree bytes excluding .git","show_in_ui":false,"static_to_formula_multiple":5.844966473156024,"storage_reduction_percent":82.89126200137049},{"bytes_per_pay_cell":94.17773333333334,"file_count":1,"gzip_bytes":479326,"id":"offline_single_file","kib":689.78,"label":"Single-file offline build","mib":0.6736,"notes":"","raw_bytes":706333,"represented_pay_cells":7500,"short_label":"Offline HTML","show_in_ui":true,"static_to_formula_multiple":0.8364929807981544,"storage_reduction_percent":-19.546729375521178},{"bytes_per_pay_cell":null,"file_count":1,"gzip_bytes":1868802,"id":"original_public_n_image","kib":1832.62,"label":"Original Public N Image","mib":1.7897,"notes":"","raw_bytes":1876603,"represented_pay_cells":0,"short_label":"Original Public N Image","show_in_ui":false,"static_to_formula_multiple":2.222415259155043,"storage_reduction_percent":55.00390865835768},{"bytes_per_pay_cell":null,"file_count":1,"gzip_bytes":19654,"id":"original_pay_lab_html","kib":70.61,"label":"Original Pay Lab Html","mib":0.069,"notes":"","raw_bytes":72305,"represented_pay_cells":0,"short_label":"Original Pay Lab Html","show_in_ui":false,"static_to_formula_multiple":0.08562905170310683,"storage_reduction_percent":-1067.82795104073},{"bytes_per_pay_cell":null,"file_count":1,"gzip_bytes":797886,"id":"portal_reference_html","kib":1133.15,"label":"Portal Reference Html","mib":1.1066,"notes":"","raw_bytes":1160342,"represented_pay_cells":0,"short_label":"Portal Reference Html","show_in_ui":false,"static_to_formula_multiple":1.3741647895897433,"storage_reduction_percent":27.228524004129817},{"bytes_per_pay_cell":7.424,"file_count":50,"gzip_bytes":27445,"id":"annual_csv_tables","kib":54.38,"label":"Fifty separate annual CSV tables","mib":0.0531,"notes":"","raw_bytes":55680,"represented_pay_cells":7500,"short_label":"50 CSV","show_in_ui":true,"static_to_formula_multiple":0.06594046883104887,"storage_reduction_percent":-1416.5193965517242},{"bytes_per_pay_cell":7.430666666666666,"file_count":50,"gzip_bytes":27115,"id":"annual_json_tables","kib":54.42,"label":"Fifty separate annual JSON tables","mib":0.0531,"notes":"","raw_bytes":55730,"represented_pay_cells":7500,"short_label":"50 JSON","show_in_ui":true,"static_to_formula_multiple":0.06599968261412273,"storage_reduction_percent":-1415.1588013637179},{"bytes_per_pay_cell":18.364,"file_count":50,"gzip_bytes":37680,"id":"annual_html_tables","kib":134.5,"label":"Fifty separate annual static HTML table pages","mib":0.1313,"notes":"","raw_bytes":137730,"represented_pay_cells":7500,"short_label":"50 HTML","show_in_ui":true,"static_to_formula_multiple":0.16311028685525072,"storage_reduction_percent":-513.0821171857983},{"bytes_per_pay_cell":7.2976,"file_count":1,"gzip_bytes":20614,"id":"combined_static_json","kib":53.45,"label":"One combined static JSON export containing all 7,500 cells","mib":0.0522,"notes":"","raw_bytes":54732,"represented_pay_cells":7500,"short_label":"Combined JSON","show_in_ui":true,"static_to_formula_multiple":0.06481777550396851,"storage_reduction_percent":-1442.7866695900022},{"bytes_per_pay_cell":17.959066666666665,"file_count":1,"gzip_bytes":23563,"id":"combined_static_html","kib":131.54,"label":"One combined static HTML export containing all 7,500 cells","mib":0.1285,"notes":"","raw_bytes":134693,"represented_pay_cells":7500,"short_label":"Combined HTML","show_in_ui":true,"static_to_formula_multiple":0.15951364167134455,"storage_reduction_percent":-526.9056298397095},{"bytes_per_pay_cell":null,"file_count":0,"gzip_bytes":null,"id":"printable_pdfs","kib":null,"label":"Fifty printable PDFs","mib":null,"notes":"{\"browser_executable\": \"C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe\", \"browser_version\": \"unavailable\", \"reason\": \"browser version check failed: Command '['C:\\\\\\\\Program Files\\\\\\\\Google\\\\\\\\Chrome\\\\\\\\Application\\\\\\\\chrome.exe', '--version']' timed out after 10 seconds\", \"status\": \"unavailable\"}","raw_bytes":null,"represented_pay_cells":7500,"short_label":"50 PDFs","show_in_ui":true,"static_to_formula_multiple":null,"storage_reduction_percent":null}],"optimized_brand_assets_bytes":453493,"represented_pay_cells":7500};
 
 (function () {
   "use strict";
@@ -1409,6 +1603,7 @@ window.NGSPaySizeReceipt = {"calculation_package_without_brand_imagery":736587,"
     compareYear: $("compareYear"),
     grade: $("grade"),
     step: $("step"),
+    localityArea: $("localityArea"),
     locality: $("locality"),
     cap: $("cap"),
     applyCap: $("applyCap"),
@@ -1445,14 +1640,32 @@ window.NGSPaySizeReceipt = {"calculation_package_without_brand_imagery":736587,"
     sizeStamp: $("sizeStamp"),
     sizeTable: $("sizeTable"),
     sizeBars: $("sizeBars"),
+    surfaceMode: $("surfaceMode"),
+    surfaceYearSpan: $("surfaceYearSpan"),
+    surfaceYaw: $("surfaceYaw"),
+    surfaceTilt: $("surfaceTilt"),
+    surfaceTitle: $("surfaceTitle"),
+    surfacePeak: $("surfacePeak"),
+    surfaceRange: $("surfaceRange"),
+    surfaceSelected: $("surfaceSelected"),
+    surfaceSpread: $("surfaceSpread"),
+    paySurfaceCanvas: $("paySurfaceCanvas"),
+    localityLiftCanvas: $("localityLiftCanvas"),
+    capPressureCanvas: $("capPressureCanvas"),
     sourceList: $("sourceList"),
     buildMeta: $("buildMeta")
   };
 
   let lastRecord = null;
+  const surfaceDrag = { active: false, pointerId: null, x: 0, y: 0 };
+  let resizeTimer = null;
 
   function setText(el, value) {
     if (el) el.textContent = value;
+  }
+
+  function clamp(value, min, max) {
+    return Math.min(max, Math.max(min, value));
   }
 
   function option(label, value) {
@@ -1460,6 +1673,49 @@ window.NGSPaySizeReceipt = {"calculation_package_without_brand_imagery":736587,"
     node.textContent = label;
     node.value = value;
     return node;
+  }
+
+  function localityAreasForYear(year) {
+    const rates = math.DATA.localityRates && math.DATA.localityRates.by_year;
+    const areas = rates ? rates[String(year)] : null;
+    return Array.isArray(areas) ? areas : [];
+  }
+
+  function localityAreaByCode(year, code) {
+    return localityAreasForYear(year).find((area) => area.code === code) || null;
+  }
+
+  function fillLocalityAreas(year, preferredCode) {
+    const areas = localityAreasForYear(year);
+    els.localityArea.innerHTML = "";
+    els.localityArea.appendChild(option("Manual / custom percentage", "custom"));
+    areas.forEach((area) => {
+      els.localityArea.appendChild(option(`${area.name} (${math.pct(area.percentage)})`, area.code));
+    });
+    if (!areas.length) {
+      els.localityArea.value = "custom";
+      return;
+    }
+    const fallback = localityAreaByCode(year, preferredCode) ? preferredCode : "RUS";
+    els.localityArea.value = localityAreaByCode(year, fallback) ? fallback : areas[0].code;
+  }
+
+  function selectedLocalityArea() {
+    const inputYear = Number(els.year.value || 2026);
+    return localityAreaByCode(inputYear, els.localityArea.value);
+  }
+
+  function syncLocalityFromArea() {
+    const area = selectedLocalityArea();
+    if (area) els.locality.value = area.percentage.toFixed(2);
+  }
+
+  function syncAreaFromManualPercent() {
+    const area = selectedLocalityArea();
+    const value = Number(els.locality.value);
+    if (area && (!Number.isFinite(value) || Math.abs(value - area.percentage) > 0.005)) {
+      els.localityArea.value = "custom";
+    }
   }
 
   function fillControls() {
@@ -1477,6 +1733,8 @@ window.NGSPaySizeReceipt = {"calculation_package_without_brand_imagery":736587,"
     els.compareYear.value = "1977";
     els.grade.value = "12";
     els.step.value = "10";
+    fillLocalityAreas(2026, "RUS");
+    syncLocalityFromArea();
   }
 
   function knownCap(year) {
@@ -1485,7 +1743,14 @@ window.NGSPaySizeReceipt = {"calculation_package_without_brand_imagery":736587,"
   }
 
   function setYearDefaults(year) {
-    els.locality.value = year === 2026 ? "17.06" : year < 1994 ? "0" : els.locality.value;
+    const previousArea = els.localityArea.value || "RUS";
+    fillLocalityAreas(year, previousArea);
+    const area = selectedLocalityArea();
+    if (area) {
+      els.locality.value = area.percentage.toFixed(2);
+    } else if (year < 1994) {
+      els.locality.value = "0";
+    }
     const cap = knownCap(year);
     els.cap.value = Number.isFinite(cap) ? String(cap) : "";
   }
@@ -1501,6 +1766,7 @@ window.NGSPaySizeReceipt = {"calculation_package_without_brand_imagery":736587,"
       grade,
       step,
       localityPct,
+      localityArea: selectedLocalityArea(),
       capValue,
       applyCap: els.applyCap.checked,
       compareYear: Number(els.compareYear.value)
@@ -1525,7 +1791,9 @@ window.NGSPaySizeReceipt = {"calculation_package_without_brand_imagery":736587,"
     els.statusBadge.dataset.statusClass = result.statusClass;
     const diff = result.base - compare.base;
     const diffPct = compare.base ? (diff / compare.base) * 100 : 0;
-    els.resultNote.textContent = `${eraDescription(result)}. ${diff >= 0 ? "+" : "-"}${math.money0.format(Math.abs(diff))} (${diffPct >= 0 ? "+" : ""}${diffPct.toFixed(1)}%) vs. ${compare.year}.`;
+    const area = selectedLocalityArea();
+    const areaText = area ? `${area.name} locality (${math.pct(area.percentage)})` : `manual locality (${math.pct(result.localityPct)})`;
+    els.resultNote.textContent = `${areaText}. ${eraDescription(result)}. ${diff >= 0 ? "+" : "-"}${math.money0.format(Math.abs(diff))} (${diffPct >= 0 ? "+" : ""}${diffPct.toFixed(1)}%) vs. ${compare.year}.`;
   }
 
   function renderTrace(result) {
@@ -1658,6 +1926,333 @@ window.NGSPaySizeReceipt = {"calculation_package_without_brand_imagery":736587,"
     }).join("");
   }
 
+
+  function themeColors() {
+    const root = getComputedStyle(document.documentElement);
+    const read = (name, fallback) => root.getPropertyValue(name).trim() || fallback;
+    return {
+      bg: read("--navy", "#071a2d"),
+      panel: read("--panel", "#ffffff"),
+      ink: read("--ink", "#172033"),
+      muted: read("--muted", "#637083"),
+      line: read("--line", "#c9d7e4"),
+      teal: read("--teal", "#138f88"),
+      cyan: read("--cyan", "#0ea5c6"),
+      blue: read("--blue", "#1d5fa7"),
+      orange: read("--orange", "#c65d21"),
+      magenta: read("--magenta", "#a73383"),
+      green: read("--green", "#1d7d45")
+    };
+  }
+
+  function rgbParts(color) {
+    const value = String(color).trim();
+    const hex = value.match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i);
+    if (hex) {
+      const raw = hex[1].length === 3 ? hex[1].split("").map((c) => c + c).join("") : hex[1];
+      return [0, 2, 4].map((i) => parseInt(raw.slice(i, i + 2), 16));
+    }
+    const rgb = value.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/i);
+    if (rgb) return [Number(rgb[1]), Number(rgb[2]), Number(rgb[3])];
+    return [19, 143, 136];
+  }
+
+  function rgbaColor(color, alpha) {
+    const [r, g, b] = rgbParts(color);
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  }
+
+  function blendColor(a, b, t) {
+    const left = rgbParts(a);
+    const right = rgbParts(b);
+    const mix = left.map((value, index) => Math.round(value + (right[index] - value) * Math.max(0, Math.min(1, t))));
+    return `rgb(${mix[0]}, ${mix[1]}, ${mix[2]})`;
+  }
+
+  function canvasMetrics(canvas, minHeight) {
+    const rect = canvas.getBoundingClientRect();
+    const cssWidth = Math.max(320, rect.width || canvas.clientWidth || canvas.width || 320);
+    const cssHeight = Math.max(minHeight, rect.height || canvas.clientHeight || minHeight);
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const pixelWidth = Math.round(cssWidth * dpr);
+    const pixelHeight = Math.round(cssHeight * dpr);
+    if (canvas.width !== pixelWidth || canvas.height !== pixelHeight) {
+      canvas.width = pixelWidth;
+      canvas.height = pixelHeight;
+    }
+    const ctx = canvas.getContext("2d");
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return { ctx, width: cssWidth, height: cssHeight };
+  }
+
+  function clearCanvas(ctx, width, height, colors) {
+    const bg = ctx.createLinearGradient(0, 0, width, height);
+    bg.addColorStop(0, rgbaColor(colors.bg, 0.96));
+    bg.addColorStop(0.55, rgbaColor(colors.blue, 0.32));
+    bg.addColorStop(1, rgbaColor(colors.teal, 0.24));
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, width, height);
+    ctx.strokeStyle = rgbaColor(colors.cyan, 0.16);
+    ctx.lineWidth = 1;
+    for (let x = -height; x < width + height; x += 44) {
+      ctx.beginPath();
+      ctx.moveTo(x, height);
+      ctx.lineTo(x + height, 0);
+      ctx.stroke();
+    }
+  }
+
+  function surfaceYears(selectedYear, span) {
+    const selectedIndex = math.YEARS.indexOf(selectedYear);
+    const endIndex = selectedIndex >= 0 ? selectedIndex : math.YEARS.length - 1;
+    const startIndex = Math.max(0, endIndex - span + 1);
+    let years = math.YEARS.slice(startIndex, endIndex + 1);
+    if (years.length < 2) years = math.YEARS.slice(0, Math.min(span, math.YEARS.length));
+    return years;
+  }
+
+  function surfaceMetricValue(year, grade, step, input, mode) {
+    if (mode === "base") return math.deriveFromAnchor(year, grade, step).base;
+    const result = math.computePay(year, grade, step, input.localityPct, input.capValue, input.applyCap);
+    return mode === "hourly" ? result.hourly : result.annual;
+  }
+
+  function surfaceMoney(value, mode) {
+    return mode === "hourly" ? math.money2.format(value) : math.money0.format(value);
+  }
+
+  function surfaceLabel(mode) {
+    if (mode === "base") return "Base pay";
+    if (mode === "hourly") return "Hourly";
+    return "Annual with locality/cap";
+  }
+
+  function polygon(ctx, points, fill, stroke, lineWidth = 1) {
+    ctx.beginPath();
+    points.forEach((point, index) => {
+      if (index === 0) ctx.moveTo(point.x, point.y);
+      else ctx.lineTo(point.x, point.y);
+    });
+    ctx.closePath();
+    ctx.fillStyle = fill;
+    ctx.fill();
+    ctx.strokeStyle = stroke;
+    ctx.lineWidth = lineWidth;
+    ctx.stroke();
+  }
+
+  function renderPaySurface(input) {
+    const canvas = els.paySurfaceCanvas;
+    if (!canvas) return;
+    const colors = themeColors();
+    const { ctx, width, height } = canvasMetrics(canvas, 360);
+    clearCanvas(ctx, width, height, colors);
+    const mode = els.surfaceMode.value || "annual";
+    const years = surfaceYears(input.year, Number(els.surfaceYearSpan.value) || 25);
+    const grades = Array.from({ length: 15 }, (_, index) => index + 1);
+    const values = years.map((year) => grades.map((grade) => surfaceMetricValue(year, grade, input.step, input, mode)));
+    const flat = values.flat();
+    const minValue = Math.min(...flat);
+    const maxValue = Math.max(...flat);
+    const span = Math.max(1, maxValue - minValue);
+    const yaw = (Number(els.surfaceYaw.value) || 0) * Math.PI / 180;
+    const tilt = (Number(els.surfaceTilt.value) || 38) * Math.PI / 180;
+    const scale = Math.min(width * 0.34, height * 0.43);
+    const centerX = width * 0.5;
+    const baseY = height * 0.76;
+
+    function project(ix, iz, value) {
+      const xNorm = years.length <= 1 ? 0 : (ix / (years.length - 1) - 0.5) * 2.25;
+      const zNorm = (iz / (grades.length - 1) - 0.5) * 1.5;
+      const vNorm = (value - minValue) / span;
+      const yNorm = 0.08 + vNorm * 1.26;
+      const rx = xNorm * Math.cos(yaw) - zNorm * Math.sin(yaw);
+      const rz = xNorm * Math.sin(yaw) + zNorm * Math.cos(yaw);
+      return {
+        x: centerX + rx * scale,
+        y: baseY + rz * scale * Math.sin(tilt) - yNorm * height * 0.42,
+        depth: rz + yNorm * 0.12,
+        vNorm
+      };
+    }
+
+    const cells = [];
+    for (let ix = 0; ix < years.length - 1; ix += 1) {
+      for (let iz = 0; iz < grades.length - 1; iz += 1) {
+        const corners = [
+          project(ix, iz, values[ix][iz]),
+          project(ix + 1, iz, values[ix + 1][iz]),
+          project(ix + 1, iz + 1, values[ix + 1][iz + 1]),
+          project(ix, iz + 1, values[ix][iz + 1])
+        ];
+        const avg = (values[ix][iz] + values[ix + 1][iz] + values[ix + 1][iz + 1] + values[ix][iz + 1]) / 4;
+        cells.push({ corners, value: avg, depth: corners.reduce((sum, point) => sum + point.depth, 0) / 4 });
+      }
+    }
+    cells.sort((a, b) => a.depth - b.depth).forEach((cell) => {
+      const t = (cell.value - minValue) / span;
+      const fill = rgbaColor(blendColor(colors.blue, colors.orange, t), 0.78);
+      polygon(ctx, cell.corners, fill, rgbaColor(colors.cyan, 0.38), 0.9);
+    });
+
+    const baseValue = minValue;
+    const axisCorners = [project(0, 0, baseValue), project(years.length - 1, 0, baseValue), project(years.length - 1, grades.length - 1, baseValue), project(0, grades.length - 1, baseValue)];
+    ctx.strokeStyle = rgbaColor(colors.ink, 0.75);
+    ctx.lineWidth = 1.6;
+    ctx.beginPath();
+    axisCorners.forEach((point, index) => index === 0 ? ctx.moveTo(point.x, point.y) : ctx.lineTo(point.x, point.y));
+    ctx.closePath();
+    ctx.stroke();
+
+    const selectedYearIndex = Math.max(0, years.indexOf(input.year));
+    const selectedGradeIndex = input.grade - 1;
+    const selectedValue = surfaceMetricValue(input.year, input.grade, input.step, input, mode);
+    const selectedPoint = project(selectedYearIndex >= 0 ? selectedYearIndex : years.length - 1, selectedGradeIndex, selectedValue);
+    const floorPoint = project(selectedYearIndex >= 0 ? selectedYearIndex : years.length - 1, selectedGradeIndex, baseValue);
+    ctx.strokeStyle = rgbaColor(colors.orange, 0.86);
+    ctx.setLineDash([5, 5]);
+    ctx.beginPath();
+    ctx.moveTo(floorPoint.x, floorPoint.y);
+    ctx.lineTo(selectedPoint.x, selectedPoint.y);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.beginPath();
+    ctx.arc(selectedPoint.x, selectedPoint.y, 7, 0, Math.PI * 2);
+    ctx.fillStyle = colors.orange;
+    ctx.fill();
+    ctx.strokeStyle = rgbaColor(colors.panel, 0.92);
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    ctx.font = "700 12px Segoe UI, system-ui, sans-serif";
+    ctx.fillStyle = rgbaColor(colors.ink, 0.92);
+    ctx.textAlign = "left";
+    ctx.fillText(String(years[0]), Math.max(10, axisCorners[0].x - 18), Math.min(height - 14, axisCorners[0].y + 22));
+    ctx.textAlign = "right";
+    ctx.fillText(String(years[years.length - 1]), Math.min(width - 10, axisCorners[1].x + 18), Math.min(height - 14, axisCorners[1].y + 22));
+    ctx.textAlign = "center";
+    ctx.fillText("GS-15", axisCorners[2].x, Math.max(18, axisCorners[2].y - 8));
+    ctx.fillText(`GS-${input.grade} / ${input.year}`, selectedPoint.x, Math.max(18, selectedPoint.y - 14));
+
+    const gradeLow = surfaceMetricValue(input.year, 1, input.step, input, mode);
+    const gradeHigh = surfaceMetricValue(input.year, 15, input.step, input, mode);
+    setText(els.surfaceTitle, `${surfaceLabel(mode)} surface | Step ${input.step}`);
+    setText(els.surfacePeak, surfaceMoney(maxValue, mode));
+    setText(els.surfaceRange, `${years[0]}-${years[years.length - 1]} | GS-1 to GS-15`);
+    setText(els.surfaceSelected, surfaceMoney(selectedValue, mode));
+    setText(els.surfaceSpread, surfaceMoney(Math.abs(gradeHigh - gradeLow), mode));
+  }
+
+  function drawExtrudedBar(ctx, x, bottom, width, height, depth, color, colors) {
+    const top = bottom - height;
+    ctx.fillStyle = rgbaColor(color, 0.86);
+    ctx.fillRect(x, top, width, height);
+    polygon(ctx, [
+      { x: x + width, y: top },
+      { x: x + width + depth, y: top - depth },
+      { x: x + width + depth, y: bottom - depth },
+      { x: x + width, y: bottom }
+    ], rgbaColor(color, 0.54), rgbaColor(colors.line, 0.55));
+    polygon(ctx, [
+      { x, y: top },
+      { x: x + depth, y: top - depth },
+      { x: x + width + depth, y: top - depth },
+      { x: x + width, y: top }
+    ], rgbaColor(color, 0.72), rgbaColor(colors.line, 0.55));
+  }
+
+  function renderLocalityLift(input) {
+    const canvas = els.localityLiftCanvas;
+    if (!canvas) return;
+    const colors = themeColors();
+    const { ctx, width, height } = canvasMetrics(canvas, 180);
+    clearCanvas(ctx, width, height, colors);
+    const base = math.computePay(input.year, input.grade, input.step, 0, NaN, false).annual;
+    const selected = math.computePay(input.year, input.grade, input.step, input.localityPct, input.capValue, input.applyCap).annual;
+    const areas = localityAreasForYear(input.year);
+    const maxArea = areas.reduce((best, area) => (!best || area.percentage > best.percentage ? area : best), null);
+    const scenarios = [
+      { label: "Base", value: base, color: colors.blue },
+      { label: input.localityArea ? input.localityArea.code : "Manual", value: selected, color: colors.orange }
+    ];
+    if (maxArea) {
+      scenarios.push({ label: `Max ${maxArea.code}`, value: math.computePay(input.year, input.grade, input.step, maxArea.percentage, input.capValue, input.applyCap).annual, color: colors.magenta });
+    }
+    const maxValue = Math.max(...scenarios.map((item) => item.value), 1);
+    const bottom = height - 34;
+    const topPad = 28;
+    const barW = Math.min(64, (width - 72) / scenarios.length - 18);
+    const gap = (width - 42 - scenarios.length * barW) / Math.max(1, scenarios.length - 1);
+    ctx.font = "700 12px Segoe UI, system-ui, sans-serif";
+    scenarios.forEach((item, index) => {
+      const x = 20 + index * (barW + gap);
+      const h = Math.max(6, (item.value / maxValue) * (bottom - topPad));
+      drawExtrudedBar(ctx, x, bottom, barW, h, 10, item.color, colors);
+      ctx.fillStyle = rgbaColor(colors.ink, 0.92);
+      ctx.textAlign = "center";
+      ctx.fillText(item.label, x + barW / 2 + 4, bottom + 18);
+      ctx.fillText(math.money0.format(item.value), x + barW / 2 + 4, Math.max(14, bottom - h - 16));
+    });
+  }
+
+  function renderCapPressure(input) {
+    const canvas = els.capPressureCanvas;
+    if (!canvas) return;
+    const colors = themeColors();
+    const { ctx, width, height } = canvasMetrics(canvas, 180);
+    clearCanvas(ctx, width, height, colors);
+    const grades = Array.from({ length: 15 }, (_, index) => index + 1);
+    const rows = grades.map((grade) => {
+      const uncapped = math.computePay(input.year, grade, input.step, input.localityPct, input.capValue, false).localityRounded;
+      const capped = math.computePay(input.year, grade, input.step, input.localityPct, input.capValue, input.applyCap);
+      return { grade, uncapped, annual: capped.annual, capped: capped.capped };
+    });
+    const capValue = Number.isFinite(input.capValue) && input.capValue > 0 ? input.capValue : null;
+    const maxValue = Math.max(...rows.map((row) => row.uncapped), capValue || 0, 1);
+    const left = 22;
+    const right = 18;
+    const bottom = height - 32;
+    const top = 24;
+    const barW = Math.max(5, (width - left - right) / rows.length - 5);
+    rows.forEach((row, index) => {
+      const x = left + index * ((width - left - right) / rows.length);
+      const h = Math.max(4, (row.annual / maxValue) * (bottom - top));
+      drawExtrudedBar(ctx, x, bottom, barW, h, 5, row.capped ? colors.orange : colors.teal, colors);
+      if (row.grade === 1 || row.grade === 8 || row.grade === 15) {
+        ctx.fillStyle = rgbaColor(colors.ink, 0.88);
+        ctx.font = "700 11px Segoe UI, system-ui, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(`G${row.grade}`, x + barW / 2, bottom + 17);
+      }
+    });
+    if (capValue) {
+      const y = bottom - (capValue / maxValue) * (bottom - top);
+      ctx.strokeStyle = rgbaColor(colors.orange, 0.92);
+      ctx.lineWidth = 2;
+      ctx.setLineDash([6, 5]);
+      ctx.beginPath();
+      ctx.moveTo(left, y);
+      ctx.lineTo(width - right, y);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = rgbaColor(colors.ink, 0.94);
+      ctx.font = "700 12px Segoe UI, system-ui, sans-serif";
+      ctx.textAlign = "left";
+      const cappedCount = rows.filter((row) => row.capped).length;
+      ctx.fillText(`Cap ${math.money0.format(capValue)} | ${cappedCount} capped`, left, Math.max(14, y - 8));
+    } else {
+      ctx.fillStyle = rgbaColor(colors.ink, 0.9);
+      ctx.font = "700 12px Segoe UI, system-ui, sans-serif";
+      ctx.fillText("No annual cap selected", left, top);
+    }
+  }
+
+  function render3DLab(input) {
+    renderPaySurface(input);
+    renderLocalityLift(input);
+    renderCapPressure(input);
+  }
+
   function renderSources() {
     els.sourceList.innerHTML = math.DATA.sources.sources.map((source) => {
       const title = math.escapeHtml(source.title);
@@ -1684,11 +2279,17 @@ window.NGSPaySizeReceipt = {"calculation_package_without_brand_imagery":736587,"
     const result = math.computePay(input.year, input.grade, input.step, input.localityPct, input.capValue, input.applyCap);
     const compare = math.computePay(input.compareYear, input.grade, input.step, 0, NaN, false);
     lastRecord = math.calculationRecord(result);
+    lastRecord.inputs.locality_area = input.localityArea ? {
+      code: input.localityArea.code,
+      name: input.localityArea.name,
+      percentage: input.localityArea.percentage
+    } : null;
     renderSummary(result, compare);
     renderTrace(result);
     renderSchedule(input.year, input.grade, input.step);
     renderChart(input.year, input.grade, input.step);
     renderLedger(input.grade, input.step);
+    render3DLab(input);
   }
 
   function applyTheme(theme) {
@@ -1719,16 +2320,31 @@ window.NGSPaySizeReceipt = {"calculation_package_without_brand_imagery":736587,"
       els.compareYear.value = "1977";
       els.grade.value = "12";
       els.step.value = "10";
-      els.locality.value = "17.06";
+      fillLocalityAreas(2026, "RUS");
+      syncLocalityFromArea();
       els.cap.value = "197200";
       els.applyCap.checked = true;
+      els.surfaceMode.value = "annual";
+      els.surfaceYearSpan.value = "25";
+      els.surfaceYaw.value = "34";
+      els.surfaceTilt.value = "38";
       renderAll();
     });
     els.year.addEventListener("change", () => {
       setYearDefaults(Number(els.year.value));
       renderAll();
     });
-    [els.grade, els.step, els.compareYear, els.locality, els.cap, els.applyCap].forEach((el) => el.addEventListener("change", renderAll));
+    els.localityArea.addEventListener("change", () => {
+      syncLocalityFromArea();
+      renderAll();
+    });
+    els.locality.addEventListener("input", () => {
+      syncAreaFromManualPercent();
+      renderAll();
+    });
+    [els.grade, els.step, els.compareYear, els.cap, els.applyCap].forEach((el) => el.addEventListener("change", renderAll));
+    [els.surfaceMode, els.surfaceYearSpan].forEach((el) => el.addEventListener("change", renderAll));
+    [els.surfaceYaw, els.surfaceTilt].forEach((el) => el.addEventListener("input", renderAll));
     els.scheduleTable.addEventListener("click", (event) => {
       const button = event.target.closest(".cell-button");
       if (!button) return;
@@ -1741,7 +2357,51 @@ window.NGSPaySizeReceipt = {"calculation_package_without_brand_imagery":736587,"
       if (lastRecord) downloadJson(`N-GS-Pay-Math-Lab-${lastRecord.inputs.year}-GS${lastRecord.inputs.grade}-S${lastRecord.inputs.step}.json`, lastRecord);
     });
     els.printPage.addEventListener("click", () => window.print());
-    els.themeToggle.addEventListener("click", () => applyTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark"));
+    els.themeToggle.addEventListener("click", () => {
+      applyTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark");
+      renderAll();
+    });
+    els.paySurfaceCanvas.addEventListener("pointerdown", (event) => {
+      surfaceDrag.active = true;
+      surfaceDrag.pointerId = event.pointerId;
+      surfaceDrag.x = event.clientX;
+      surfaceDrag.y = event.clientY;
+      els.paySurfaceCanvas.setPointerCapture(event.pointerId);
+    });
+    els.paySurfaceCanvas.addEventListener("pointermove", (event) => {
+      if (!surfaceDrag.active || event.pointerId !== surfaceDrag.pointerId) return;
+      const dx = event.clientX - surfaceDrag.x;
+      const dy = event.clientY - surfaceDrag.y;
+      surfaceDrag.x = event.clientX;
+      surfaceDrag.y = event.clientY;
+      els.surfaceYaw.value = String(Math.round(clamp(Number(els.surfaceYaw.value) + dx * 0.35, -65, 65)));
+      els.surfaceTilt.value = String(Math.round(clamp(Number(els.surfaceTilt.value) - dy * 0.25, 18, 62)));
+      renderAll();
+    });
+    ["pointerup", "pointercancel", "pointerleave"].forEach((type) => {
+      els.paySurfaceCanvas.addEventListener(type, (event) => {
+        if (event.pointerId === surfaceDrag.pointerId && els.paySurfaceCanvas.hasPointerCapture(event.pointerId)) {
+          els.paySurfaceCanvas.releasePointerCapture(event.pointerId);
+        }
+        surfaceDrag.active = false;
+        surfaceDrag.pointerId = null;
+      });
+    });
+    els.paySurfaceCanvas.addEventListener("keydown", (event) => {
+      const yaw = Number(els.surfaceYaw.value);
+      const tilt = Number(els.surfaceTilt.value);
+      if (event.key === "ArrowLeft") els.surfaceYaw.value = String(clamp(yaw - 3, -65, 65));
+      else if (event.key === "ArrowRight") els.surfaceYaw.value = String(clamp(yaw + 3, -65, 65));
+      else if (event.key === "ArrowUp") els.surfaceTilt.value = String(clamp(tilt + 3, 18, 62));
+      else if (event.key === "ArrowDown") els.surfaceTilt.value = String(clamp(tilt - 3, 18, 62));
+      else return;
+      event.preventDefault();
+      renderAll();
+    });
+    window.addEventListener("resize", () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(renderAll, 90);
+    });
     els.menuToggle.addEventListener("click", () => {
       els.navDrawer.hidden = false;
       els.navDrawer.dataset.open = "true";

@@ -53,6 +53,7 @@ def combined_pay_data() -> dict[str, Any]:
         "checkpoints": read_json(ROOT / "data" / "historical-checkpoints.json"),
         "validation": read_json(ROOT / "data" / "official-validation.json"),
         "locality": read_json(ROOT / "data" / "locality-examples.json"),
+        "localityRates": read_json(ROOT / "data" / "locality-rates.json"),
         "sources": read_json(ROOT / "data" / "sources.json"),
     }
 
@@ -79,6 +80,10 @@ def copy_runtime(site: Path) -> None:
         copy_file(size_json, evidence_dir / "size-comparison.json")
     else:
         (evidence_dir / "size-comparison.js").write_text("window.NGSPaySizeReceipt = null;\n", encoding="utf-8")
+    for name in ("calculation-validation.json", "release-receipt.json"):
+        evidence_file = ROOT / "evidence" / name
+        if evidence_file.exists():
+            copy_file(evidence_file, evidence_dir / name)
 
 
 def copy_brand_assets(site: Path, brand: dict[str, Any]) -> None:
