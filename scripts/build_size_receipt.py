@@ -1,7 +1,8 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 import csv
 import json
+import os
 import shutil
 import subprocess
 import tempfile
@@ -242,7 +243,7 @@ def main() -> None:
             ]
         )
         chrome = find_chrome()
-        if chrome:
+        if chrome and os.environ.get("NGS_ENABLE_BROWSER_EVIDENCE") == "1":
             pdf_status = generate_pdfs(chrome, dirs["html"], dirs["pdf"])
             if pdf_status["status"] == "generated":
                 pdf_raw, pdf_gz, pdf_count = sum_files(dirs["pdf"], {".pdf"})
@@ -250,7 +251,10 @@ def main() -> None:
             else:
                 measurements.append(measurement("printable_pdfs", "Fifty printable PDFs", None, None, 0, PAY_CELLS, formula_artifact_bytes, True, "50 PDFs", json.dumps(pdf_status, sort_keys=True)))
         else:
-            measurements.append(measurement("printable_pdfs", "Fifty printable PDFs", None, None, 0, PAY_CELLS, formula_artifact_bytes, True, "50 PDFs", "unavailable: no verified local headless Chromium/Chrome PDF path"))
+            reason = "unavailable: browser evidence disabled; set NGS_ENABLE_BROWSER_EVIDENCE=1 to generate PDFs"
+            if not chrome:
+                reason = "unavailable: no verified local headless Chromium/Chrome PDF path"
+            measurements.append(measurement("printable_pdfs", "Fifty printable PDFs", None, None, 0, PAY_CELLS, formula_artifact_bytes, True, "50 PDFs", reason))
     finally:
         if tmp_root.exists():
             shutil.rmtree(tmp_root, ignore_errors=True)

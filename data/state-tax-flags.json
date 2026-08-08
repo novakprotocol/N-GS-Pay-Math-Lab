@@ -1,0 +1,183 @@
+{
+    "description":  "State income-tax flags for locality comparison. Flags mark state individual wage-income tax exposure only; this is not a complete tax calculation.",
+    "as_of":  "2026-01-01",
+    "source_url":  "https://taxfoundation.org/data/all/state/state-income-tax-rates-2026/",
+    "source_note":  "Tax Foundation lists Alaska, Florida, Nevada, New Hampshire, South Dakota, Tennessee, Texas, and Wyoming as states with no individual income tax as of January 1, 2026; it classifies Washington under graduated-rate income tax because its tax applies to high-earning individuals capital gains.",
+    "no_individual_income_tax_states":  [
+                                            "Alaska",
+                                            "Florida",
+                                            "Nevada",
+                                            "New Hampshire",
+                                            "South Dakota",
+                                            "Tennessee",
+                                            "Texas",
+                                            "Wyoming"
+                                        ],
+    "no_broad_wage_income_tax_states":  [
+                                            "Alaska",
+                                            "Florida",
+                                            "Nevada",
+                                            "New Hampshire",
+                                            "South Dakota",
+                                            "Tennessee",
+                                            "Texas",
+                                            "Washington",
+                                            "Wyoming"
+                                        ],
+    "locality_area_notes":  {
+                                "AK":  {
+                                           "states":  [
+                                                          "Alaska"
+                                                      ],
+                                           "note":  "Statewide Alaska locality; no state individual wage income tax.",
+                                           "no_wage_tax_states":  [
+                                                                      "Alaska"
+                                                                  ]
+                                       },
+                                "AU":  {
+                                           "states":  [
+                                                          "Texas"
+                                                      ],
+                                           "note":  "Texas locality; no state individual wage income tax.",
+                                           "no_wage_tax_states":  [
+                                                                      "Texas"
+                                                                  ]
+                                       },
+                                "BOS":  {
+                                            "states":  [
+                                                           "Massachusetts",
+                                                           "Rhode Island",
+                                                           "New Hampshire",
+                                                           "Connecticut",
+                                                           "Maine",
+                                                           "Vermont"
+                                                       ],
+                                            "note":  "Only the New Hampshire portion has no state individual wage income tax.",
+                                            "no_wage_tax_states":  [
+                                                                       "New Hampshire"
+                                                                   ]
+                                        },
+                                "CC":  {
+                                           "states":  [
+                                                          "Texas"
+                                                      ],
+                                           "note":  "Texas locality; no state individual wage income tax.",
+                                           "no_wage_tax_states":  [
+                                                                      "Texas"
+                                                                  ]
+                                       },
+                                "DFW":  {
+                                            "states":  [
+                                                           "Texas",
+                                                           "Oklahoma"
+                                                       ],
+                                            "note":  "Texas portion has no state individual wage income tax; Oklahoma portion is different.",
+                                            "no_wage_tax_states":  [
+                                                                       "Texas"
+                                                                   ]
+                                        },
+                                "HNT":  {
+                                            "states":  [
+                                                           "Alabama",
+                                                           "Tennessee"
+                                                       ],
+                                            "note":  "Tennessee portion has no state individual wage income tax; Alabama portion is different.",
+                                            "no_wage_tax_states":  [
+                                                                       "Tennessee"
+                                                                   ]
+                                        },
+                                "HOU":  {
+                                            "states":  [
+                                                           "Texas"
+                                                       ],
+                                            "note":  "Texas locality; no state individual wage income tax.",
+                                            "no_wage_tax_states":  [
+                                                                       "Texas"
+                                                                   ]
+                                        },
+                                "LR":  {
+                                           "states":  [
+                                                          "Texas"
+                                                      ],
+                                           "note":  "Texas locality; no state individual wage income tax.",
+                                           "no_wage_tax_states":  [
+                                                                      "Texas"
+                                                                  ]
+                                       },
+                                "LV":  {
+                                           "states":  [
+                                                          "Nevada",
+                                                          "Arizona"
+                                                      ],
+                                           "note":  "Nevada portion has no state individual wage income tax; Arizona portion is different.",
+                                           "no_wage_tax_states":  [
+                                                                      "Nevada"
+                                                                  ]
+                                       },
+                                "MFL":  {
+                                            "states":  [
+                                                           "Florida"
+                                                       ],
+                                            "note":  "Florida locality; no state individual wage income tax.",
+                                            "no_wage_tax_states":  [
+                                                                       "Florida"
+                                                                   ]
+                                        },
+                                "PB":  {
+                                           "states":  [
+                                                          "Florida"
+                                                      ],
+                                           "note":  "Florida locality; no state individual wage income tax.",
+                                           "no_wage_tax_states":  [
+                                                                      "Florida"
+                                                                  ]
+                                       },
+                                "POR":  {
+                                            "states":  [
+                                                           "Oregon",
+                                                           "Washington"
+                                                       ],
+                                            "note":  "Washington portion has no broad state wage income tax; Oregon portion is different.",
+                                            "no_wage_tax_states":  [
+                                                                       "Washington"
+                                                                   ]
+                                        },
+                                "RN":  {
+                                           "states":  [
+                                                          "Nevada"
+                                                      ],
+                                           "note":  "Nevada locality; no state individual wage income tax.",
+                                           "no_wage_tax_states":  [
+                                                                      "Nevada"
+                                                                  ]
+                                       },
+                                "SEA":  {
+                                            "states":  [
+                                                           "Washington"
+                                                       ],
+                                            "note":  "Washington has no broad state wage income tax; high-earner capital gains tax is separate.",
+                                            "no_wage_tax_states":  [
+                                                                       "Washington"
+                                                                   ]
+                                        },
+                                "SN":  {
+                                           "states":  [
+                                                          "Washington",
+                                                          "Idaho"
+                                                      ],
+                                           "note":  "Washington portion has no broad state wage income tax; Idaho portion is different.",
+                                           "no_wage_tax_states":  [
+                                                                      "Washington"
+                                                                  ]
+                                       },
+                                "SO":  {
+                                           "states":  [
+                                                          "Texas"
+                                                      ],
+                                           "note":  "Texas locality; no state individual wage income tax.",
+                                           "no_wage_tax_states":  [
+                                                                      "Texas"
+                                                                  ]
+                                       }
+                            }
+}

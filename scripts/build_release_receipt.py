@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import os
 from pathlib import Path
 from typing import Any
 
@@ -61,6 +62,8 @@ def find_chrome() -> Path | None:
 
 
 async def capture_screenshots() -> dict[str, Any]:
+    if os.environ.get("NGS_ENABLE_BROWSER_EVIDENCE") != "1":
+        return {"status": "unavailable", "reason": "browser screenshot evidence disabled; set NGS_ENABLE_BROWSER_EVIDENCE=1 to capture screenshots"}
     try:
         from playwright.async_api import async_playwright
     except Exception as exc:

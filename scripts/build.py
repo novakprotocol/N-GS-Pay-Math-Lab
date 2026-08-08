@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 import json
 import os
@@ -54,6 +54,8 @@ def combined_pay_data() -> dict[str, Any]:
         "validation": read_json(ROOT / "data" / "official-validation.json"),
         "locality": read_json(ROOT / "data" / "locality-examples.json"),
         "localityRates": read_json(ROOT / "data" / "locality-rates.json"),
+        "inflation": read_json(ROOT / "data" / "inflation-cpi.json"),
+        "stateTaxFlags": read_json(ROOT / "data" / "state-tax-flags.json"),
         "sources": read_json(ROOT / "data" / "sources.json"),
     }
 
@@ -107,7 +109,7 @@ def render_template(prefix: str, shell_mode: str, brand: dict[str, Any]) -> str:
     for needle, value in replacements.items():
         template = template.replace(needle, str(value))
     if shell_mode == "standalone":
-        template = template.replace('href="../index.html"', 'href="#home"')
+        template = template.replace('href="../index.html"', 'href="#calculator"')
     return template
 
 
@@ -164,5 +166,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
-

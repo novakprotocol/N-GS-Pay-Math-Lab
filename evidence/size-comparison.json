@@ -1,109 +1,109 @@
 {
-  "calculation_package_without_brand_imagery": 905960,
-  "complete_deployed_package_with_brand_imagery": 1359453,
+  "calculation_package_without_brand_imagery": 942537,
+  "complete_deployed_package_with_brand_imagery": 1396030,
   "equations": {
     "bytes_per_pay_cell": "artifact_bytes / represented_pay_cells",
     "static_to_formula_multiple": "static_equivalent_bytes / formula_artifact_bytes",
     "storage_reduction_percent": "100 * (1 - formula_artifact_bytes / static_equivalent_bytes)"
   },
-  "formula_artifact_bytes": 905960,
+  "formula_artifact_bytes": 942537,
   "generated_at": "2026-08-08T00:00:00Z",
   "measurements": [
     {
-      "bytes_per_pay_cell": 3.1002666666666667,
+      "bytes_per_pay_cell": 3.039066666666667,
       "file_count": 2,
-      "gzip_bytes": 6106,
+      "gzip_bytes": 6030,
       "id": "core_calculation_engine",
-      "kib": 22.71,
+      "kib": 22.26,
       "label": "Core calculation engine",
-      "mib": 0.0222,
+      "mib": 0.0217,
       "notes": "",
-      "raw_bytes": 23252,
+      "raw_bytes": 22793,
       "represented_pay_cells": 7500,
       "short_label": "Core calculation engine",
       "show_in_ui": false,
-      "static_to_formula_multiple": 0.025665592299880788,
-      "storage_reduction_percent": -3796.2669877859967
+      "static_to_formula_multiple": 0.024182605033011968,
+      "storage_reduction_percent": -4035.2037906374762
     },
     {
-      "bytes_per_pay_cell": 3.4444,
-      "file_count": 6,
-      "gzip_bytes": 6273,
+      "bytes_per_pay_cell": 5.519466666666666,
+      "file_count": 8,
+      "gzip_bytes": 8271,
       "id": "historical_data_checkpoints",
-      "kib": 25.23,
+      "kib": 40.43,
       "label": "Historical data and checkpoints",
-      "mib": 0.0246,
+      "mib": 0.0395,
       "notes": "",
-      "raw_bytes": 25833,
+      "raw_bytes": 41396,
       "represented_pay_cells": 7500,
       "short_label": "Historical data and checkpoints",
       "show_in_ui": false,
-      "static_to_formula_multiple": 0.028514503951609343,
-      "storage_reduction_percent": -3406.987186931444
+      "static_to_formula_multiple": 0.0439197612401423,
+      "storage_reduction_percent": -2176.8794086385155
     },
     {
-      "bytes_per_pay_cell": 4.5824,
+      "bytes_per_pay_cell": 4.860266666666667,
       "file_count": 2,
-      "gzip_bytes": 8912,
+      "gzip_bytes": 9204,
       "id": "html",
-      "kib": 33.56,
+      "kib": 35.6,
       "label": "HTML bytes",
-      "mib": 0.0328,
+      "mib": 0.0348,
       "notes": "",
-      "raw_bytes": 34368,
+      "raw_bytes": 36452,
       "represented_pay_cells": 7500,
       "short_label": "HTML bytes",
       "show_in_ui": false,
-      "static_to_formula_multiple": 0.03793544968872798,
-      "storage_reduction_percent": -2536.056797020484
+      "static_to_formula_multiple": 0.038674343818863345,
+      "storage_reduction_percent": -2485.6935147591353
     },
     {
       "bytes_per_pay_cell": null,
       "file_count": 1,
-      "gzip_bytes": 4441,
+      "gzip_bytes": 4561,
       "id": "css",
-      "kib": 18.5,
+      "kib": 19.69,
       "label": "CSS bytes",
-      "mib": 0.0181,
+      "mib": 0.0192,
       "notes": "",
-      "raw_bytes": 18948,
+      "raw_bytes": 20164,
       "represented_pay_cells": 0,
       "short_label": "CSS bytes",
       "show_in_ui": false,
-      "static_to_formula_multiple": 0.020914830676851074,
-      "storage_reduction_percent": -4681.296179016255
+      "static_to_formula_multiple": 0.02139332461219029,
+      "storage_reduction_percent": -4574.355286649475
     },
     {
-      "bytes_per_pay_cell": 11.376666666666667,
+      "bytes_per_pay_cell": 13.3644,
       "file_count": 4,
-      "gzip_bytes": 22305,
+      "gzip_bytes": 25775,
       "id": "javascript",
-      "kib": 83.33,
+      "kib": 97.88,
       "label": "JavaScript bytes",
-      "mib": 0.0814,
+      "mib": 0.0956,
       "notes": "",
-      "raw_bytes": 85325,
+      "raw_bytes": 100233,
       "represented_pay_cells": 7500,
       "short_label": "JavaScript bytes",
       "show_in_ui": false,
-      "static_to_formula_multiple": 0.09418186233387787,
-      "storage_reduction_percent": -961.7755640199239
+      "static_to_formula_multiple": 0.10634383583880527,
+      "storage_reduction_percent": -840.3459938343658
     },
     {
       "bytes_per_pay_cell": null,
       "file_count": 3,
-      "gzip_bytes": 2923,
+      "gzip_bytes": 3074,
       "id": "source_metadata",
-      "kib": 5.69,
+      "kib": 6.03,
       "label": "Source/reference metadata bytes",
-      "mib": 0.0056,
+      "mib": 0.0059,
       "notes": "",
-      "raw_bytes": 5831,
+      "raw_bytes": 6177,
       "represented_pay_cells": 0,
       "short_label": "Source/reference metadata bytes",
       "show_in_ui": false,
-      "static_to_formula_multiple": 0.0064362665018323105,
-      "storage_reduction_percent": -15436.957640198938
+      "static_to_formula_multiple": 0.006553588877678012,
+      "storage_reduction_percent": -15158.814958717823
     },
     {
       "bytes_per_pay_cell": null,
@@ -118,19 +118,19 @@
       "represented_pay_cells": 0,
       "short_label": "Optimized N brand assets bytes",
       "show_in_ui": false,
-      "static_to_formula_multiple": 0.5005662501655702,
-      "storage_reduction_percent": -99.77375615500128
+      "static_to_formula_multiple": 0.48114079341182364,
+      "storage_reduction_percent": -107.83937128026233
     },
     {
-      "bytes_per_pay_cell": 120.79466666666667,
+      "bytes_per_pay_cell": 125.6716,
       "file_count": 12,
-      "gzip_bytes": 528974,
+      "gzip_bytes": 536744,
       "id": "calculation_without_brand",
-      "kib": 884.73,
+      "kib": 920.45,
       "label": "Calculation package without brand imagery",
-      "mib": 0.864,
+      "mib": 0.8989,
       "notes": "",
-      "raw_bytes": 905960,
+      "raw_bytes": 942537,
       "represented_pay_cells": 7500,
       "short_label": "Formula package",
       "show_in_ui": true,
@@ -138,52 +138,52 @@
       "storage_reduction_percent": 0.0
     },
     {
-      "bytes_per_pay_cell": 181.2604,
+      "bytes_per_pay_cell": 186.13733333333334,
       "file_count": 15,
-      "gzip_bytes": 982059,
+      "gzip_bytes": 989829,
       "id": "complete_with_brand",
-      "kib": 1327.59,
+      "kib": 1363.31,
       "label": "Complete deployed package with brand imagery",
-      "mib": 1.2965,
+      "mib": 1.3314,
       "notes": "",
-      "raw_bytes": 1359453,
+      "raw_bytes": 1396030,
       "represented_pay_cells": 7500,
       "short_label": "Complete package",
       "show_in_ui": true,
-      "static_to_formula_multiple": 1.5005662501655703,
-      "storage_reduction_percent": 33.35849051052151
+      "static_to_formula_multiple": 1.4811407934118237,
+      "storage_reduction_percent": 32.484473829358976
     },
     {
-      "bytes_per_pay_cell": 1098.3384,
+      "bytes_per_pay_cell": 1113.0813333333333,
       "file_count": 0,
       "gzip_bytes": null,
       "id": "repository_worktree",
-      "kib": 8044.47,
+      "kib": 8152.45,
       "label": "Full repository working-tree bytes excluding .git",
-      "mib": 7.8559,
+      "mib": 7.9614,
       "notes": "",
-      "raw_bytes": 8237538,
+      "raw_bytes": 8348110,
       "represented_pay_cells": 7500,
       "short_label": "Full repository working-tree bytes excluding .git",
       "show_in_ui": false,
-      "static_to_formula_multiple": 9.09260673760431,
-      "storage_reduction_percent": 89.00205376897806
+      "static_to_formula_multiple": 8.857063436236455,
+      "storage_reduction_percent": 88.70957617951848
     },
     {
-      "bytes_per_pay_cell": 96.93253333333334,
+      "bytes_per_pay_cell": 99.25093333333334,
       "file_count": 1,
-      "gzip_bytes": 483516,
+      "gzip_bytes": 487315,
       "id": "offline_single_file",
-      "kib": 709.96,
+      "kib": 726.94,
       "label": "Single-file offline build",
-      "mib": 0.6933,
+      "mib": 0.7099,
       "notes": "",
-      "raw_bytes": 726994,
+      "raw_bytes": 744382,
       "represented_pay_cells": 7500,
       "short_label": "Offline HTML",
       "show_in_ui": true,
-      "static_to_formula_multiple": 0.802457062121948,
-      "storage_reduction_percent": -24.61725956472818
+      "static_to_formula_multiple": 0.7897642214576192,
+      "storage_reduction_percent": -26.62006872815301
     },
     {
       "bytes_per_pay_cell": null,
@@ -198,8 +198,8 @@
       "represented_pay_cells": 0,
       "short_label": "Original Public N Image",
       "show_in_ui": false,
-      "static_to_formula_multiple": 2.0713971919290035,
-      "storage_reduction_percent": 51.72340660224886
+      "static_to_formula_multiple": 1.9910125544143094,
+      "storage_reduction_percent": 49.77429962544022
     },
     {
       "bytes_per_pay_cell": null,
@@ -214,8 +214,8 @@
       "represented_pay_cells": 0,
       "short_label": "Original Pay Lab Html",
       "show_in_ui": false,
-      "static_to_formula_multiple": 0.07981036690361605,
-      "storage_reduction_percent": -1152.970057395754
+      "static_to_formula_multiple": 0.07671316881989779,
+      "storage_reduction_percent": -1203.5571537238088
     },
     {
       "bytes_per_pay_cell": null,
@@ -230,8 +230,8 @@
       "represented_pay_cells": 0,
       "short_label": "Portal Reference Html",
       "show_in_ui": false,
-      "static_to_formula_multiple": 1.2807872312243367,
-      "storage_reduction_percent": 21.9230192477735
+      "static_to_formula_multiple": 1.231083766472828,
+      "storage_reduction_percent": 18.770758965891087
     },
     {
       "bytes_per_pay_cell": 7.424,
@@ -246,8 +246,8 @@
       "represented_pay_cells": 7500,
       "short_label": "50 CSV",
       "show_in_ui": true,
-      "static_to_formula_multiple": 0.06145966709346991,
-      "storage_reduction_percent": -1527.0833333333333
+      "static_to_formula_multiple": 0.05907460396780179,
+      "storage_reduction_percent": -1592.7747844827586
     },
     {
       "bytes_per_pay_cell": 7.430666666666666,
@@ -262,8 +262,8 @@
       "represented_pay_cells": 7500,
       "short_label": "50 JSON",
       "show_in_ui": true,
-      "static_to_formula_multiple": 0.06151485716808689,
-      "storage_reduction_percent": -1525.6235420778755
+      "static_to_formula_multiple": 0.05912765228314645,
+      "storage_reduction_percent": -1591.2560559842095
     },
     {
       "bytes_per_pay_cell": 18.364,
@@ -278,8 +278,8 @@
       "represented_pay_cells": 7500,
       "short_label": "50 HTML",
       "show_in_ui": true,
-      "static_to_formula_multiple": 0.15202657953993554,
-      "storage_reduction_percent": -557.7797139330575
+      "static_to_formula_multiple": 0.1461268894483718,
+      "storage_reduction_percent": -584.3367458070137
     },
     {
       "bytes_per_pay_cell": 7.2976,
@@ -294,8 +294,8 @@
       "represented_pay_cells": 7500,
       "short_label": "Combined JSON",
       "show_in_ui": true,
-      "static_to_formula_multiple": 0.060413263278731956,
-      "storage_reduction_percent": -1555.2656581159101
+      "static_to_formula_multiple": 0.05806880790886724,
+      "storage_reduction_percent": -1622.0949353212013
     },
     {
       "bytes_per_pay_cell": 17.959066666666665,
@@ -310,8 +310,8 @@
       "represented_pay_cells": 7500,
       "short_label": "Combined HTML",
       "show_in_ui": true,
-      "static_to_formula_multiple": 0.14867433440770011,
-      "storage_reduction_percent": -572.6110488295606
+      "static_to_formula_multiple": 0.14290473477433777,
+      "storage_reduction_percent": -599.7668772690488
     },
     {
       "bytes_per_pay_cell": null,
@@ -321,7 +321,7 @@
       "kib": null,
       "label": "Fifty printable PDFs",
       "mib": null,
-      "notes": "{\"browser_executable\": \"C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe\", \"browser_version\": \"\", \"reason\": \"[0808/142506.153:ERROR:third_party\\\\crashpad\\\\crashpad\\\\util\\\\win\\\\registration_protocol_win.cc:108] CreateFile: Access is denied. (0x5)\\n[108924:54180:0808/142506.211:FATAL:mojo\\\\public\\\\cpp\\\\platform\\\\platform_channel.cc:108] Check failed: . : Access is denied. (0x5)\\n[0808/142506.211:ERROR:third_party\\\\crashpad\\\\crashpad\\\\client\\\\crashpad_client_win.cc:142] crash server failed to launch, self-terminating\", \"status\": \"unavailable\"}",
+      "notes": "unavailable: browser evidence disabled; set NGS_ENABLE_BROWSER_EVIDENCE=1 to generate PDFs",
       "raw_bytes": null,
       "represented_pay_cells": 7500,
       "short_label": "50 PDFs",

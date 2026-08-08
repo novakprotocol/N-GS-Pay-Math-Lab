@@ -17,12 +17,14 @@
         <span class="brand-title"><strong>N-GS Pay Math Lab</strong><span>v0.01 | 1977-2026</span></span>
       </a>
       <div class="top-actions">
-        <a class="text-button return-link" href="#home">Return to Portal</a>
+        <a class="text-button return-link" href="#calculator">Return to Portal</a>
         <button class="text-button" id="themeToggle" type="button" aria-pressed="false">Dark</button>
         <button class="icon-button menu-toggle" id="menuToggle" type="button" aria-label="Open navigation">Menu</button>
       </div>
     </div>
   </header>
+
+  <img class="watermark" src="assets/brand/n-mark-512.png" alt="" aria-hidden="true">
 
   <div class="nav-drawer" id="navDrawer" hidden>
     <div class="drawer-panel">
@@ -32,10 +34,11 @@
       </div>
       <nav class="nav-list" aria-label="Mobile">
         <a href="#calculator">Pay Table</a>
+        <a href="#locality-highlights">Locality Picks</a>
         <a href="#pay-surface">3D Pay Lab</a>
+        <a href="#inflation">Inflation Check</a>
         <a href="#ledger">Fifty-Year Ledger</a>
         <a href="#formula-proof">Formula Proof</a>
-        <a href="#home">About</a>
         <a href="#math-vs-files">Math vs. Files</a>
         <a href="#validation">Validation</a>
         <a href="#sources">Sources</a>
@@ -48,10 +51,11 @@
       <p class="side-label">N-GS Pay Math Lab</p>
       <nav class="nav-list">
         <a href="#calculator">Pay Table</a>
+        <a href="#locality-highlights">Locality Picks</a>
         <a href="#pay-surface">3D Pay Lab</a>
+        <a href="#inflation">Inflation Check</a>
         <a href="#ledger">Fifty-Year Ledger</a>
         <a href="#formula-proof">Formula Proof</a>
-        <a href="#home">About</a>
         <a href="#math-vs-files">Math vs. Files</a>
         <a href="#validation">Validation</a>
         <a href="#sources">Sources</a>
@@ -62,26 +66,6 @@
     </aside>
 
     <main>
-      <section class="section hero" id="home">
-        <img class="watermark" src="assets/brand/n-mark-512.png" alt="" aria-hidden="true">
-        <div class="section-inner">
-          <p class="kicker">Federal General Schedule Pay Reconstruction and Verification</p>
-          <h1>N-GS Pay Math Lab</h1>
-          <p class="hero-copy">1977-2026</p>
-          <p class="hero-copy">50 years. 7,500 grade-and-step cells. One auditable formula system.</p>
-          <div class="hero-actions">
-            <a class="primary-button" href="#calculator">Run the math</a>
-            <a class="secondary-button" href="#math-vs-files">See why math matters</a>
-          </div>
-          <div class="hero-metrics" aria-label="Coverage summary">
-            <div class="metric"><span>Years</span><strong>50</strong></div>
-            <div class="metric"><span>Annual cells</span><strong>150</strong></div>
-            <div class="metric"><span>Total cells</span><strong>7,500</strong></div>
-            <div class="metric"><span>Runtime calls</span><strong>0</strong></div>
-          </div>
-        </div>
-      </section>
-
       <section class="section pay-table-section" id="calculator">
         <div class="section-inner">
           <p class="kicker">Pay Table</p>
@@ -114,6 +98,23 @@
           <div class="pay-picture-panel" aria-label="Selected pay picture">
             <svg id="payPicture" viewBox="0 0 980 260" role="img" aria-label="Selected pay breakdown picture"></svg>
           </div>
+          <div class="locality-highlights" id="locality-highlights" aria-label="Locality pay and no state wage income tax highlights">
+            <div class="highlight-card">
+              <div class="chart-head">
+                <h3>Highest pay areas</h3>
+                <div class="chart-metric"><strong id="highestAreaPay">$0</strong><span id="highestAreaName"></span></div>
+              </div>
+              <div class="rank-list" id="highestPayList"></div>
+            </div>
+            <div class="highlight-card tax-card">
+              <div class="chart-head">
+                <h3>No state wage-income-tax areas</h3>
+                <div class="chart-metric"><strong id="noTaxAreaPay">$0</strong><span id="noTaxAreaName"></span></div>
+              </div>
+              <div class="rank-list" id="noTaxAreaList"></div>
+              <p class="fine-print" id="taxHighlightNote"></p>
+            </div>
+          </div>
           <div class="pay-table-panel" id="full-schedule">
             <div class="pay-table-heading">
               <div>
@@ -130,38 +131,7 @@
         </div>
       </section>
 
-      <section class="section" id="formula-proof">
-        <div class="section-inner">
-          <p class="kicker">Formula Proof</p>
-          <h2>Visible formulas, substituted numbers, and rounding order</h2>
-          <div class="proof-grid">
-            <div class="proof-box"><span class="tag">Official table</span><p>Complete annual fixture table used only when the source provides every cell.</p></div>
-            <div class="proof-box"><span class="tag">Official checkpoint</span><p>Published anchor used to reconstruct surrounding years.</p></div>
-            <div class="proof-box"><span class="tag">Formula reconstruction</span><p>Generated from the nearest anchor and annual adjustment chain.</p></div>
-            <div class="proof-box"><span class="tag">Reverse calculation</span><p>Explicitly labeled when low-grade rows are derived instead of asserted as official tables.</p></div>
-          </div>
-          <ul class="trace-list" id="traceList"></ul>
-          <pre class="sr-output" id="tracePlain"></pre>
-        </div>
-      </section>
 
-      <section class="section" id="ledger">
-        <div class="section-inner">
-          <p class="kicker">Fifty-Year Ledger</p>
-          <h2 id="ledgerTitle">Fifty-year ledger</h2>
-          <p class="section-lede">Each row is recalculated for the selected grade and step, with official and reconstructed statuses kept separate.</p>
-          <div class="chart-card">
-            <div class="chart-head">
-              <h3 id="chartTitle">GS-12 Step 10 | 1977-2026</h3>
-              <div class="chart-metric"><strong id="chartMetric">$0</strong><span id="chartDelta"></span></div>
-            </div>
-            <svg id="timelineChart" viewBox="0 0 980 330" role="img" aria-label="Pay trend chart"></svg>
-          </div>
-          <div class="table-wrap">
-            <table id="ledgerTable"></table>
-          </div>
-        </div>
-      </section>
 
       <section class="section surface-section" id="pay-surface">
         <div class="section-inner surface-inner">
@@ -187,8 +157,6 @@
                 <div class="field"><label for="earnEnd">To</label><select id="earnEnd"></select></div>
                 <div class="field"><label for="compareMode">Compare</label><select id="compareMode"><option value="grades" selected>Adjacent grades</option><option value="steps">Adjacent steps</option><option value="locality">Locality/base-only</option></select></div>
                 <div class="field"><label for="surfaceYearSpan">Surface span</label><select id="surfaceYearSpan"><option value="10">10 years</option><option value="25" selected>25 years</option><option value="50">50 years</option></select></div>
-                <div class="field"><label for="surfaceYaw">Yaw</label><input id="surfaceYaw" type="range" min="-65" max="65" step="1" value="34"></div>
-                <div class="field"><label for="surfaceTilt">Tilt</label><input id="surfaceTilt" type="range" min="18" max="62" step="1" value="38"></div>
               </div>
               <div class="surface-panel surface-readouts">
                 <div><span id="surfaceSelectedLabel">Career total</span><strong id="surfaceSelected">$0</strong></div>
@@ -208,6 +176,67 @@
           </div>
         </div>
       </section>
+
+
+
+      <section class="section inflation-section" id="inflation">
+        <div class="section-inner">
+          <p class="kicker">Inflation Check</p>
+          <h2>Did the selected pay keep up with prices?</h2>
+          <p class="section-lede" id="inflationSummary">Inflation comparison will render after the data loads.</p>
+          <div class="inflation-grid">
+            <div class="metric"><span>Actual change</span><strong id="inflationActual">0%</strong></div>
+            <div class="metric"><span>CPI change</span><strong id="inflationTarget">0%</strong></div>
+            <div class="metric"><span>Real gap</span><strong id="inflationGap">$0</strong></div>
+            <div class="metric"><span>Buying power</span><strong id="inflationPower">0%</strong></div>
+          </div>
+          <div class="chart-card inflation-card">
+            <div class="chart-head">
+              <h3 id="inflationTitle">Base pay vs CPI target</h3>
+              <div class="chart-metric"><strong id="inflationVerdict">Checking</strong><span id="inflationNote"></span></div>
+            </div>
+            <svg id="inflationChart" viewBox="0 0 980 340" role="img" aria-label="Inflation adjusted pay chart"></svg>
+          </div>
+        </div>
+      </section>
+
+
+
+      <section class="section" id="ledger">
+        <div class="section-inner">
+          <p class="kicker">Fifty-Year Ledger</p>
+          <h2 id="ledgerTitle">Fifty-year ledger</h2>
+          <p class="section-lede">Each row is recalculated for the selected grade and step, with official and reconstructed statuses kept separate.</p>
+          <div class="chart-card">
+            <div class="chart-head">
+              <h3 id="chartTitle">GS-12 Step 10 | 1977-2026</h3>
+              <div class="chart-metric"><strong id="chartMetric">$0</strong><span id="chartDelta"></span></div>
+            </div>
+            <svg id="timelineChart" viewBox="0 0 980 330" role="img" aria-label="Pay trend chart"></svg>
+          </div>
+          <div class="table-wrap">
+            <table id="ledgerTable"></table>
+          </div>
+        </div>
+      </section>
+
+
+
+      <section class="section" id="formula-proof">
+        <div class="section-inner">
+          <p class="kicker">Formula Proof</p>
+          <h2>Visible formulas, substituted numbers, and rounding order</h2>
+          <div class="proof-grid">
+            <div class="proof-box"><span class="tag">Official table</span><p>Complete annual fixture table used only when the source provides every cell.</p></div>
+            <div class="proof-box"><span class="tag">Official checkpoint</span><p>Published anchor used to reconstruct surrounding years.</p></div>
+            <div class="proof-box"><span class="tag">Formula reconstruction</span><p>Generated from the nearest anchor and annual adjustment chain.</p></div>
+            <div class="proof-box"><span class="tag">Reverse calculation</span><p>Explicitly labeled when low-grade rows are derived instead of asserted as official tables.</p></div>
+          </div>
+          <ul class="trace-list" id="traceList"></ul>
+          <pre class="sr-output" id="tracePlain"></pre>
+        </div>
+      </section>
+
 
 
       <section class="section" id="math-vs-files">
@@ -236,6 +265,8 @@
         </div>
       </section>
 
+
+
       <section class="section" id="validation">
         <div class="section-inner">
           <p class="kicker">Validation</p>
@@ -246,9 +277,11 @@
             <div class="audit-box"><span>2026 Rest of U.S. annual</span><strong id="auditLocality">$0</strong></div>
             <div class="audit-box"><span>2026 Rest of U.S. hourly</span><strong id="auditHourly">$0.00</strong></div>
           </div>
-          <p class="fine-print">The incorrect shortcut audit multiplies each 2025 cell by 1.01 and rounds directly; the failures show why annual Step 1, WGI, and step calculations must remain explicit.</p>
+          <p class="fine-print">The incorrect shortcut audit multiplies each 2025 cell by 1.01 and rounds directly; the failures show why annual Step 1 and step calculations must remain explicit.</p>
         </div>
       </section>
+
+
 
       <section class="section" id="sources">
         <div class="section-inner">
@@ -256,9 +289,10 @@
           <h2>Source notes and limitations</h2>
           <p class="section-lede">Official and reconstructed values are visibly distinguished. Reconstructed values are never described as official published tables.</p>
           <ol class="source-list" id="sourceList"></ol>
-          <p class="fine-print" id="buildMeta">Build n-gs-pay-math-lab-v0.01 | commit e436771f19a76b93a2c79dee82bc2f84c018e7ed</p>
+          <p class="fine-print" id="buildMeta">Build n-gs-pay-math-lab-v0.01 | commit c75b491bc09f80c068a2ff57b34dbda9c57bc631</p>
         </div>
       </section>
+
     </main>
   </div>
 

@@ -21,6 +21,18 @@
       "note": "Used for the 17.06 percent locality example."
     },
     {
+      "id": "minneapolis-fed-cpi",
+      "title": "Federal Reserve Bank of Minneapolis CPI annual average table",
+      "url": "https://www.minneapolisfed.org/about-us/monetary-policy/inflation-calculator/consumer-price-index-1800-",
+      "note": "Used for the CPI-U inflation comparison; the 2026 CPI value is marked by the source as an estimate based on Q2 2025 to Q2 2026."
+    },
+    {
+      "id": "tax-foundation-2026-income-tax",
+      "title": "Tax Foundation 2026 state individual income tax structures",
+      "url": "https://taxfoundation.org/data/all/state/state-income-tax-rates-2026/",
+      "note": "Used only to flag locality areas touching states with no state individual wage-income tax as of January 1, 2026; this is not tax advice and does not account for local, property, sales, or capital-gains taxes."
+    },
+    {
       "id": "opm-fact-sheets",
       "title": "OPM pay administration fact sheets",
       "url": "https://www.opm.gov/policy-data-oversight/pay-leave/pay-administration/fact-sheets/",
