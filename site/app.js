@@ -59,6 +59,24 @@
     inflationVerdict: $("inflationVerdict"),
     inflationNote: $("inflationNote"),
     inflationChart: $("inflationChart"),
+    contextStart: $("contextStart"),
+    contextEnd: $("contextEnd"),
+    contextView: $("contextView"),
+    contextSummary: $("contextSummary"),
+    contextAvgRaise: $("contextAvgRaise"),
+    contextRealAvg: $("contextRealAvg"),
+    contextBestYear: $("contextBestYear"),
+    contextToughYear: $("contextToughYear"),
+    contextChartTitle: $("contextChartTitle"),
+    contextCorrelation: $("contextCorrelation"),
+    contextCorrelationNote: $("contextCorrelationNote"),
+    contextChart: $("contextChart"),
+    adminAverages: $("adminAverages"),
+    partyAverages: $("partyAverages"),
+    conflictAverages: $("conflictAverages"),
+    contextTopYears: $("contextTopYears"),
+    marketProxyNote: $("marketProxyNote"),
+    contextWarning: $("contextWarning"),
     ledgerTitle: $("ledgerTitle"),
     ledgerTable: $("ledgerTable"),
     auditExact: $("auditExact"),
@@ -160,6 +178,8 @@
     math.YEARS.forEach((year) => {
       els.earnStart.appendChild(option(String(year), String(year)));
       els.earnEnd.appendChild(option(String(year), String(year)));
+      if (els.contextStart) els.contextStart.appendChild(option(String(year), String(year)));
+      if (els.contextEnd) els.contextEnd.appendChild(option(String(year), String(year)));
     });
     for (let grade = 1; grade <= 15; grade += 1) {
       els.grade.appendChild(option(`GS-${grade}`, String(grade)));
@@ -173,6 +193,8 @@
     els.step.value = "10";
     els.earnStart.value = "2017";
     els.earnEnd.value = "2026";
+    if (els.contextStart) els.contextStart.value = "1977";
+    if (els.contextEnd) els.contextEnd.value = "2026";
     fillLocalityAreas(2026, "RUS");
     syncLocalityFromArea();
   }
@@ -595,6 +617,238 @@
     els.inflationChart.innerHTML = svg;
   }
 
+  function federalContext() {
+    return math.DATA.federalContext || {};
+  }
+
+  function contextYears() {
+    const start = Math.min(Number(els.contextStart && els.contextStart.value) || 1977, Number(els.contextEnd && els.contextEnd.value) || 2026);
+    const end = Math.max(Number(els.contextStart && els.contextStart.value) || 1977, Number(els.contextEnd && els.contextEnd.value) || 2026);
+    return math.YEARS.filter((year) => year >= start && year <= end);
+  }
+
+  function administrationForYear(year) {
+    const records = federalContext().administrations || [];
+    return records.find((record) => year >= Number(record.start_year) && year <= Number(record.end_year || 9999)) || null;
+  }
+
+  function conflictsForYear(year) {
+    const records = federalContext().conflict_eras || [];
+    return records.filter((record) => year >= Number(record.start_year) && year <= Number(record.end_year));
+  }
+
+  function baseRaiseForYear(year) {
+    const values = math.DATA.adjustments && math.DATA.adjustments.base_raise_percent;
+    const value = values ? Number(values[String(year)]) : NaN;
+    return Number.isFinite(value) ? value : null;
+  }
+
+  function cpiChangeForYear(year) {
+    const current = cpiForYear(year);
+    const previous = cpiForYear(year - 1);
+    return current && previous ? ((current / previous) - 1) * 100 : null;
+  }
+
+  function marketProxyForYear(year) {
+    const values = federalContext().market_proxy_by_year;
+    const value = values ? Number(values[String(year)]) : NaN;
+    return Number.isFinite(value) && value > 0 ? value : null;
+  }
+
+  function marketChangeForYear(year) {
+    const current = marketProxyForYear(year);
+    const previous = marketProxyForYear(year - 1);
+    return current && previous ? ((current / previous) - 1) * 100 : null;
+  }
+
+  function contextPayForYear(year, input) {
+    const view = els.contextView ? els.contextView.value : "selected";
+    if (view === "gs1") return math.deriveFromAnchor(year, 1, 1).base;
+    if (view === "gs15") return math.deriveFromAnchor(year, 15, 10).base;
+    return math.deriveFromAnchor(year, input.grade, input.step).base;
+  }
+
+  function contextPayLabel(input) {
+    const view = els.contextView ? els.contextView.value : "selected";
+    if (view === "gs1") return "GS-1 Step 1";
+    if (view === "gs15") return "GS-15 Step 10";
+    return `GS-${input.grade} Step ${input.step}`;
+  }
+
+  function average(values) {
+    const usable = values.filter((value) => Number.isFinite(value));
+    return usable.length ? usable.reduce((sum, value) => sum + value, 0) / usable.length : null;
+  }
+
+  function pearson(pairs) {
+    const usable = pairs.filter((pair) => Number.isFinite(pair.x) && Number.isFinite(pair.y));
+    if (usable.length < 3) return null;
+    const avgX = average(usable.map((pair) => pair.x));
+    const avgY = average(usable.map((pair) => pair.y));
+    const numerator = usable.reduce((sum, pair) => sum + (pair.x - avgX) * (pair.y - avgY), 0);
+    const denomX = Math.sqrt(usable.reduce((sum, pair) => sum + (pair.x - avgX) ** 2, 0));
+    const denomY = Math.sqrt(usable.reduce((sum, pair) => sum + (pair.y - avgY) ** 2, 0));
+    return denomX && denomY ? numerator / (denomX * denomY) : null;
+  }
+
+  function contextRows(years, input) {
+    return years.map((year) => {
+      const raise = baseRaiseForYear(year);
+      const cpi = cpiChangeForYear(year);
+      const market = marketChangeForYear(year);
+      const admin = administrationForYear(year);
+      const conflicts = conflictsForYear(year);
+      return {
+        year,
+        pay: contextPayForYear(year, input),
+        raise,
+        cpi,
+        realRaise: Number.isFinite(raise) && Number.isFinite(cpi) ? raise - cpi : null,
+        market,
+        marketLevel: marketProxyForYear(year),
+        admin,
+        party: admin ? admin.party : "Unknown",
+        president: admin ? admin.president : "Unknown",
+        conflicts,
+        conflictLabel: conflicts.length ? conflicts.map((item) => item.label).join(" + ") : "No listed conflict era"
+      };
+    });
+  }
+
+  function groupAverageRows(rows, keyFn) {
+    const groups = new Map();
+    rows.forEach((row) => {
+      const key = keyFn(row);
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key).push(row);
+    });
+    return Array.from(groups.entries()).map(([key, items]) => ({
+      key,
+      count: items.length,
+      raise: average(items.map((item) => item.raise)),
+      cpi: average(items.map((item) => item.cpi)),
+      realRaise: average(items.map((item) => item.realRaise)),
+      market: average(items.map((item) => item.market))
+    }));
+  }
+
+  function miniTable(rows, firstLabel) {
+    if (!rows.length) return `<p class="fine-print">No rows for this span.</p>`;
+    return `<table><thead><tr><th>${math.escapeHtml(firstLabel)}</th><th>Years</th><th>Raise</th><th>Real</th><th>Fed equity</th></tr></thead><tbody>${rows.map((row) => `<tr><td>${math.escapeHtml(row.key)}</td><td>${row.count}</td><td>${row.raise === null ? "N/A" : signedPercent(row.raise)}</td><td>${row.realRaise === null ? "N/A" : signedPoints(row.realRaise)}</td><td>${row.market === null ? "N/A" : signedPercent(row.market)}</td></tr>`).join("")}</tbody></table>`;
+  }
+
+  function indexedSeries(rows, valueFn) {
+    const first = rows.map(valueFn).find((value) => Number.isFinite(value) && value > 0);
+    return rows.map((row) => {
+      const value = valueFn(row);
+      return Number.isFinite(value) && first ? (value / first) * 100 : null;
+    });
+  }
+
+  function renderContextChart(rows, input) {
+    if (!els.contextChart) return;
+    const years = rows.map((row) => row.year);
+    if (years.length < 2) {
+      els.contextChart.innerHTML = "";
+      return;
+    }
+    const width = 1080;
+    const height = 420;
+    const margin = { left: 70, right: 30, top: 26, bottom: 58 };
+    const innerW = width - margin.left - margin.right;
+    const innerH = height - margin.top - margin.bottom;
+    const pay = indexedSeries(rows, (row) => row.pay);
+    const cpi = indexedSeries(rows, (row) => cpiForYear(row.year));
+    const market = indexedSeries(rows, (row) => row.marketLevel);
+    const allValues = pay.concat(cpi, market).filter((value) => Number.isFinite(value));
+    const minValue = Math.min(...allValues, 80);
+    const maxValue = Math.max(...allValues, 120);
+    const pad = Math.max(8, (maxValue - minValue) * 0.08);
+    const yMin = Math.max(0, minValue - pad);
+    const yMax = maxValue + pad;
+    const firstYear = years[0];
+    const lastYear = years[years.length - 1];
+    const x = (year) => margin.left + ((year - firstYear) / Math.max(1, lastYear - firstYear)) * innerW;
+    const y = (value) => margin.top + (1 - (value - yMin) / Math.max(1, yMax - yMin)) * innerH;
+    const pathFor = (series) => {
+      let path = "";
+      series.forEach((value, index) => {
+        if (!Number.isFinite(value)) return;
+        path += `${path ? "L" : "M"}${x(years[index]).toFixed(2)},${y(value).toFixed(2)}`;
+      });
+      return path;
+    };
+    let svg = "";
+    const admins = [];
+    rows.forEach((row) => {
+      const previous = admins[admins.length - 1];
+      const key = row.president + row.party;
+      if (previous && previous.key === key) previous.end = row.year;
+      else admins.push({ key, start: row.year, end: row.year, party: row.party, president: row.president });
+    });
+    admins.forEach((admin) => {
+      const x1 = x(admin.start);
+      const x2 = x(Math.min(lastYear, admin.end + 1));
+      const klass = admin.party === "Democratic" ? "context-admin-dem" : "context-admin-rep";
+      svg += `<rect class="${klass}" x="${x1.toFixed(2)}" y="${margin.top}" width="${Math.max(4, x2 - x1).toFixed(2)}" height="${innerH}"><title>${math.escapeHtml(admin.president)} | ${math.escapeHtml(admin.party)}</title></rect>`;
+    });
+    rows.filter((row) => row.conflicts.length).forEach((row) => {
+      svg += `<rect class="context-conflict-band" x="${(x(row.year) - innerW / Math.max(1, years.length - 1) / 2).toFixed(2)}" y="${height - margin.bottom + 10}" width="${Math.max(4, innerW / Math.max(1, years.length - 1)).toFixed(2)}" height="12"><title>${row.year}: ${math.escapeHtml(row.conflictLabel)}</title></rect>`;
+    });
+    for (let i = 0; i <= 4; i += 1) {
+      const value = yMin + ((yMax - yMin) * i) / 4;
+      const yy = y(value);
+      svg += `<line class="chart-grid" x1="${margin.left}" x2="${width - margin.right}" y1="${yy}" y2="${yy}"></line><text class="chart-axis" x="${margin.left - 10}" y="${yy + 4}" text-anchor="end">${value.toFixed(0)}</text>`;
+    }
+    years.forEach((year) => {
+      if (year === firstYear || year === lastYear || year % 5 === 0) {
+        svg += `<text class="chart-axis" x="${x(year)}" y="${height - 18}" text-anchor="middle">${year}</text>`;
+      }
+    });
+    svg += `<path class="context-line pay" d="${pathFor(pay)}"></path>`;
+    svg += `<path class="context-line cpi" d="${pathFor(cpi)}"></path>`;
+    svg += `<path class="context-line market" d="${pathFor(market)}"></path>`;
+    const active = rows.find((row) => row.year === input.year);
+    if (active && active.year >= firstYear && active.year <= lastYear) {
+      svg += `<line class="context-active-year" x1="${x(active.year)}" x2="${x(active.year)}" y1="${margin.top}" y2="${height - margin.bottom}"><title>Selected year ${active.year}</title></line>`;
+    }
+    svg += `<g class="context-legend"><line class="context-line pay" x1="${width - 360}" x2="${width - 318}" y1="30" y2="30"></line><text x="${width - 308}" y="34">${math.escapeHtml(contextPayLabel(input))}</text><line class="context-line cpi" x1="${width - 360}" x2="${width - 318}" y1="54" y2="54"></line><text x="${width - 308}" y="58">BLS CPI</text><line class="context-line market" x1="${width - 360}" x2="${width - 318}" y1="78" y2="78"></line><text x="${width - 308}" y="82">Fed Z.1 equities</text></g>`;
+    els.contextChart.innerHTML = svg;
+  }
+
+  function renderHistoricalContext(input) {
+    if (!els.contextChart) return;
+    const years = contextYears();
+    const rows = contextRows(years, input);
+    const avgRaise = average(rows.map((row) => row.raise));
+    const avgReal = average(rows.map((row) => row.realRaise));
+    const best = rows.filter((row) => Number.isFinite(row.raise)).sort((a, b) => b.raise - a.raise)[0];
+    const toughest = rows.filter((row) => Number.isFinite(row.realRaise)).sort((a, b) => a.realRaise - b.realRaise)[0];
+    const selected = rows.find((row) => row.year === input.year) || contextRows([input.year], input)[0];
+    const cpiCorrelation = pearson(rows.map((row) => ({ x: row.raise, y: row.cpi })));
+    const marketCorrelation = pearson(rows.map((row) => ({ x: row.raise, y: row.market })));
+    setText(els.contextSummary, `${contextPayLabel(input)} across ${years[0]}-${years[years.length - 1]}: base raises, BLS CPI, administration, VA conflict eras, and Federal Reserve Z.1 household corporate equities are shown together. Selected year context: ${selected.year} | ${selected.president} | ${selected.party}${selected.conflicts.length ? ` | ${selected.conflictLabel}` : ""}.`);
+    setText(els.contextAvgRaise, avgRaise === null ? "N/A" : signedPercent(avgRaise));
+    setText(els.contextRealAvg, avgReal === null ? "N/A" : signedPoints(avgReal));
+    setText(els.contextBestYear, best ? `${best.year} | ${signedPercent(best.raise)}` : "N/A");
+    setText(els.contextToughYear, toughest ? `${toughest.year} | ${signedPoints(toughest.realRaise)}` : "N/A");
+    setText(els.contextChartTitle, `${contextPayLabel(input)} indexed against BLS CPI and Fed Z.1 equities`);
+    setText(els.contextCorrelation, cpiCorrelation === null ? "N/A" : `CPI r ${cpiCorrelation.toFixed(2)}`);
+    setText(els.contextCorrelationNote, marketCorrelation === null ? "Fed equity r N/A" : `Fed equity r ${marketCorrelation.toFixed(2)}`);
+    renderContextChart(rows, input);
+    const adminRows = groupAverageRows(rows, (row) => `${row.president} ${row.admin ? `${row.admin.start_year}-${row.admin.end_year}` : ""} (${row.party.slice(0, 3)})`);
+    const partyRows = groupAverageRows(rows, (row) => row.party).sort((a, b) => a.key.localeCompare(b.key));
+    const conflictRows = groupAverageRows(rows, (row) => row.conflicts.length ? "Listed conflict era" : "No listed conflict era");
+    els.adminAverages.innerHTML = miniTable(adminRows, "Administration");
+    els.partyAverages.innerHTML = miniTable(partyRows, "Party");
+    els.conflictAverages.innerHTML = miniTable(conflictRows, "Era");
+    const topRaise = rows.filter((row) => Number.isFinite(row.raise)).sort((a, b) => b.raise - a.raise).slice(0, 4);
+    const weakReal = rows.filter((row) => Number.isFinite(row.realRaise)).sort((a, b) => a.realRaise - b.realRaise).slice(0, 4);
+    els.contextTopYears.innerHTML = topRaise.map((row, index) => `<div class="rank-row"><span class="rank-index">#${index + 1}</span><span class="rank-main"><span class="rank-title">${row.year} base raise ${signedPercent(row.raise)}</span><span class="rank-meta">${math.escapeHtml(row.president)} | CPI ${row.cpi === null ? "N/A" : signedPercent(row.cpi)} | real ${row.realRaise === null ? "N/A" : signedPoints(row.realRaise)}</span></span><span class="rank-value">Top</span></div>`).join("") + weakReal.map((row) => `<div class="rank-row pressure-row"><span class="rank-index">--</span><span class="rank-main"><span class="rank-title">${row.year} pressure year</span><span class="rank-meta">Raise ${signedPercent(row.raise)} | CPI ${signedPercent(row.cpi)} | ${math.escapeHtml(row.president)}</span></span><span class="rank-value">${signedPoints(row.realRaise)}</span></div>`).join("");
+    const marketLatest = federalContext().market_proxy_latest_complete_year || "latest complete year";
+    setText(els.marketProxyNote, `Market proxy: Federal Reserve Z.1 series ${federalContext().market_proxy_series || "LM153064105.Q"}, household/nonprofit corporate equities. Q4 values are complete through ${marketLatest}; 2026 is partial if shown. Dow Jones index history is excluded under the federal-.gov-only source rule.`);
+    setText(els.contextWarning, federalContext().notes ? `${federalContext().notes.pay_year_mapping} ${federalContext().notes.correlation_warning}` : "Correlations are descriptive, not causal.");
+  }
   function DATA_CHECKPOINT_YEARS() {
     return math.DATA.checkpoints.anchor_years;
   }
@@ -1223,6 +1477,7 @@
     renderSchedule(input.year, input.grade, input.step);
     renderChart(input.year, input.grade, input.step);
     renderInflation(input);
+    renderHistoricalContext(input);
     renderLedger(input.grade, input.step);
     render3DLab(input);
   }
@@ -1264,6 +1519,9 @@
       els.earnEnd.value = "2026";
       els.compareMode.value = "grades";
       els.surfaceYearSpan.value = "25";
+      if (els.contextStart) els.contextStart.value = "1977";
+      if (els.contextEnd) els.contextEnd.value = "2026";
+      if (els.contextView) els.contextView.value = "selected";
       surfaceView.yaw = 34;
       surfaceView.tilt = 38;
       renderAll();
@@ -1282,6 +1540,7 @@
     });
     [els.grade, els.step, els.compareYear, els.cap, els.applyCap].forEach((el) => el.addEventListener("change", renderAll));
     [els.surfaceMode, els.earnStart, els.earnEnd, els.compareMode, els.surfaceYearSpan].forEach((el) => el.addEventListener("change", renderAll));
+    [els.contextStart, els.contextEnd, els.contextView].filter(Boolean).forEach((el) => el.addEventListener("change", renderAll));
     els.scheduleTable.addEventListener("click", (event) => {
       const button = event.target.closest(".cell-button");
       if (!button) return;

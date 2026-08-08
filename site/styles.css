@@ -859,6 +859,116 @@ thead th {
   font-weight: 800;
 }
 
+.context-section {
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--panel) 88%, var(--teal)), color-mix(in srgb, var(--bg) 88%, var(--orange))),
+    var(--bg);
+}
+
+.context-inner {
+  width: min(1380px, 100%);
+}
+
+.context-form {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.context-metrics,
+.context-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.context-chart-card {
+  overflow: hidden;
+}
+
+#contextChart {
+  display: block;
+  width: 100%;
+  height: auto;
+  min-height: 300px;
+}
+
+.context-admin-dem {
+  fill: color-mix(in srgb, var(--blue) 15%, transparent);
+}
+
+.context-admin-rep {
+  fill: color-mix(in srgb, var(--orange) 14%, transparent);
+}
+
+.context-conflict-band {
+  fill: color-mix(in srgb, var(--magenta) 64%, var(--orange));
+  opacity: 0.82;
+}
+
+.context-active-year {
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-dasharray: 6 6;
+  opacity: 0.72;
+}
+
+.context-line {
+  fill: none;
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.context-line.pay {
+  stroke: var(--teal);
+}
+
+.context-line.cpi {
+  stroke: var(--orange);
+  stroke-dasharray: 9 7;
+}
+
+.context-line.market {
+  stroke: var(--magenta);
+  stroke-dasharray: 2 7;
+}
+
+.context-legend text {
+  fill: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.mini-table {
+  margin-top: 10px;
+  overflow-x: auto;
+}
+
+.mini-table table {
+  min-width: 520px;
+  font-size: 0.88rem;
+}
+
+.mini-table th,
+.mini-table td {
+  padding: 7px 8px;
+}
+
+.context-footnotes {
+  display: grid;
+  gap: 8px;
+  margin-top: 14px;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.context-footnotes p {
+  margin: 0;
+}
+
+.pressure-row {
+  border-color: color-mix(in srgb, var(--orange) 58%, var(--line));
+}
 .surface-section {
   background:
     linear-gradient(135deg, color-mix(in srgb, var(--navy) 92%, black), color-mix(in srgb, var(--navy) 76%, var(--teal))),
@@ -1100,7 +1210,9 @@ html[data-shell="module"] .layout {
   .result-grid,
   .validation-grid,
   .size-totals,
-  .inflation-grid {
+  .inflation-grid,
+  .context-metrics,
+  .context-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -1176,12 +1288,15 @@ html[data-shell="module"] .layout {
   .validation-grid,
   .size-totals,
   .inflation-grid,
+  .context-metrics,
+  .context-grid,
   .locality-highlights,
   .columns {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .form-grid {
+  .form-grid,
+  .context-form {
     grid-template-columns: minmax(0, 1fr);
   }
 

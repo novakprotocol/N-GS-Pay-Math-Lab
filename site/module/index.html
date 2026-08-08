@@ -37,6 +37,7 @@
         <a href="#locality-highlights">Locality Picks</a>
         <a href="#pay-surface">3D Pay Lab</a>
         <a href="#inflation">Inflation Check</a>
+        <a href="#context-lab">History Lab</a>
         <a href="#ledger">Fifty-Year Ledger</a>
         <a href="#formula-proof">Formula Proof</a>
         <a href="#math-vs-files">Math vs. Files</a>
@@ -54,6 +55,7 @@
         <a href="#locality-highlights">Locality Picks</a>
         <a href="#pay-surface">3D Pay Lab</a>
         <a href="#inflation">Inflation Check</a>
+        <a href="#context-lab">History Lab</a>
         <a href="#ledger">Fifty-Year Ledger</a>
         <a href="#formula-proof">Formula Proof</a>
         <a href="#math-vs-files">Math vs. Files</a>
@@ -211,6 +213,56 @@
 
 
 
+      <section class="section context-section" id="context-lab">
+        <div class="section-inner context-inner">
+          <p class="kicker">Historical Context Lab</p>
+          <h2>Raises, prices, presidents, conflict eras, and federal market proxy</h2>
+          <p class="section-lede" id="contextSummary">Historical context will render after the data loads.</p>
+          <div class="form-grid context-form">
+            <div class="field"><label for="contextStart">From</label><select id="contextStart"></select></div>
+            <div class="field"><label for="contextEnd">To</label><select id="contextEnd"></select></div>
+            <div class="field wide-field"><label for="contextView">View</label><select id="contextView"><option value="selected" selected>Selected grade/step</option><option value="gs1">GS-1 Step 1</option><option value="gs15">GS-15 Step 10</option></select></div>
+          </div>
+          <div class="context-metrics">
+            <div class="metric"><span>Average base raise</span><strong id="contextAvgRaise">0%</strong></div>
+            <div class="metric"><span>Average real raise</span><strong id="contextRealAvg">0 pts</strong></div>
+            <div class="metric"><span>Best raise year</span><strong id="contextBestYear">N/A</strong></div>
+            <div class="metric"><span>Toughest CPI year</span><strong id="contextToughYear">N/A</strong></div>
+          </div>
+          <div class="chart-card context-chart-card">
+            <div class="chart-head">
+              <h3 id="contextChartTitle">Indexed context view</h3>
+              <div class="chart-metric"><strong id="contextCorrelation">N/A</strong><span id="contextCorrelationNote"></span></div>
+            </div>
+            <svg id="contextChart" viewBox="0 0 1080 420" role="img" aria-label="Historical pay, CPI, administration, conflict, and market proxy chart"></svg>
+          </div>
+          <div class="context-grid">
+            <div class="highlight-card">
+              <h3>Administration averages</h3>
+              <div class="mini-table" id="adminAverages"></div>
+            </div>
+            <div class="highlight-card">
+              <h3>Party averages</h3>
+              <div class="mini-table" id="partyAverages"></div>
+            </div>
+            <div class="highlight-card">
+              <h3>Conflict comparison</h3>
+              <div class="mini-table" id="conflictAverages"></div>
+            </div>
+            <div class="highlight-card">
+              <h3>Top and pressure years</h3>
+              <div class="rank-list" id="contextTopYears"></div>
+            </div>
+          </div>
+          <div class="context-footnotes">
+            <p id="marketProxyNote"></p>
+            <p id="contextWarning"></p>
+          </div>
+        </div>
+      </section>
+
+
+
       <section class="section" id="ledger">
         <div class="section-inner">
           <p class="kicker">Fifty-Year Ledger</p>
@@ -298,7 +350,7 @@
           <h2>Source notes and limitations</h2>
           <p class="section-lede">Official and reconstructed values are visibly distinguished. Reconstructed values are never described as official published tables.</p>
           <ol class="source-list" id="sourceList"></ol>
-          <p class="fine-print" id="buildMeta">Build n-gs-pay-math-lab-v0.01 | commit 056af8cf5aaca4d10b2968057b51a15a1192880b</p>
+          <p class="fine-print" id="buildMeta">Build n-gs-pay-math-lab-v0.01 | commit a63047e7b64e72d7cb0385d4150dc4007e37c6bd</p>
         </div>
       </section>
 
