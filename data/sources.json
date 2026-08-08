@@ -50,6 +50,36 @@
       "title": "Federal Register 1979 GS schedule checkpoint",
       "url": "https://www.federalregister.gov/",
       "note": "Used for the 1979 nonuniform historical checkpoint represented in the source implementation."
+    },
+    {
+      "id": "whitehouse-presidents",
+      "title": "White House presidential information",
+      "url": "https://www.whitehouse.gov/about-the-white-house/",
+      "note": "Used for presidential context in the historical context lab."
+    },
+    {
+      "id": "archives-presidential-libraries",
+      "title": "National Archives presidential libraries",
+      "url": "https://www.archives.gov/presidential-libraries",
+      "note": "Used as a federal presidential-history source for administration context."
+    },
+    {
+      "id": "va-americas-wars",
+      "title": "VA America's Wars",
+      "url": "https://department.va.gov/americas-wars/",
+      "note": "Used for conflict-era context such as Desert Shield/Desert Storm and Global War on Terror."
+    },
+    {
+      "id": "va-conflict-dates",
+      "title": "VA Dates and Names of Conflicts",
+      "url": "https://www.va.gov/vetsinworkplace/docs/em_datesnames.asp",
+      "note": "Used for operation date context including Iraq-era operation names."
+    },
+    {
+      "id": "federal-reserve-z1",
+      "title": "Federal Reserve Z.1 Financial Accounts CSV package",
+      "url": "https://www.federalreserve.gov/releases/z1/default.htm",
+      "note": "Used for the federal market proxy: household and nonprofit corporate equities from series LM153064105.Q. Dow Jones index data is not loaded under the federal-.gov-only source rule."
     }
   ]
 }
