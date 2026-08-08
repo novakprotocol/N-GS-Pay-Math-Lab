@@ -98,23 +98,7 @@
           <div class="pay-picture-panel" aria-label="Selected pay picture">
             <svg id="payPicture" viewBox="0 0 980 260" role="img" aria-label="Selected pay breakdown picture"></svg>
           </div>
-          <div class="locality-highlights" id="locality-highlights" aria-label="Locality pay and no state wage income tax highlights">
-            <div class="highlight-card">
-              <div class="chart-head">
-                <h3>Highest pay areas</h3>
-                <div class="chart-metric"><strong id="highestAreaPay">$0</strong><span id="highestAreaName"></span></div>
-              </div>
-              <div class="rank-list" id="highestPayList"></div>
-            </div>
-            <div class="highlight-card tax-card">
-              <div class="chart-head">
-                <h3>No state wage-income-tax areas</h3>
-                <div class="chart-metric"><strong id="noTaxAreaPay">$0</strong><span id="noTaxAreaName"></span></div>
-              </div>
-              <div class="rank-list" id="noTaxAreaList"></div>
-              <p class="fine-print" id="taxHighlightNote"></p>
-            </div>
-          </div>
+
           <div class="pay-table-panel" id="full-schedule">
             <div class="pay-table-heading">
               <div>
@@ -127,6 +111,31 @@
               <table id="scheduleTable"></table>
             </div>
             <p class="table-note">Base pay only. Locality schedules, special rates, LEO schedules, title 38 schedules, and agency payroll determinations are outside this calculator.</p>
+          </div>
+          <div class="locality-highlights" id="locality-highlights" aria-label="Locality pay, Census income-tax, and BEA price-level highlights">
+            <div class="highlight-card">
+              <div class="chart-head">
+                <h3>Highest pay areas</h3>
+                <div class="chart-metric"><strong id="highestAreaPay">$0</strong><span id="highestAreaName"></span></div>
+              </div>
+              <div class="rank-list" id="highestPayList"></div>
+            </div>
+            <div class="highlight-card tax-card">
+              <div class="chart-head">
+                <h3>No Census T40 income-tax collections</h3>
+                <div class="chart-metric"><strong id="noTaxAreaPay">$0</strong><span id="noTaxAreaName"></span></div>
+              </div>
+              <div class="rank-list" id="noTaxAreaList"></div>
+              <p class="fine-print" id="taxHighlightNote"></p>
+            </div>
+            <div class="highlight-card cost-card">
+              <div class="chart-head">
+                <h3>BEA price level vs locality</h3>
+                <div class="chart-metric"><strong id="costAreaGap">0 pts</strong><span id="costAreaName"></span></div>
+              </div>
+              <div class="rank-list" id="costAreaList"></div>
+              <p class="fine-print" id="costHighlightNote"></p>
+            </div>
           </div>
         </div>
       </section>

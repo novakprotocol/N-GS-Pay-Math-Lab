@@ -8,8 +8,8 @@ Public site target: https://novakprotocol.github.io/N-GS-Pay-Math-Lab/
 
 - Calculates annual base pay, locality pay, pay-cap effects, hourly pay, and biweekly pay.
 - Lets users choose a 2026 OPM locality area or enter a manual locality percentage.
-- Highlights the highest-paying 2026 locality areas and flags no state wage-income-tax locality candidates.
-- Compares selected base pay growth against CPI inflation to show buying-power drift.
+- Highlights the highest-paying 2026 OPM locality areas, Census T40 income-tax collection flags, and BEA RPP price-level gaps.
+- Compares selected base pay growth against BLS CPI inflation to show buying-power drift.
 - Shows formulas, substituted numbers, intermediate rounding, and final results.
 - Adds offline canvas views for the grade/year pay surface, locality lift, and cap pressure.
 - Distinguishes official tables, official checkpoints, formula reconstructions, reverse calculations, and user-entered scenarios.
@@ -83,6 +83,6 @@ The private promotion path is profile-driven. A later private implementation may
 
 ## Limitations
 
-This project is an independent calculation and verification tool, not an official OPM service or payroll determination. It does not calculate special rates, law-enforcement schedules, title 38 schedules, agency payroll exceptions, tax liability, deductions, or individual employment records. No state wage-income-tax flags are informational only and do not account for residence, worksite, local taxes, sales taxes, property taxes, deductions, or capital-gains taxes.
+This project is an independent calculation and verification tool, not an official OPM service or payroll determination. It does not calculate special rates, law-enforcement schedules, title 38 schedules, agency payroll exceptions, tax liability, deductions, or individual employment records. Census T40 income-tax collection flags are informational only and do not account for residence, worksite, local taxes, sales taxes, property taxes, deductions, or capital-gains taxes. BEA RPP values are price-level comparisons, not OPM locality-pay or nonforeign-COLA determinations.
 
 No license is granted by publication. See `NOTICE.md`.

@@ -36,6 +36,10 @@
     noTaxAreaName: $("noTaxAreaName"),
     noTaxAreaList: $("noTaxAreaList"),
     taxHighlightNote: $("taxHighlightNote"),
+    costAreaGap: $("costAreaGap"),
+    costAreaName: $("costAreaName"),
+    costAreaList: $("costAreaList"),
+    costHighlightNote: $("costHighlightNote"),
     traceList: $("traceList"),
     tracePlain: $("tracePlain"),
     scheduleTitle: $("scheduleTitle"),
@@ -298,22 +302,68 @@
     return area && notes ? notes[area.code] || null : null;
   }
 
+  function rppInfoFor(area) {
+    const byCode = math.DATA.regionalPriceParities && math.DATA.regionalPriceParities.by_locality_code;
+    return area && byCode ? byCode[area.code] || null : null;
+  }
+
+  function noIncomeTaxStates(taxInfo) {
+    return taxInfo && Array.isArray(taxInfo.no_income_tax_collection_states) ? taxInfo.no_income_tax_collection_states : [];
+  }
+
   function localityCandidateRows(input) {
     return localityAreasForYear(input.year)
       .filter((area) => area.code !== "RUS")
       .map((area) => {
         const result = math.computePay(input.year, input.grade, input.step, area.percentage, input.capValue, input.applyCap);
-        return { area, annual: result.annual, taxInfo: stateTaxInfoFor(area) };
+        return { area, annual: result.annual, taxInfo: stateTaxInfoFor(area), costInfo: rppInfoFor(area) };
       })
       .sort((a, b) => b.annual - a.annual || b.area.percentage - a.area.percentage || a.area.name.localeCompare(b.area.name));
   }
 
+  function signedPercent(value, digits = 1) {
+    const numeric = Number(value);
+    if (!Number.isFinite(numeric)) return "N/A";
+    return `${numeric >= 0 ? "+" : ""}${numeric.toFixed(digits)}%`;
+  }
+
+  function signedPoints(value, digits = 1) {
+    const numeric = Number(value);
+    if (!Number.isFinite(numeric)) return "N/A";
+    return `${numeric >= 0 ? "+" : ""}${numeric.toFixed(digits)} pts`;
+  }
+
+  function pricePremium(costInfo) {
+    const rpp = costInfo ? Number(costInfo.rpp_all_items) : NaN;
+    return Number.isFinite(rpp) ? rpp - 100 : NaN;
+  }
+
+  function localityVsPriceGap(row) {
+    const premium = pricePremium(row.costInfo);
+    return Number.isFinite(premium) ? row.area.percentage - premium : NaN;
+  }
+
   function rankRow(row, index, selectedCode, showTaxBadge) {
     const isSelected = selectedCode && row.area.code === selectedCode;
-    const states = row.taxInfo && Array.isArray(row.taxInfo.no_wage_tax_states) ? row.taxInfo.no_wage_tax_states : [];
+    const states = noIncomeTaxStates(row.taxInfo);
     const badge = showTaxBadge && states.length ? `<span class="rank-badge">${math.escapeHtml(states.join(" / "))}</span>` : "";
-    const meta = `${math.pct(row.area.percentage)} locality${row.taxInfo && row.taxInfo.note ? ` | ${row.taxInfo.note}` : ""}`;
+    const meta = `${math.pct(row.area.percentage)} OPM locality${row.taxInfo && row.taxInfo.note ? ` | ${row.taxInfo.note}` : ""}`;
     return `<div class="rank-row${isSelected ? " is-selected" : ""}"><span class="rank-index">#${index + 1}</span><span class="rank-main"><span class="rank-title">${math.escapeHtml(row.area.code)} | ${math.escapeHtml(row.area.name)}</span><span class="rank-meta">${math.escapeHtml(meta)}</span>${badge}</span><span class="rank-value">${math.money0.format(row.annual)}</span></div>`;
+  }
+
+  function costRankRow(row, index, selectedCode) {
+    const isSelected = selectedCode && row.area.code === selectedCode;
+    const premium = pricePremium(row.costInfo);
+    const gap = localityVsPriceGap(row);
+    const housing = Number(row.costInfo.rpp_housing);
+    const quality = row.costInfo.match_quality ? `${row.costInfo.match_quality} BEA match` : "BEA match";
+    const metaParts = [
+      `${math.pct(row.area.percentage)} OPM locality`,
+      `BEA all-items ${signedPercent(premium)}`,
+      Number.isFinite(housing) ? `housing RPP ${housing.toFixed(1)}` : "housing RPP N/A",
+      quality
+    ];
+    return `<div class="rank-row${isSelected ? " is-selected" : ""}"><span class="rank-index">#${index + 1}</span><span class="rank-main"><span class="rank-title">${math.escapeHtml(row.area.code)} | ${math.escapeHtml(row.area.name)}</span><span class="rank-meta">${math.escapeHtml(metaParts.join(" | "))}</span></span><span class="rank-value">${signedPoints(gap)}</span></div>`;
   }
 
   function renderLocalityHighlights(input) {
@@ -325,23 +375,40 @@
       setText(els.highestAreaName, "2026 locality list only");
       setText(els.noTaxAreaPay, "N/A");
       setText(els.noTaxAreaName, "2026 locality list only");
-      els.highestPayList.innerHTML = `<div class="rank-row"><span class="rank-index">--</span><span class="rank-main"><span class="rank-title">No locality table is loaded for ${input.year}</span><span class="rank-meta">Use 2026 to compare OPM locality areas.</span></span></div>`;
-      els.noTaxAreaList.innerHTML = els.highestPayList.innerHTML;
-      setText(els.taxHighlightNote, "No state wage-income-tax flags are informational only and are not a payroll or tax determination.");
+      setText(els.costAreaGap, "N/A");
+      setText(els.costAreaName, "2024 BEA RPP");
+      const emptyRow = `<div class="rank-row"><span class="rank-index">--</span><span class="rank-main"><span class="rank-title">No locality table is loaded for ${input.year}</span><span class="rank-meta">Use 2026 to compare OPM locality areas.</span></span></div>`;
+      els.highestPayList.innerHTML = emptyRow;
+      els.noTaxAreaList.innerHTML = emptyRow;
+      if (els.costAreaList) els.costAreaList.innerHTML = emptyRow;
+      setText(els.taxHighlightNote, "Census T40 collection flags are informational only and are not payroll or tax determinations.");
+      setText(els.costHighlightNote, "BEA Regional Price Parities are loaded for 2024 and are price-level measures, not OPM locality-pay or nonforeign-COLA determinations.");
       return;
     }
     const top = rows.slice(0, 5);
-    const wageNoTaxRows = rows.filter((row) => row.taxInfo && Array.isArray(row.taxInfo.no_wage_tax_states) && row.taxInfo.no_wage_tax_states.length).slice(0, 5);
+    const noIncomeTaxRows = rows.filter((row) => noIncomeTaxStates(row.taxInfo).length).slice(0, 5);
+    const costRows = rows
+      .filter((row) => Number.isFinite(localityVsPriceGap(row)))
+      .sort((a, b) => localityVsPriceGap(b) - localityVsPriceGap(a) || b.area.percentage - a.area.percentage || a.area.name.localeCompare(b.area.name))
+      .slice(0, 5);
     const firstTop = top[0];
-    const firstTax = wageNoTaxRows[0];
+    const firstTax = noIncomeTaxRows[0];
+    const firstCost = costRows[0];
     setText(els.highestAreaPay, firstTop ? math.money0.format(firstTop.annual) : "N/A");
     setText(els.highestAreaName, firstTop ? `${firstTop.area.code} | ${math.pct(firstTop.area.percentage)}` : "No area loaded");
     setText(els.noTaxAreaPay, firstTax ? math.money0.format(firstTax.annual) : "N/A");
-    setText(els.noTaxAreaName, firstTax ? `${firstTax.area.code} | ${firstTax.taxInfo.no_wage_tax_states.join("/")}` : "No flagged area");
+    setText(els.noTaxAreaName, firstTax ? `${firstTax.area.code} | ${noIncomeTaxStates(firstTax.taxInfo).join("/")}` : "No flagged area");
+    setText(els.costAreaGap, firstCost ? signedPoints(localityVsPriceGap(firstCost)) : "N/A");
+    setText(els.costAreaName, firstCost ? `${firstCost.area.code} | BEA ${signedPercent(pricePremium(firstCost.costInfo))}` : "No BEA match loaded");
     els.highestPayList.innerHTML = top.map((row, index) => rankRow(row, index, selectedCode, false)).join("");
-    els.noTaxAreaList.innerHTML = wageNoTaxRows.length ? wageNoTaxRows.map((row, index) => rankRow(row, index, selectedCode, true)).join("") : `<div class="rank-row"><span class="rank-index">--</span><span class="rank-main"><span class="rank-title">No no-wage-tax area is flagged for ${input.year}</span><span class="rank-meta">The tax flag table is currently mapped to the 2026 locality list.</span></span></div>`;
-    setText(els.taxHighlightNote, "Flags mean at least one state in that locality area has no broad state wage-income tax. They do not model residence, duty station, local taxes, sales taxes, property taxes, deductions, or capital-gains taxes.");
+    els.noTaxAreaList.innerHTML = noIncomeTaxRows.length ? noIncomeTaxRows.map((row, index) => rankRow(row, index, selectedCode, true)).join("") : `<div class="rank-row"><span class="rank-index">--</span><span class="rank-main"><span class="rank-title">No Census T40 income-tax collection flag is loaded for ${input.year}</span><span class="rank-meta">The Census flag table is currently mapped to the 2026 OPM locality list.</span></span></div>`;
+    if (els.costAreaList) {
+      els.costAreaList.innerHTML = costRows.length ? costRows.map((row, index) => costRankRow(row, index, selectedCode)).join("") : `<div class="rank-row"><span class="rank-index">--</span><span class="rank-main"><span class="rank-title">No BEA RPP locality match is loaded for ${input.year}</span><span class="rank-meta">RUS and manual percentages do not have a single BEA price-level match.</span></span></div>`;
+    }
+    setText(els.taxHighlightNote, "Census FY2025 T40 flags mean the state individual income tax collection item is coded X. This does not model residence, duty station, local taxes, sales taxes, property taxes, deductions, or capital-gains taxes.");
+    setText(els.costHighlightNote, "BEA 2024 RPP compares local price levels with the U.S. average. Difference shown is OPM locality percent minus BEA all-items price premium; it is not an OPM COLA calculation.");
   }
+
   function renderTrace(result) {
     const lines = math.traceFor(result);
     els.traceList.innerHTML = lines.map((line, index) => `<li><span>${String(index + 1).padStart(2, "0")}</span><p>${line}</p></li>`).join("");
@@ -424,26 +491,42 @@
     return Number.isFinite(value) && value > 0 ? value : null;
   }
 
+  function latestCpiYear() {
+    const metaYear = math.DATA.inflation && Number(math.DATA.inflation.latest_completed_year);
+    if (Number.isFinite(metaYear) && cpiForYear(metaYear)) return metaYear;
+    const values = math.DATA.inflation && math.DATA.inflation.by_year;
+    if (!values) return null;
+    return Object.keys(values).map(Number).filter((year) => Number.isFinite(year) && cpiForYear(year)).sort((a, b) => b - a)[0] || null;
+  }
+
+  function cpiComparableYear(requestedYear) {
+    if (cpiForYear(requestedYear)) return requestedYear;
+    const latest = latestCpiYear();
+    return latest && requestedYear > latest ? latest : null;
+  }
+
   function pointPath(points) {
     return points.map((point, index) => `${index === 0 ? "M" : "L"}${point.x.toFixed(2)},${point.y.toFixed(2)}`).join(" ");
   }
 
   function renderInflation(input) {
     if (!els.inflationChart) return;
-    const baseYear = input.compareYear;
-    const targetYear = input.year;
-    const baseCpi = cpiForYear(baseYear);
-    const targetCpi = cpiForYear(targetYear);
-    const startPay = math.deriveFromAnchor(baseYear, input.grade, input.step).base;
-    const endPay = math.deriveFromAnchor(targetYear, input.grade, input.step).base;
+    const requestedBaseYear = input.compareYear;
+    const requestedTargetYear = input.year;
+    const baseYear = cpiComparableYear(requestedBaseYear);
+    const targetYear = cpiComparableYear(requestedTargetYear);
+    const baseCpi = baseYear ? cpiForYear(baseYear) : null;
+    const targetCpi = targetYear ? cpiForYear(targetYear) : null;
+    const startPay = baseYear ? math.deriveFromAnchor(baseYear, input.grade, input.step).base : NaN;
+    const endPay = targetYear ? math.deriveFromAnchor(targetYear, input.grade, input.step).base : NaN;
     if (!baseCpi || !targetCpi || !Number.isFinite(startPay) || !Number.isFinite(endPay)) {
-      setText(els.inflationSummary, "CPI comparison is unavailable for the selected years.");
+      setText(els.inflationSummary, "BLS CPI comparison is unavailable for the selected years.");
       setText(els.inflationActual, "N/A");
       setText(els.inflationTarget, "N/A");
       setText(els.inflationGap, "N/A");
       setText(els.inflationPower, "N/A");
       setText(els.inflationVerdict, "Unavailable");
-      setText(els.inflationNote, "Missing CPI data");
+      setText(els.inflationNote, "Missing official BLS annual CPI");
       els.inflationChart.innerHTML = "";
       return;
     }
@@ -452,15 +535,17 @@
     const actualPct = startPay ? ((endPay / startPay) - 1) * 100 : 0;
     const cpiPct = baseCpi ? ((targetCpi / baseCpi) - 1) * 100 : 0;
     const buyingPower = neededPay ? (endPay / neededPay) * 100 : 0;
-    const summary = `GS-${input.grade} Step ${input.step} base pay: ${baseYear} ${math.money0.format(startPay)} to ${targetYear} ${math.money0.format(endPay)}. CPI target for the same buying power is ${math.money0.format(neededPay)}.`;
+    const latest = latestCpiYear();
+    const fallbackNote = requestedBaseYear !== baseYear || requestedTargetYear !== targetYear ? ` BLS annual CPI is loaded through ${latest}; using ${baseYear}-${targetYear}.` : "";
+    const summary = `GS-${input.grade} Step ${input.step} base pay: ${baseYear} ${math.money0.format(startPay)} to ${targetYear} ${math.money0.format(endPay)}. CPI target for the same buying power is ${math.money0.format(neededPay)}.${fallbackNote}`;
     setText(els.inflationSummary, summary);
     setText(els.inflationActual, `${actualPct >= 0 ? "+" : ""}${actualPct.toFixed(1)}%`);
     setText(els.inflationTarget, `${cpiPct >= 0 ? "+" : ""}${cpiPct.toFixed(1)}%`);
     setText(els.inflationGap, `${gap >= 0 ? "+" : "-"}${math.money0.format(Math.abs(gap))}`);
     setText(els.inflationPower, `${buyingPower.toFixed(1)}%`);
-    setText(els.inflationTitle, `GS-${input.grade} Step ${input.step} base pay vs CPI target`);
+    setText(els.inflationTitle, `GS-${input.grade} Step ${input.step} base pay vs BLS CPI target`);
     setText(els.inflationVerdict, gap >= 0 ? "Kept up" : "Behind CPI");
-    setText(els.inflationNote, (baseYear === 2026 || targetYear === 2026) ? "2026 CPI is source-estimated" : `${Math.min(baseYear, targetYear)}-${Math.max(baseYear, targetYear)}`);
+    setText(els.inflationNote, requestedBaseYear !== baseYear || requestedTargetYear !== targetYear ? `Official BLS annual CPI through ${latest}` : `${Math.min(baseYear, targetYear)}-${Math.max(baseYear, targetYear)}`);
 
     const firstYear = Math.min(baseYear, targetYear);
     const lastYear = Math.max(baseYear, targetYear);
@@ -506,9 +591,10 @@
       svg += `<circle class="inflation-dot actual" cx="${selectedActual.x}" cy="${selectedActual.y}" r="6"><title>${targetYear} actual ${math.money0.format(endPay)}</title></circle>`;
       svg += `<circle class="inflation-dot target" cx="${selectedTarget.x}" cy="${selectedTarget.y}" r="6"><title>${targetYear} CPI target ${math.money0.format(neededPay)}</title></circle>`;
     }
-    svg += `<g class="inflation-legend"><line class="inflation-line actual" x1="${width - 268}" x2="${width - 224}" y1="30" y2="30"></line><text x="${width - 214}" y="34">Actual base pay</text><line class="inflation-line target" x1="${width - 268}" x2="${width - 224}" y1="54" y2="54"></line><text x="${width - 214}" y="58">CPI target</text></g>`;
+    svg += `<g class="inflation-legend"><line class="inflation-line actual" x1="${width - 268}" x2="${width - 224}" y1="30" y2="30"></line><text x="${width - 214}" y="34">Actual base pay</text><line class="inflation-line target" x1="${width - 268}" x2="${width - 224}" y1="54" y2="54"></line><text x="${width - 214}" y="58">BLS CPI target</text></g>`;
     els.inflationChart.innerHTML = svg;
   }
+
   function DATA_CHECKPOINT_YEARS() {
     return math.DATA.checkpoints.anchor_years;
   }
