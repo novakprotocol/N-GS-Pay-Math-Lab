@@ -48,14 +48,21 @@
     sizeTable: $("sizeTable"),
     sizeBars: $("sizeBars"),
     surfaceMode: $("surfaceMode"),
+    earnStart: $("earnStart"),
+    earnEnd: $("earnEnd"),
+    compareMode: $("compareMode"),
     surfaceYearSpan: $("surfaceYearSpan"),
     surfaceYaw: $("surfaceYaw"),
     surfaceTilt: $("surfaceTilt"),
     surfaceTitle: $("surfaceTitle"),
     surfacePeak: $("surfacePeak"),
     surfaceRange: $("surfaceRange"),
+    surfaceSelectedLabel: $("surfaceSelectedLabel"),
     surfaceSelected: $("surfaceSelected"),
+    surfaceSpreadLabel: $("surfaceSpreadLabel"),
     surfaceSpread: $("surfaceSpread"),
+    surfaceRaise: $("surfaceRaise"),
+    surfaceCompare: $("surfaceCompare"),
     paySurfaceCanvas: $("paySurfaceCanvas"),
     localityLiftCanvas: $("localityLiftCanvas"),
     capPressureCanvas: $("capPressureCanvas"),
@@ -130,6 +137,10 @@
       els.year.appendChild(option(String(year), String(year)));
       els.compareYear.appendChild(option(String(year), String(year)));
     });
+    math.YEARS.forEach((year) => {
+      els.earnStart.appendChild(option(String(year), String(year)));
+      els.earnEnd.appendChild(option(String(year), String(year)));
+    });
     for (let grade = 1; grade <= 15; grade += 1) {
       els.grade.appendChild(option(`GS-${grade}`, String(grade)));
     }
@@ -140,6 +151,8 @@
     els.compareYear.value = "1977";
     els.grade.value = "12";
     els.step.value = "10";
+    els.earnStart.value = "2017";
+    els.earnEnd.value = "2026";
     fillLocalityAreas(2026, "RUS");
     syncLocalityFromArea();
   }
@@ -157,6 +170,10 @@
       els.locality.value = area.percentage.toFixed(2);
     } else if (year < 1994) {
       els.locality.value = "0";
+    }
+    if (Number(els.earnEnd.value) !== year) {
+      els.earnEnd.value = String(year);
+      els.earnStart.value = String(Math.max(math.YEARS[0], year - 9));
     }
     const cap = knownCap(year);
     els.cap.value = Number.isFinite(cap) ? String(cap) : "";
@@ -176,7 +193,10 @@
       localityArea: selectedLocalityArea(),
       capValue,
       applyCap: els.applyCap.checked,
-      compareYear: Number(els.compareYear.value)
+      compareYear: Number(els.compareYear.value),
+      earnStart: Number(els.earnStart.value),
+      earnEnd: Number(els.earnEnd.value),
+      compareMode: els.compareMode.value || "grades"
     };
   }
 
@@ -543,11 +563,220 @@
 
     const gradeLow = surfaceMetricValue(input.year, 1, input.step, input, mode);
     const gradeHigh = surfaceMetricValue(input.year, 15, input.step, input, mode);
+    const previousYearValue = math.YEARS.includes(input.year - 1) ? surfaceMetricValue(input.year - 1, input.grade, input.step, input, mode) : selectedValue;
+    const raise = selectedValue - previousYearValue;
     setText(els.surfaceTitle, `${surfaceLabel(mode)} surface | Step ${input.step}`);
     setText(els.surfacePeak, surfaceMoney(maxValue, mode));
     setText(els.surfaceRange, `${years[0]}-${years[years.length - 1]} | GS-1 to GS-15`);
+    setText(els.surfaceSelectedLabel, "Selected cell");
     setText(els.surfaceSelected, surfaceMoney(selectedValue, mode));
+    setText(els.surfaceSpreadLabel, "Grade spread");
     setText(els.surfaceSpread, surfaceMoney(Math.abs(gradeHigh - gradeLow), mode));
+    setText(els.surfaceRaise, `${raise >= 0 ? "+" : "-"}${surfaceMoney(Math.abs(raise), mode)}`);
+    setText(els.surfaceCompare, surfaceMoney(maxValue - minValue, mode));
+  }
+
+
+  function careerYears(input) {
+    const start = Math.min(input.earnStart, input.earnEnd);
+    const end = Math.max(input.earnStart, input.earnEnd);
+    return math.YEARS.filter((year) => year >= start && year <= end);
+  }
+
+  function scenarioPay(year, scenario) {
+    return math.computePay(year, scenario.grade, scenario.step, scenario.localityPct, scenario.capValue, scenario.applyCap).annual;
+  }
+
+  function scenarioTotal(years, scenario) {
+    return years.reduce((sum, year) => sum + scenarioPay(year, scenario), 0);
+  }
+
+  function careerScenarios(input) {
+    const colors = themeColors();
+    const baseScenario = {
+      key: "base",
+      label: "Base/COLA only",
+      shortLabel: "Base only",
+      grade: input.grade,
+      step: input.step,
+      localityPct: 0,
+      capValue: NaN,
+      applyCap: false,
+      color: colors.green
+    };
+    const you = {
+      key: "you",
+      label: `You GS-${input.grade}/${input.step}`,
+      shortLabel: "You",
+      grade: input.grade,
+      step: input.step,
+      localityPct: input.localityPct,
+      capValue: input.capValue,
+      applyCap: input.applyCap,
+      color: colors.orange,
+      primary: true
+    };
+    if (input.compareMode === "steps") {
+      const below = Math.max(1, input.step - 1);
+      const above = Math.min(10, input.step + 1);
+      return [
+        baseScenario,
+        { ...you, key: "belowStep", label: `Step ${below}`, shortLabel: `S${below}`, step: below, primary: false, color: colors.blue },
+        { ...you, key: "aboveStep", label: `Step ${above}`, shortLabel: `S${above}`, step: above, primary: false, color: colors.magenta },
+        you
+      ];
+    }
+    if (input.compareMode === "locality") {
+      const rus = localityAreaByCode(2026, "RUS");
+      const areas = localityAreasForYear(2026);
+      const maxArea = areas.reduce((best, area) => (!best || area.percentage > best.percentage ? area : best), null);
+      const selectedLabel = input.localityArea ? input.localityArea.code : "Manual";
+      return [
+        baseScenario,
+        { ...you, key: "rus", label: `RUS rate`, shortLabel: "RUS", localityPct: rus ? rus.percentage : 17.06, color: colors.blue, primary: false },
+        { ...you, key: "maxLocality", label: maxArea ? `${maxArea.code} rate` : "High locality", shortLabel: maxArea ? maxArea.code : "High", localityPct: maxArea ? maxArea.percentage : input.localityPct, color: colors.magenta, primary: false },
+        { ...you, label: `${selectedLabel} selected`, shortLabel: selectedLabel }
+      ];
+    }
+    const lowerGrade = Math.max(1, input.grade - 1);
+    const higherGrade = Math.min(15, input.grade + 1);
+    return [
+      baseScenario,
+      { ...you, key: "lowerGrade", label: `GS-${lowerGrade}`, shortLabel: `GS-${lowerGrade}`, grade: lowerGrade, primary: false, color: colors.blue },
+      { ...you, key: "higherGrade", label: `GS-${higherGrade}`, shortLabel: `GS-${higherGrade}`, grade: higherGrade, primary: false, color: colors.magenta },
+      you
+    ];
+  }
+
+  function drawCareerLabel(ctx, text, x, y, colors, align = "left") {
+    const padX = 7;
+    const metrics = ctx.measureText(text);
+    const width = metrics.width + padX * 2;
+    const height = 22;
+    const left = align === "right" ? x - width : align === "center" ? x - width / 2 : x;
+    ctx.fillStyle = rgbaColor(colors.bg, 0.78);
+    ctx.strokeStyle = rgbaColor(colors.cyan, 0.32);
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.roundRect(left, y - height + 5, width, height, 5);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = rgbaColor(colors.ink, 0.96);
+    ctx.textAlign = align;
+    ctx.fillText(text, x, y);
+  }
+
+  function renderCareerEarnings(input) {
+    const canvas = els.paySurfaceCanvas;
+    if (!canvas) return;
+    const colors = themeColors();
+    const { ctx, width, height } = canvasMetrics(canvas, 360);
+    clearCanvas(ctx, width, height, colors);
+    const years = careerYears(input);
+    const scenarios = careerScenarios(input);
+    const series = scenarios.map((scenario) => ({
+      scenario,
+      values: years.map((year) => scenarioPay(year, scenario)),
+      total: scenarioTotal(years, scenario)
+    }));
+    const maxAnnual = Math.max(...series.flatMap((item) => item.values), 1);
+    const maxTotal = Math.max(...series.map((item) => item.total), 1);
+    const primary = series.find((item) => item.scenario.primary) || series[series.length - 1];
+    const baseline = series.find((item) => item.scenario.key === "base") || series[0];
+    const minTotal = Math.min(...series.map((item) => item.total));
+    const yaw = Number(els.surfaceYaw.value) || 34;
+    const tilt = Number(els.surfaceTilt.value) || 38;
+    const depthMagnitude = (width > 720 ? 16 : 10) + (Math.abs(yaw) / 65) * (width > 720 ? 22 : 14);
+    const depthX = (yaw < 0 ? -1 : 1) * depthMagnitude;
+    const depthY = (width > 720 ? 7 : 5) + (tilt / 62) * (width > 720 ? 15 : 10);
+    const depthFootprint = Math.abs(depthX) * (series.length - 1);
+    const rightPad = (width > 760 ? 178 : 112) + Math.max(0, depthX) * 0.35;
+    const leftPad = (width > 760 ? 70 : 44) + Math.max(0, -depthX) * (series.length - 1);
+    const topPad = 38;
+    const bottom = height - 50;
+    const xSpan = Math.max(1, years.length - 1);
+    const xStep = Math.max(7, (width - leftPad - rightPad - depthFootprint) / xSpan);
+    const yScale = (height - topPad - 105) / maxAnnual;
+
+    ctx.strokeStyle = rgbaColor(colors.cyan, 0.22);
+    ctx.lineWidth = 1;
+    for (let i = 0; i < years.length; i += Math.max(1, Math.ceil(years.length / 8))) {
+      const x = leftPad + i * xStep;
+      ctx.beginPath();
+      ctx.moveTo(x, bottom + 8);
+      ctx.lineTo(x + depthX * (series.length - 1), bottom - depthY * (series.length - 1) - 6);
+      ctx.stroke();
+    }
+    for (let level = 0; level <= 4; level += 1) {
+      const value = (maxAnnual * level) / 4;
+      const y = bottom - value * yScale;
+      ctx.beginPath();
+      ctx.moveTo(leftPad - 12, y);
+      ctx.lineTo(width - rightPad + depthX * (series.length - 1), y - depthY * (series.length - 1));
+      ctx.stroke();
+      if (level > 0) {
+        ctx.fillStyle = rgbaColor(colors.ink, 0.82);
+        ctx.font = "700 11px Segoe UI, system-ui, sans-serif";
+        ctx.textAlign = "right";
+        ctx.fillText(math.money0.format(value), leftPad - 16, y + 4);
+      }
+    }
+
+    ctx.font = "700 12px Segoe UI, system-ui, sans-serif";
+    for (let j = series.length - 1; j >= 0; j -= 1) {
+      const item = series[j];
+      const depthOffsetX = j * depthX;
+      const depthOffsetY = j * depthY;
+      const base = item.values.map((_value, index) => ({
+        x: leftPad + index * xStep + depthOffsetX,
+        y: bottom - depthOffsetY
+      }));
+      const top = item.values.map((value, index) => ({
+        x: leftPad + index * xStep + depthOffsetX,
+        y: bottom - depthOffsetY - Math.max(2, value * yScale)
+      }));
+      for (let i = 0; i < years.length - 1; i += 1) {
+        const t = item.values[i] / maxAnnual;
+        polygon(ctx, [base[i], base[i + 1], top[i + 1], top[i]], rgbaColor(blendColor(item.scenario.color, colors.panel, 0.18 + t * 0.18), item.scenario.primary ? 0.82 : 0.62), rgbaColor(item.scenario.color, item.scenario.primary ? 0.88 : 0.48), item.scenario.primary ? 1.4 : 0.9);
+      }
+      ctx.beginPath();
+      top.forEach((point, index) => {
+        if (index === 0) ctx.moveTo(point.x, point.y);
+        else ctx.lineTo(point.x, point.y);
+      });
+      ctx.strokeStyle = item.scenario.color;
+      ctx.lineWidth = item.scenario.primary ? 4 : 2.5;
+      ctx.stroke();
+      const last = top[top.length - 1] || { x: leftPad + depthOffsetX, y: bottom - depthOffsetY };
+      const label = `${item.scenario.shortLabel} ${math.money0.format(item.total)}`;
+      drawCareerLabel(ctx, label, Math.min(width - 8, last.x + 12), Math.max(20, last.y - 2), colors);
+    }
+
+    const firstYear = years[0] || input.earnStart;
+    const lastYear = years[years.length - 1] || input.earnEnd;
+    ctx.fillStyle = rgbaColor(colors.ink, 0.9);
+    ctx.font = "700 12px Segoe UI, system-ui, sans-serif";
+    ctx.textAlign = "left";
+    ctx.fillText(String(firstYear), leftPad, bottom + 28);
+    ctx.textAlign = "right";
+    ctx.fillText(String(lastYear), width - rightPad + depthX * (series.length - 1), bottom + 28 - depthY * (series.length - 1));
+
+    const raise = primary.values.length > 1 ? primary.values[primary.values.length - 1] - primary.values[primary.values.length - 2] : 0;
+    const previous = primary.values.length > 1 ? primary.values[primary.values.length - 2] : primary.values[0] || 0;
+    const raisePct = previous ? (raise / previous) * 100 : 0;
+    const lastPointX = leftPad + (years.length - 1) * xStep + (series.length - 1) * depthX;
+    const lastPointY = bottom - (series.length - 1) * depthY - Math.max(2, (primary.values[primary.values.length - 1] || 0) * yScale);
+    drawCareerLabel(ctx, `${lastYear} raise ${raise >= 0 ? "+" : "-"}${math.money0.format(Math.abs(raise))} (${raisePct >= 0 ? "+" : ""}${raisePct.toFixed(1)}%)`, Math.min(width - 8, lastPointX + 10), Math.max(20, lastPointY - 28), colors);
+
+    setText(els.surfaceTitle, `${firstYear}-${lastYear} earnings | GS-${input.grade} Step ${input.step}`);
+    setText(els.surfacePeak, math.money0.format(maxTotal));
+    setText(els.surfaceRange, `${years.length} years | ${input.compareMode === "locality" ? "locality/base-only" : input.compareMode === "steps" ? "adjacent steps" : "adjacent grades"}`);
+    setText(els.surfaceSelectedLabel, "Career total");
+    setText(els.surfaceSelected, math.money0.format(primary.total));
+    setText(els.surfaceSpreadLabel, "Vs base-only");
+    setText(els.surfaceSpread, `${primary.total >= baseline.total ? "+" : "-"}${math.money0.format(Math.abs(primary.total - baseline.total))}`);
+    setText(els.surfaceRaise, `${raise >= 0 ? "+" : "-"}${math.money0.format(Math.abs(raise))}`);
+    setText(els.surfaceCompare, math.money0.format(maxTotal - minTotal));
   }
 
   function drawExtrudedBar(ctx, x, bottom, width, height, depth, color, colors) {
@@ -655,7 +884,8 @@
   }
 
   function render3DLab(input) {
-    renderPaySurface(input);
+    if (els.surfaceMode.value === "career") renderCareerEarnings(input);
+    else renderPaySurface(input);
     renderLocalityLift(input);
     renderCapPressure(input);
   }
@@ -731,7 +961,10 @@
       syncLocalityFromArea();
       els.cap.value = "197200";
       els.applyCap.checked = true;
-      els.surfaceMode.value = "annual";
+      els.surfaceMode.value = "career";
+      els.earnStart.value = "2017";
+      els.earnEnd.value = "2026";
+      els.compareMode.value = "grades";
       els.surfaceYearSpan.value = "25";
       els.surfaceYaw.value = "34";
       els.surfaceTilt.value = "38";
@@ -750,7 +983,7 @@
       renderAll();
     });
     [els.grade, els.step, els.compareYear, els.cap, els.applyCap].forEach((el) => el.addEventListener("change", renderAll));
-    [els.surfaceMode, els.surfaceYearSpan].forEach((el) => el.addEventListener("change", renderAll));
+    [els.surfaceMode, els.earnStart, els.earnEnd, els.compareMode, els.surfaceYearSpan].forEach((el) => el.addEventListener("change", renderAll));
     [els.surfaceYaw, els.surfaceTilt].forEach((el) => el.addEventListener("input", renderAll));
     els.scheduleTable.addEventListener("click", (event) => {
       const button = event.target.closest(".cell-button");

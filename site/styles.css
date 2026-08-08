@@ -269,9 +269,10 @@ main {
 }
 
 .watermark {
-  position: absolute;
+  position: fixed;
   right: clamp(8px, 5vw, 72px);
-  top: 34px;
+  top: calc(var(--topbar-h) + 24px);
+  z-index: 1;
   width: min(38vw, 430px);
   opacity: 0.08;
   pointer-events: none;
@@ -680,7 +681,14 @@ thead th {
 
 .control-panel {
   display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
+}
+
+.control-panel .field:first-child,
+.control-panel .field:nth-child(4),
+.control-panel .field:nth-child(5) {
+  grid-column: 1 / -1;
 }
 
 .control-panel input[type="range"] {
@@ -886,8 +894,9 @@ html[data-shell="module"] .hero {
   }
 
   .watermark {
-    width: 240px;
-    top: 20px;
+    right: 8px;
+    top: calc(var(--topbar-h) + 12px);
+    width: min(46vw, 190px);
   }
 }
 
@@ -940,8 +949,15 @@ html[data-shell="module"] .hero {
   }
 
   .surface-controls,
-  .surface-readouts {
+  .surface-readouts,
+  .control-panel {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .control-panel .field:first-child,
+  .control-panel .field:nth-child(4),
+  .control-panel .field:nth-child(5) {
+    grid-column: auto;
   }
 
   #paySurfaceCanvas {
