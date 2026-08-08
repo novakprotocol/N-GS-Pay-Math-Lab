@@ -1,0 +1,356 @@
+{
+  "description": "OPM 2026 General Schedule locality pay area percentages used by the public calculator locality selector.",
+  "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/2026/general-schedule/",
+  "by_year": {
+    "2026": [
+      {
+        "code": "RUS",
+        "name": "Rest of U.S.",
+        "percentage": 17.06,
+        "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/RUS.aspx"
+      },
+      {
+        "code": "AL",
+        "name": "Albany-Schenectady, NY-MA",
+        "percentage": 20.77,
+        "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/AL.aspx"
+      },
+      {
+        "code": "AQ",
+        "name": "Albuquerque-Santa Fe-Las Vegas, NM",
+        "percentage": 18.33,
+        "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/AQ.aspx"
+      },
+      {
+        "code": "ATL",
+        "name": "Atlanta--Athens-Clarke County--Sandy Springs, GA-AL",
+        "percentage": 23.79,
+        "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/ATL.aspx"
+      },
+      {
+        "code": "AU",
+        "name": "Austin-Round Rock-Georgetown, TX",
+        "percentage": 20.35,
+        "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/AU.aspx"
+      },
+      {
+        "code": "BH",
+        "name": "Birmingham-Hoover-Talladega, AL",
+        "percentage": 18.24,
+        "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/BH.aspx"
+      },
+      {
+        "code": "BOS",
+        "name": "Boston-Worcester-Providence, MA-RI-NH-CT-ME-VT",
+        "percentage": 32.58,
+        "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/BOS.aspx"
+      },
+      {
+        "code": "BU",
+        "name": "Buffalo-Cheektowaga-Olean, NY",
+        "percentage": 22.41,
+        "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/BU.aspx"
+      },
+      {
+        "code": "BN",
+        "name": "Burlington-South Burlington-Barre, VT",
+        "percentage": 19.45,
+        "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/BN.aspx"
+      },
+      {
+        "code": "CT",
+        "name": "Charlotte-Concord, NC-SC",
+        "percentage": 19.67,
+        "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/CT.aspx"
+      },
+      {
+        "code": "CHI",
+        "name": "Chicago-Naperville, IL-IN-WI",
+        "percentage": 30.86,
+        "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/CHI.aspx"
+      },
+      {
+        "code": "CIN",
+        "name": "Cincinnati-Wilmington-Maysville, OH-KY-IN",
+        "percentage": 21.93,
+        "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/CIN.aspx"
+      },
+      {
+        "code": "CLE",
+        "name": "Cleveland-Akron-Canton, OH-PA",
+        "percentage": 22.23,
+        "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/CLE.aspx"
+      },
+      {
+        "code": "CS",
+        "name": "Colorado Springs, CO",
+        "percentage": 20.15,
+        "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/CS.aspx"
+      },
+      {
+        "code": "COL",
+        "name": "Columbus-Marion-Zanesville, OH",
+        "percentage": 22.15,
+        "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/COL.aspx"
+      },
+      {
+        "code": "CC",
+        "name": "Corpus Christi-Kingsville-Alice, TX",
+        "percentage": 17.63,
+        "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/CC.aspx"
+      },
+      {
+        "code": "DFW",
+        "name": "Dallas-Fort Worth, TX-OK",
+        "percentage": 27.26,
+        "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/DFW.aspx"
+      },
+      {
+        "code": "DV",
+        "name": "Davenport-Moline, IA-IL",
+        "percentage": 18.93,
+        "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/DV.aspx"
+      },
+      {
+        "code": "DAY",
+        "name": "Dayton-Springfield-Kettering, OH",
+        "percentage": 21.42,
+        "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/DAY.aspx"
+      },
+      {
+        "code": "DEN",
+        "name": "Denver-Aurora, CO",
+        "percentage": 30.52,
+        "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/DEN.aspx"
+      },
+      {
+        "code": "DM",
+        "name": "Des Moines-Ames-West Des Moines, IA",
+        "percentage": 18.01,
+        "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/DM.aspx"
+      },
+      {
+        "code": "DET",
+        "name": "Detroit-Warren-Ann Arbor, MI",
+        "percentage": 29.12,
+        "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/DET.aspx"
+      },
+      {
+        "code": "FN",
+        "name": "Fresno-Madera-Hanford, CA",
+        "percentage": 17.65,
+        "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/FN.aspx"
+      },
+      {
+        "code": "HB",
+        "name": "Harrisburg-Lebanon, PA",
+        "percentage": 19.43,
+        "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/HB.aspx"
+      },
+      {
+        "code": "HAR",
+        "name": "Hartford-East Hartford, CT-MA",
+        "percentage": 32.08,
+        "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/HAR.aspx"
+      },
+      {
+        "code": "HOU",
+        "name": "Houston-The Woodlands, TX",
+        "percentage": 35.0,
+        "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/HOU.aspx"
+      },
+      {
+        "code": "HNT",
+        "name": "Huntsville-Decatur, AL-TN",
+        "percentage": 21.91,
+        "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/HNT.aspx"
+      },
+      {
+        "code": "IND",
+        "name": "Indianapolis-Carmel-Muncie, IN",
+        "percentage": 18.15,
+        "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/IND.aspx"
+      },
+      {
+        "code": "KC",
+        "name": "Kansas City-Overland Park-Kansas City, MO-KS",
+        "percentage": 18.97,
+        "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/KC.aspx"
+      },
+      {
+        "code": "LR",
+        "name": "Laredo, TX",
+        "percentage": 21.59,
+        "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/LR.aspx"
+      },
+      {
+        "code": "LV",
+        "name": "Las Vegas-Henderson, NV-AZ",
+        "percentage": 19.57,
+        "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/LV.aspx"
+      },
+      {
+        "code": "LA",
+        "name": "Los Angeles-Long Beach, CA",
+        "percentage": 36.47,
+        "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/LA.aspx"
+      },
+      {
+        "code": "MFL",
+        "name": "Miami-Port St. Lucie-Fort Lauderdale, FL",
+        "percentage": 24.67,
+        "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/MFL.aspx"
+      },
+      {
+        "code": "MIL",
+        "name": "Milwaukee-Racine-Waukesha, WI",
+        "percentage": 22.42,
+        "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/MIL.aspx"
+      },
+      {
+        "code": "MSP",
+        "name": "Minneapolis-St. Paul, MN-WI",
+        "percentage": 27.62,
+        "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/MSP.aspx"
+      },
+      {
+        "code": "NY",
+        "name": "New York-Newark, NY-NJ-CT-PA",
+        "percentage": 37.95,
+        "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/NY.aspx"
+      },
+      {
+        "code": "OM",
+        "name": "Omaha-Council Bluffs-Fremont, NE-IA",
+        "percentage": 18.23,
+        "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/OM.aspx"
+      },
+      {
+        "code": "PB",
+        "name": "Palm Bay-Melbourne-Titusville, FL",
+        "percentage": 17.93,
+        "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/PB.aspx"
+      },
+      {
+        "code": "PHL",
+        "name": "Philadelphia-Reading-Camden, PA-NJ-DE-MD",
+        "percentage": 28.99,
+        "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/PHL.aspx"
+      },
+      {
+        "code": "PX",
+        "name": "Phoenix-Mesa, AZ",
+        "percentage": 22.45,
+        "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/PX.aspx"
+      },
+      {
+        "code": "PIT",
+        "name": "Pittsburgh-New Castle-Weirton, PA-OH-WV",
+        "percentage": 21.03,
+        "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/PIT.aspx"
+      },
+      {
+        "code": "POR",
+        "name": "Portland-Vancouver-Salem, OR-WA",
+        "percentage": 26.13,
+        "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/POR.aspx"
+      },
+      {
+        "code": "RA",
+        "name": "Raleigh-Durham-Cary, NC",
+        "percentage": 22.24,
+        "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/RA.aspx"
+      },
+      {
+        "code": "RN",
+        "name": "Reno-Fernley, NV",
+        "percentage": 17.52,
+        "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/RN.aspx"
+      },
+      {
+        "code": "RCH",
+        "name": "Richmond, VA",
+        "percentage": 22.28,
+        "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/RCH.aspx"
+      },
+      {
+        "code": "RT",
+        "name": "Rochester-Batavia-Seneca Falls, NY",
+        "percentage": 17.88,
+        "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/RT.aspx"
+      },
+      {
+        "code": "SAC",
+        "name": "Sacramento-Roseville, CA-NV",
+        "percentage": 29.76,
+        "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/SAC.aspx"
+      },
+      {
+        "code": "SO",
+        "name": "San Antonio-New Braunfels-Pearsall, TX",
+        "percentage": 18.78,
+        "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/SO.aspx"
+      },
+      {
+        "code": "SD",
+        "name": "San Diego-Chula Vista-Carlsbad, CA",
+        "percentage": 33.72,
+        "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/SD.aspx"
+      },
+      {
+        "code": "SF",
+        "name": "San Jose-San Francisco-Oakland, CA",
+        "percentage": 46.34,
+        "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/SF.aspx"
+      },
+      {
+        "code": "SEA",
+        "name": "Seattle-Tacoma, WA",
+        "percentage": 31.57,
+        "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/SEA.aspx"
+      },
+      {
+        "code": "SN",
+        "name": "Spokane-Spokane Valley-Coeur d'Alene, WA-ID",
+        "percentage": 17.67,
+        "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/SN.aspx"
+      },
+      {
+        "code": "SL",
+        "name": "St. Louis-St. Charles-Farmington, MO-IL",
+        "percentage": 20.03,
+        "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/SL.aspx"
+      },
+      {
+        "code": "AK",
+        "name": "State of Alaska",
+        "percentage": 32.36,
+        "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/AK.aspx"
+      },
+      {
+        "code": "HI",
+        "name": "State of Hawaii",
+        "percentage": 22.21,
+        "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/HI.aspx"
+      },
+      {
+        "code": "TU",
+        "name": "Tucson-Nogales, AZ",
+        "percentage": 19.28,
+        "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/TU.aspx"
+      },
+      {
+        "code": "VB",
+        "name": "Virginia Beach-Norfolk, VA-NC",
+        "percentage": 18.8,
+        "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/VB.aspx"
+      },
+      {
+        "code": "DCB",
+        "name": "Washington-Baltimore-Arlington, DC-MD-VA-WV-PA",
+        "percentage": 33.94,
+        "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/salary-tables/26Tables/html/DCB.aspx"
+      }
+    ]
+  }
+}

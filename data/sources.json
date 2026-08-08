@@ -9,6 +9,12 @@
       "note": "Used for the official 2026 checkpoint fixture."
     },
     {
+      "id": "opm-2026-locality-tables",
+      "title": "OPM 2026 General Schedule locality pay tables",
+      "url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/2026/general-schedule/",
+      "note": "Used for the locality area selector and 2026 locality percentages."
+    },
+    {
       "id": "opm-2026-rus",
       "title": "OPM 2026 Rest of U.S. locality schedule",
       "url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/2026/locality-pay-area-definitions/",

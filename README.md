@@ -7,7 +7,9 @@ Public site target: https://novakprotocol.github.io/N-GS-Pay-Math-Lab/
 ## What It Does
 
 - Calculates annual base pay, locality pay, pay-cap effects, hourly pay, and biweekly pay.
+- Lets users choose a 2026 OPM locality area or enter a manual locality percentage.
 - Shows formulas, substituted numbers, intermediate rounding, and final results.
+- Adds offline canvas views for the grade/year pay surface, locality lift, and cap pressure.
 - Distinguishes official tables, official checkpoints, formula reconstructions, reverse calculations, and user-entered scenarios.
 - Provides a downloadable single-file offline build.
 - Measures the formula package against generated static CSV, JSON, HTML, and optional PDF alternatives.
