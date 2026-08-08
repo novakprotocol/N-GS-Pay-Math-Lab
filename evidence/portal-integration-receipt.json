@@ -1,0 +1,9 @@
+{
+  "generated_at": "2026-08-08T00:00:00Z",
+  "ghe_mutation": "none",
+  "module_id": "gs-pay-math-lab",
+  "public_record_private_only_behavior": "public fixture is marked public and must remain excluded by production private-only logic",
+  "reason": "A portable contract and private-target fixture are provided. Full central Portal build proof requires selecting the intended local Portal checkout and applying its exact current schema without mutating GHE.",
+  "stable_anchor": "module-gs-pay-math-lab",
+  "status": "local-proof-blocked"
+}

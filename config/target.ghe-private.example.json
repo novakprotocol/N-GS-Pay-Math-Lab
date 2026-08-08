@@ -1,0 +1,16 @@
+{
+  "id": "ghe-private-example",
+  "host": "GHE_HOST_PLACEHOLDER",
+  "owner": "software",
+  "repository": "ITOPS-IaT-Storage-GS-Pay-Math-Lab",
+  "visibility": "private",
+  "pages_url": "GHE_PAGES_URL_PLACEHOLDER",
+  "site_entrypoint": "site/index.html",
+  "module_entrypoint": "site/module/index.html",
+  "custom_properties_required": [
+    "portal-enabled",
+    "technical-tools",
+    "calculation-tool",
+    "reviewed-lifecycle"
+  ]
+}

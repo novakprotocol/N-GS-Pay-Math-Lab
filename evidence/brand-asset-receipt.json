@@ -1,0 +1,74 @@
+{
+  "alpha_preserved": true,
+  "derivatives": [
+    {
+      "byte_count": 352663,
+      "exists": true,
+      "file_name": "n-mark-512.png",
+      "image": {
+        "bit_depth": 8,
+        "color_type": 6,
+        "has_alpha": true,
+        "height": 512,
+        "valid_png": true,
+        "width": 512
+      },
+      "label": "N mark 512 PNG",
+      "mime": "image/png",
+      "sha256": "c65175bfa14dd1f28e07f6aef6b95b9b7be4c16f1298ce4e8e9064379e56f1b5"
+    },
+    {
+      "byte_count": 93559,
+      "exists": true,
+      "file_name": "n-mark-256.png",
+      "image": {
+        "bit_depth": 8,
+        "color_type": 6,
+        "has_alpha": true,
+        "height": 256,
+        "valid_png": true,
+        "width": 256
+      },
+      "label": "N mark 256 PNG",
+      "mime": "image/png",
+      "sha256": "63971ebbdacf63ea55749c6e84d7273b29b34fc2ea5b6898de3e4c88118aa5ae"
+    },
+    {
+      "byte_count": 7271,
+      "exists": true,
+      "file_name": "favicon.png",
+      "image": {
+        "bit_depth": 8,
+        "color_type": 6,
+        "has_alpha": true,
+        "height": 64,
+        "valid_png": true,
+        "width": 64
+      },
+      "label": "Favicon PNG",
+      "mime": "image/png",
+      "sha256": "d51450b94a933456f4e0ee6e73bab682dbf3f2658bb52325edeca9023d9cef10"
+    }
+  ],
+  "generated_at": "2026-08-08T00:00:00Z",
+  "source": {
+    "byte_count": 1876603,
+    "exists": true,
+    "file_name": "Transparent N.png",
+    "image": {
+      "bit_depth": 8,
+      "color_type": 6,
+      "has_alpha": true,
+      "height": 1254,
+      "valid_png": true,
+      "width": 1254
+    },
+    "label": "Public N source image",
+    "mime": "image/png",
+    "sha256": "1dc93ef4af50420c7ab628eaa5bfe31f2e64a78b20a6689821c98b3db23a41be"
+  },
+  "webp": {
+    "exists": false,
+    "status": "unavailable"
+  }
+}

@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en" data-theme="light" data-shell="module">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="description" content="N-GS Pay Math Lab reconstructs and verifies General Schedule base-pay math from 1977 through 2026.">
+  <title>N-GS Pay Math Lab</title>
+  <link rel="icon" href="../assets/brand/favicon.png">
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="#home" aria-label="N-GS Pay Math Lab home">
+        <img src="../assets/brand/n-mark-256.png" alt="Colorful transparent N mark">
+        <span class="brand-title"><strong>N-GS Pay Math Lab</strong><span>v0.01 | 1977-2026</span></span>
+      </a>
+      <div class="top-actions">
+        <a class="text-button return-link" href="../index.html">Return to Portal</a>
+        <button class="text-button" id="themeToggle" type="button" aria-pressed="false">Dark</button>
+        <button class="icon-button menu-toggle" id="menuToggle" type="button" aria-label="Open navigation">Menu</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="nav-drawer" id="navDrawer" hidden>
+    <div class="drawer-panel">
+      <div class="drawer-head">
+        <strong>Navigation</strong>
+        <button class="icon-button" id="drawerClose" type="button" aria-label="Close navigation">Close</button>
+      </div>
+      <nav class="nav-list" aria-label="Mobile">
+        <a href="#home">Home</a>
+        <a href="#calculator">Calculator</a>
+        <a href="#formula-proof">Formula Proof</a>
+        <a href="#ledger">Fifty-Year Ledger</a>
+        <a href="#full-schedule">Full Schedule</a>
+        <a href="#math-vs-files">Math vs. Files</a>
+        <a href="#validation">Validation</a>
+        <a href="#sources">Sources</a>
+      </nav>
+    </div>
+  </div>
+
+  <div class="layout">
+    <aside class="sidebar" aria-label="Desktop navigation">
+      <p class="side-label">N-GS Pay Math Lab</p>
+      <nav class="nav-list">
+        <a href="#home">Home</a>
+        <a href="#calculator">Calculator</a>
+        <a href="#formula-proof">Formula Proof</a>
+        <a href="#ledger">Fifty-Year Ledger</a>
+        <a href="#full-schedule">Full Schedule</a>
+        <a href="#math-vs-files">Math vs. Files</a>
+        <a href="#validation">Validation</a>
+        <a href="#sources">Sources</a>
+      </nav>
+      <div class="side-note">
+        Independent calculation and verification tool. It is not an official OPM service.
+      </div>
+    </aside>
+
+    <main>
+      <section class="section hero" id="home">
+        <img class="watermark" src="../assets/brand/n-mark-512.png" alt="" aria-hidden="true">
+        <div class="section-inner">
+          <p class="kicker">Federal General Schedule Pay Reconstruction and Verification</p>
+          <h1>N-GS Pay Math Lab</h1>
+          <p class="hero-copy">1977-2026</p>
+          <p class="hero-copy">50 years. 7,500 grade-and-step cells. One auditable formula system.</p>
+          <div class="hero-actions">
+            <a class="primary-button" href="#calculator">Run the math</a>
+            <a class="secondary-button" href="#math-vs-files">See why math matters</a>
+          </div>
+          <div class="hero-metrics" aria-label="Coverage summary">
+            <div class="metric"><span>Years</span><strong>50</strong></div>
+            <div class="metric"><span>Annual cells</span><strong>150</strong></div>
+            <div class="metric"><span>Total cells</span><strong>7,500</strong></div>
+            <div class="metric"><span>Runtime calls</span><strong>0</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="calculator">
+        <div class="section-inner">
+          <p class="kicker">Calculator</p>
+          <h2>Run a pay-cell proof</h2>
+          <p class="section-lede">Select a year, grade, step, locality percentage, and cap. The visible result and downloadable calculation record come from the same formula functions.</p>
+          <div class="form-grid">
+            <div class="field"><label for="year">Year</label><select id="year"></select></div>
+            <div class="field"><label for="grade">Grade</label><select id="grade"></select></div>
+            <div class="field"><label for="step">Step</label><select id="step"></select></div>
+            <div class="field"><label for="locality">Locality percent</label><input id="locality" type="number" min="0" max="100" step="0.01" value="17.06" inputmode="decimal"></div>
+            <div class="field"><label for="cap">Annual cap</label><input id="cap" type="number" min="0" step="1" value="197200" inputmode="numeric"></div>
+            <label class="check-field"><input id="applyCap" type="checkbox" checked> Apply cap</label>
+            <div class="field"><label for="compareYear">Compare with</label><select id="compareYear"></select></div>
+          </div>
+          <div class="button-row">
+            <button class="primary-button" id="runMath" type="button">Run the math</button>
+            <button class="secondary-button" id="resetScenario" type="button">Reset proof case</button>
+            <button class="secondary-button" id="downloadRecord" type="button">Download calculation record</button>
+            <a class="secondary-button" href="../offline/N-GS-Pay-Math-Lab-1977-2026.html" download>Download offline build</a>
+            <button class="secondary-button" id="printPage" type="button">Print evidence</button>
+          </div>
+          <div class="result-grid" aria-live="polite">
+            <div class="metric"><span>Base pay</span><strong id="baseResult">$0</strong></div>
+            <div class="metric"><span>Locality/cap annual</span><strong id="annualResult">$0.00</strong></div>
+            <div class="metric"><span>Hourly</span><strong id="hourlyResult">$0.00</strong></div>
+            <div class="metric"><span>Biweekly</span><strong id="biweeklyResult">$0.00</strong></div>
+          </div>
+          <p class="result-note"><span class="status-pill" id="statusBadge" data-status-class="recon">Formula reconstruction</span> <span id="resultNote"></span></p>
+        </div>
+      </section>
+
+      <section class="section" id="formula-proof">
+        <div class="section-inner">
+          <p class="kicker">Formula Proof</p>
+          <h2>Visible formulas, substituted numbers, and rounding order</h2>
+          <div class="proof-grid">
+            <div class="proof-box"><span class="tag">Official table</span><p>Complete annual fixture table used only when the source provides every cell.</p></div>
+            <div class="proof-box"><span class="tag">Official checkpoint</span><p>Published anchor used to reconstruct surrounding years.</p></div>
+            <div class="proof-box"><span class="tag">Formula reconstruction</span><p>Generated from the nearest anchor and annual adjustment chain.</p></div>
+            <div class="proof-box"><span class="tag">Reverse calculation</span><p>Explicitly labeled when low-grade rows are derived instead of asserted as official tables.</p></div>
+          </div>
+          <ul class="trace-list" id="traceList"></ul>
+          <pre class="sr-output" id="tracePlain"></pre>
+        </div>
+      </section>
+
+      <section class="section" id="ledger">
+        <div class="section-inner">
+          <p class="kicker">Fifty-Year Ledger</p>
+          <h2 id="ledgerTitle">Fifty-year ledger</h2>
+          <p class="section-lede">Each row is recalculated for the selected grade and step, with official and reconstructed statuses kept separate.</p>
+          <div class="chart-card">
+            <div class="chart-head">
+              <h3 id="chartTitle">GS-12 Step 10 | 1977-2026</h3>
+              <div class="chart-metric"><strong id="chartMetric">$0</strong><span id="chartDelta"></span></div>
+            </div>
+            <svg id="timelineChart" viewBox="0 0 980 330" role="img" aria-label="Pay trend chart"></svg>
+          </div>
+          <div class="table-wrap">
+            <table id="ledgerTable"></table>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="full-schedule">
+        <div class="section-inner">
+          <p class="kicker">Full Schedule</p>
+          <h2 id="scheduleTitle">Generated General Schedule base table</h2>
+          <p class="section-lede"><span class="status-pill" id="scheduleBadge">Formula reconstruction year</span> <span id="scheduleMeta"></span></p>
+          <div class="table-wrap">
+            <table id="scheduleTable"></table>
+          </div>
+          <p class="table-note">Base pay only. Locality schedules, special rates, LEO schedules, title 38 schedules, and agency payroll determinations are outside this calculator.</p>
+        </div>
+      </section>
+
+      <section class="section" id="math-vs-files">
+        <div class="section-inner">
+          <p class="kicker">Math vs. Files</p>
+          <h2>The formula is smaller than the paperwork&mdash;and easier to prove.</h2>
+          <p class="section-lede" id="sizeStamp">Size measurements will appear after the evidence script runs.</p>
+          <div class="size-totals">
+            <div class="total-box"><span>Calculation package without brand imagery</span><strong data-size-total="core">Measured</strong></div>
+            <div class="total-box"><span>Complete deployed package with brand imagery</span><strong data-size-total="complete">Measured</strong></div>
+          </div>
+          <div class="table-wrap">
+            <table id="sizeTable"></table>
+          </div>
+          <div class="size-bars" id="sizeBars" aria-label="Size comparison bar chart"></div>
+          <div class="columns">
+            <div class="plain-box">
+              <h3>What the bytes prove</h3>
+              <p>A formula can generate 7,500 cells without storing 7,500 manually maintained answers as the authority. One corrected formula or rounding rule updates the generated result consistently. Static tables can still be useful outputs, but they are outputs, not the calculation authority. Images and presentation assets can be larger than the mathematical engine, so the report separates them. Storage size is only one benefit; auditability, reproducibility, drift reduction, and testability are the larger benefits.</p>
+            </div>
+            <div class="plain-box">
+              <h3>What the bytes do not prove</h3>
+              <p>Small files do not prove a formula is correct. The proof comes from visible equations, source notes, deterministic generation, official checkpoints, cell-by-cell audits, and tests that fail when the status model or rounding behavior drifts.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="validation">
+        <div class="section-inner">
+          <p class="kicker">Validation</p>
+          <h2>Required proof cases</h2>
+          <div class="validation-grid">
+            <div class="audit-box"><span>2026 official cells</span><strong id="auditExact">0 / 150</strong></div>
+            <div class="audit-box"><span>Shortcut failures</span><strong id="auditWrong">0 / 150</strong></div>
+            <div class="audit-box"><span>2026 Rest of U.S. annual</span><strong id="auditLocality">$0</strong></div>
+            <div class="audit-box"><span>2026 Rest of U.S. hourly</span><strong id="auditHourly">$0.00</strong></div>
+          </div>
+          <p class="fine-print">The incorrect shortcut audit multiplies each 2025 cell by 1.01 and rounds directly; the failures show why annual Step 1, WGI, and step calculations must remain explicit.</p>
+        </div>
+      </section>
+
+      <section class="section" id="sources">
+        <div class="section-inner">
+          <p class="kicker">Sources</p>
+          <h2>Source notes and limitations</h2>
+          <p class="section-lede">Official and reconstructed values are visibly distinguished. Reconstructed values are never described as official published tables.</p>
+          <ol class="source-list" id="sourceList"></ol>
+          <p class="fine-print" id="buildMeta">Build n-gs-pay-math-lab-v0.01 | commit unavailable</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="../data/pay-data.js"></script>
+  <script src="../evidence/size-comparison.js"></script>
+  <script src="../data-loader.js"></script>
+  <script src="../formulas.js"></script>
+  <script src="../app.js"></script>
+</body>
+</html>

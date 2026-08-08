@@ -1,0 +1,34 @@
+{
+  "source_release": "v0.01",
+  "target_profile": "ghe-private-example",
+  "brand_profile": "va-vision-private-example",
+  "required_user_supplied_assets": [
+    "approved_va_vision_emblem"
+  ],
+  "allowed_differences": [
+    "config/brand.*.json",
+    "config/target.*.json",
+    "assets/brand/*",
+    ".itops/portal.json",
+    "README.md",
+    "NOTICE.md",
+    "integration/*"
+  ],
+  "protected_paths": [
+    "data/",
+    "src/formulas.js",
+    "src/app.js",
+    "scripts/pay_math.py",
+    "scripts/build_size_receipt.py",
+    "tests/test_formulas.py",
+    "tests/test_official_tables.py",
+    "tests/test_rounding.py",
+    "tests/test_historical_status.py"
+  ],
+  "must_run": [
+    "python scripts/validate.py",
+    "python scripts/build_size_receipt.py",
+    "python -m unittest discover -s tests -p \"test_*.py\"",
+    "python scripts/verify_promotion_diff.py"
+  ]
+}

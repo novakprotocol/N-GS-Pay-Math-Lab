@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "If you cite this independent calculation tool, cite the repository and its evidence receipts."
+title: "N-GS Pay Math Lab"
+version: "0.01"
+date-released: "2026-08-08"
+authors:
+  - name: "NOVAK Protocol"
+repository-code: "https://github.com/novakprotocol/N-GS-Pay-Math-Lab"
+url: "https://novakprotocol.github.io/N-GS-Pay-Math-Lab/"
+abstract: "Static General Schedule pay math reconstruction and verification lab covering 1977 through 2026."

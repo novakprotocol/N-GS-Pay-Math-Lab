@@ -1,0 +1,12 @@
+{
+  "id": "va-vision-private-example",
+  "display_title": "GS Pay Math Lab",
+  "owner_label": "VA-VISION",
+  "version": "v0.01",
+  "emblem_asset": "__SUPPLY_APPROVED_VA_VISION_EMBLEM_PATH__",
+  "emblem_alt": "Approved VA-VISION emblem",
+  "public_disclaimer": "",
+  "internal_disclaimer": "Internal private deployment profile. Requires approved emblem and private repository controls before use.",
+  "profile_visibility": "private",
+  "requires_user_supplied_asset": true
+}
