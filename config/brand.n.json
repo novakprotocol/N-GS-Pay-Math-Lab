@@ -1,0 +1,11 @@
+{
+  "id": "n-public",
+  "display_title": "N-GS Pay Math Lab",
+  "owner_label": "NOVAK Protocol",
+  "version": "v0.01",
+  "emblem_asset": "assets/brand/n-mark-512.png",
+  "emblem_alt": "Colorful transparent N mark",
+  "public_disclaimer": "Independent calculation and verification tool; not an official OPM service.",
+  "internal_disclaimer": "",
+  "profile_visibility": "public"
+}

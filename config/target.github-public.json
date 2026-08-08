@@ -1,0 +1,10 @@
+{
+  "id": "github-public",
+  "host": "github.com",
+  "owner": "novakprotocol",
+  "repository": "N-GS-Pay-Math-Lab",
+  "visibility": "public",
+  "pages_url": "https://novakprotocol.github.io/N-GS-Pay-Math-Lab/",
+  "site_entrypoint": "site/index.html",
+  "module_entrypoint": "site/module/index.html"
+}

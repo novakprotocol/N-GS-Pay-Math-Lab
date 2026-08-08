@@ -1,0 +1,34 @@
+{
+  "portal": {
+    "enabled": true,
+    "module_id": "gs-pay-math-lab",
+    "area": "technical-tools",
+    "parent": "technical-tools",
+    "title": "GS Pay Math Lab",
+    "short_title": "GS Pay Math",
+    "icon_code": "GS",
+    "order_after": "share-capacity",
+    "authority": "calculation-tool",
+    "steward": "NOVAK Protocol",
+    "lifecycle": "test",
+    "visibility": "public",
+    "presentation_type": "static-module",
+    "standalone_entrypoint": "site/index.html",
+    "portal_entrypoint": "site/module/index.html",
+    "release_receipt": "site/evidence/release-receipt.json",
+    "stable_anchor": "module-gs-pay-math-lab",
+    "keywords": [
+      "GS pay",
+      "General Schedule",
+      "pay math",
+      "federal pay",
+      "verification",
+      "calculator"
+    ],
+    "private_only_policy": {
+      "production_ingestion": "exclude-when-repository-is-not-private",
+      "public_contract_purpose": "portability-and-test-fixture",
+      "must_not_embed_public_pages_in_private_portal": true
+    }
+  }
+}

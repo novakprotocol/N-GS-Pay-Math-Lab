@@ -1,0 +1,36 @@
+{
+  "disclaimer": "Independent calculation and verification tool; not an official OPM service or payroll determination.",
+  "formula_version": "n-gs-pay-math-lab-v0.01",
+  "sources": [
+    {
+      "id": "opm-2026-base",
+      "title": "OPM 2026 General Schedule base table",
+      "url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/2026/general-schedule/",
+      "note": "Used for the official 2026 checkpoint fixture."
+    },
+    {
+      "id": "opm-2026-rus",
+      "title": "OPM 2026 Rest of U.S. locality schedule",
+      "url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/2026/locality-pay-area-definitions/",
+      "note": "Used for the 17.06 percent locality example."
+    },
+    {
+      "id": "opm-fact-sheets",
+      "title": "OPM pay administration fact sheets",
+      "url": "https://www.opm.gov/policy-data-oversight/pay-leave/pay-administration/fact-sheets/",
+      "note": "Used for divisor, hourly rounding, and biweekly calculation context."
+    },
+    {
+      "id": "federal-register-1979",
+      "title": "Federal Register 1979 GS schedule checkpoint",
+      "url": "https://www.federalregister.gov/",
+      "note": "Used for the 1979 nonuniform historical checkpoint represented in the source implementation."
+    },
+    {
+      "id": "source-html",
+      "title": "Existing GS Pay Math Lab source file",
+      "url": "",
+      "note": "Local user-supplied working implementation preserved as the formula and fixture source."
+    }
+  ]
+}

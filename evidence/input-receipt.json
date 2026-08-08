@@ -1,0 +1,64 @@
+{
+  "generated_at": "2026-08-08T00:00:00Z",
+  "inputs": [
+    {
+      "byte_count": 72305,
+      "exists": true,
+      "file_name": "gs-pay-math-lab-1977-2026.html",
+      "label": "Existing working pay-lab implementation",
+      "mime": "text/html",
+      "sha256": "f82abddcc4300920cb251e65c262244b5b96e9368a34fd007b0b339e391dae8d"
+    },
+    {
+      "exists": false,
+      "file_name": "index(20260808-155724)(1).html",
+      "label": "Requested portal visual reference",
+      "status": "missing"
+    },
+    {
+      "byte_count": 1160342,
+      "exists": true,
+      "file_name": "index(20260808-155724).html",
+      "label": "Available portal visual reference fallback",
+      "mime": "text/html",
+      "sha256": "723d9f59ab8f501e34c141b5ff3529005e3addd929622a05e7045f515b825337"
+    },
+    {
+      "byte_count": 1876603,
+      "exists": true,
+      "file_name": "Transparent N.png",
+      "image": {
+        "bit_depth": 8,
+        "color_type": 6,
+        "has_alpha": true,
+        "height": 1254,
+        "valid_png": true,
+        "width": 1254
+      },
+      "label": "Public N-brand source image",
+      "mime": "image/png",
+      "sha256": "1dc93ef4af50420c7ab628eaa5bfe31f2e64a78b20a6689821c98b3db23a41be"
+    },
+    {
+      "byte_count": 1638037,
+      "exists": true,
+      "file_name": "va-vision_t.png",
+      "image": {
+        "bit_depth": 8,
+        "color_type": 6,
+        "has_alpha": true,
+        "height": 1024,
+        "valid_png": true,
+        "width": 1024
+      },
+      "label": "Future private VA-VISION image supplied by user",
+      "mime": "image/png",
+      "sha256": "08f353f1454a9c2ef2bdb52c39f37ffc2196725a4e94bfb948502cd797ee96a8"
+    }
+  ],
+  "notes": [
+    "The exact requested portal file index(20260808-155724)(1).html was not present when inspected.",
+    "The available file index(20260808-155724).html was used only as a visual reference and was not copied into the public site.",
+    "The VA-VISION image is recorded as future private input only and is not deployed in the public N site."
+  ]
+}

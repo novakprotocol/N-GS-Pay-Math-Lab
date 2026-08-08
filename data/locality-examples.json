@@ -1,0 +1,17 @@
+﻿{
+  "examples": [
+    {
+      "id": "2026-rest-of-us-gs12-step10",
+      "year": 2026,
+      "grade": 12,
+      "step": 10,
+      "locality_percent": 17.06,
+      "base": 99404,
+      "annual": 116362,
+      "hourly": 55.76,
+      "biweekly": 4460.8,
+      "classification": "Official checkpoint"
+    }
+  ]
+}
+

@@ -1,0 +1,601 @@
+{
+  "browser_checks": {
+    "browser": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+    "status": "generated",
+    "viewports": [
+      {
+        "console_errors": [],
+        "document_horizontal_overflow": false,
+        "height": 1000,
+        "name": "desktop",
+        "screenshot": "evidence/desktop-preview.png",
+        "width": 1440
+      },
+      {
+        "console_errors": [],
+        "document_horizontal_overflow": false,
+        "height": 900,
+        "name": "mobile",
+        "screenshot": "evidence/mobile-preview.png",
+        "width": 390
+      },
+      {
+        "console_errors": [],
+        "document_horizontal_overflow": false,
+        "height": 900,
+        "name": "module",
+        "screenshot": "evidence/module-preview.png",
+        "width": 1180
+      }
+    ]
+  },
+  "build_id": "n-gs-pay-math-lab-v0.01",
+  "calculation_validation": {
+    "all_values_numeric_nonnegative": true,
+    "annual_schedule_count": 50,
+    "cell_counts": {
+      "1977": 150,
+      "1978": 150,
+      "1979": 150,
+      "1980": 150,
+      "1981": 150,
+      "1982": 150,
+      "1983": 150,
+      "1984": 150,
+      "1985": 150,
+      "1986": 150,
+      "1987": 150,
+      "1988": 150,
+      "1989": 150,
+      "1990": 150,
+      "1991": 150,
+      "1992": 150,
+      "1993": 150,
+      "1994": 150,
+      "1995": 150,
+      "1996": 150,
+      "1997": 150,
+      "1998": 150,
+      "1999": 150,
+      "2000": 150,
+      "2001": 150,
+      "2002": 150,
+      "2003": 150,
+      "2004": 150,
+      "2005": 150,
+      "2006": 150,
+      "2007": 150,
+      "2008": 150,
+      "2009": 150,
+      "2010": 150,
+      "2011": 150,
+      "2012": 150,
+      "2013": 150,
+      "2014": 150,
+      "2015": 150,
+      "2016": 150,
+      "2017": 150,
+      "2018": 150,
+      "2019": 150,
+      "2020": 150,
+      "2021": 150,
+      "2022": 150,
+      "2023": 150,
+      "2024": 150,
+      "2025": 150,
+      "2026": 150
+    },
+    "coverage": {
+      "annual_cells": 150,
+      "first_year": 1977,
+      "grades": 15,
+      "last_year": 2026,
+      "steps": 10,
+      "total_cells": 7500
+    },
+    "formula_version": "n-gs-pay-math-lab-v0.01",
+    "official_2026_matches": 150,
+    "proofs": {
+      "2026_gs12_step10_base": 99404,
+      "2026_rest_of_us_annual": 116362.0,
+      "2026_rest_of_us_biweekly": 4460.8,
+      "2026_rest_of_us_hourly": 55.76,
+      "historical_divisors": {
+        "1983": 2080,
+        "1984": 2087
+      },
+      "low_grade_status": "Reverse calculation"
+    },
+    "status_labels": [
+      "Official table",
+      "Official checkpoint",
+      "Formula reconstruction",
+      "Reverse calculation",
+      "User-entered scenario"
+    ],
+    "steps_nondecreasing": true,
+    "total_cells": 7500,
+    "wrong_shortcut_mismatches": 101
+  },
+  "commit_sha": "5225e3a1beb088f8b60d36dbc89f7e3e2b157d56",
+  "deployed_site_bytes": 1217517,
+  "generated_at": "2026-08-08T00:00:00Z",
+  "ghe_mutation": "none",
+  "input_receipt": {
+    "generated_at": "2026-08-08T00:00:00Z",
+    "inputs": [
+      {
+        "byte_count": 72305,
+        "exists": true,
+        "file_name": "gs-pay-math-lab-1977-2026.html",
+        "label": "Existing working pay-lab implementation",
+        "mime": "text/html",
+        "sha256": "f82abddcc4300920cb251e65c262244b5b96e9368a34fd007b0b339e391dae8d"
+      },
+      {
+        "exists": false,
+        "file_name": "index(20260808-155724)(1).html",
+        "label": "Requested portal visual reference",
+        "status": "missing"
+      },
+      {
+        "byte_count": 1160342,
+        "exists": true,
+        "file_name": "index(20260808-155724).html",
+        "label": "Available portal visual reference fallback",
+        "mime": "text/html",
+        "sha256": "723d9f59ab8f501e34c141b5ff3529005e3addd929622a05e7045f515b825337"
+      },
+      {
+        "byte_count": 1876603,
+        "exists": true,
+        "file_name": "Transparent N.png",
+        "image": {
+          "bit_depth": 8,
+          "color_type": 6,
+          "has_alpha": true,
+          "height": 1254,
+          "valid_png": true,
+          "width": 1254
+        },
+        "label": "Public N-brand source image",
+        "mime": "image/png",
+        "sha256": "1dc93ef4af50420c7ab628eaa5bfe31f2e64a78b20a6689821c98b3db23a41be"
+      },
+      {
+        "byte_count": 1638037,
+        "exists": true,
+        "file_name": "va-vision_t.png",
+        "image": {
+          "bit_depth": 8,
+          "color_type": 6,
+          "has_alpha": true,
+          "height": 1024,
+          "valid_png": true,
+          "width": 1024
+        },
+        "label": "Future private VA-VISION image supplied by user",
+        "mime": "image/png",
+        "sha256": "08f353f1454a9c2ef2bdb52c39f37ffc2196725a4e94bfb948502cd797ee96a8"
+      }
+    ],
+    "notes": [
+      "The exact requested portal file index(20260808-155724)(1).html was not present when inspected.",
+      "The available file index(20260808-155724).html was used only as a visual reference and was not copied into the public site.",
+      "The VA-VISION image is recorded as future private input only and is not deployed in the public N site."
+    ]
+  },
+  "portal_integration": {
+    "generated_at": "2026-08-08T00:00:00Z",
+    "ghe_mutation": "none",
+    "module_id": "gs-pay-math-lab",
+    "public_record_private_only_behavior": "public fixture is marked public and must remain excluded by production private-only logic",
+    "reason": "A portable contract and private-target fixture are provided. Full central Portal build proof requires selecting the intended local Portal checkout and applying its exact current schema without mutating GHE.",
+    "stable_anchor": "module-gs-pay-math-lab",
+    "status": "local-proof-blocked"
+  },
+  "release_artifacts": [
+    {
+      "byte_count": 16651,
+      "path": "site/app.js",
+      "sha256": "fe0990ff1a12d692d41879b5dec1f7fc5bced27f9bdec1d75e9d635952949a22"
+    },
+    {
+      "byte_count": 7271,
+      "path": "site/assets/brand/favicon.png",
+      "sha256": "d51450b94a933456f4e0ee6e73bab682dbf3f2658bb52325edeca9023d9cef10"
+    },
+    {
+      "byte_count": 93559,
+      "path": "site/assets/brand/n-mark-256.png",
+      "sha256": "63971ebbdacf63ea55749c6e84d7273b29b34fc2ea5b6898de3e4c88118aa5ae"
+    },
+    {
+      "byte_count": 352663,
+      "path": "site/assets/brand/n-mark-512.png",
+      "sha256": "c65175bfa14dd1f28e07f6aef6b95b9b7be4c16f1298ce4e8e9064379e56f1b5"
+    },
+    {
+      "byte_count": 8670,
+      "path": "site/data/pay-data.js",
+      "sha256": "8f86a0a15209af012eb0325f57404b040f6297f8d734fadbabffa815a30f5643"
+    },
+    {
+      "byte_count": 661,
+      "path": "site/data-loader.js",
+      "sha256": "68a0cde4304a092c3088bcf9c2126319979b4b6520c255057ab3127bed41ae74"
+    },
+    {
+      "byte_count": 8200,
+      "path": "site/evidence/size-comparison.js",
+      "sha256": "4686a07c6681de7234ad84a1bbd04208472028cfe7e5d5af72857af23766b906"
+    },
+    {
+      "byte_count": 11003,
+      "path": "site/evidence/size-comparison.json",
+      "sha256": "cb1919cea8754474dc90a8c6e78f8c324f72e675d61ad773123438785f233aea"
+    },
+    {
+      "byte_count": 11543,
+      "path": "site/formulas.js",
+      "sha256": "c8286b8800ce5c0ebe2fb3842dc6dd13b8d5406d7f8a6cf4e0c493f8703cbc24"
+    },
+    {
+      "byte_count": 12745,
+      "path": "site/index.html",
+      "sha256": "6cba74b47d01bee5eb1b01d8e4cab889e5ac71e62cf77ff3c24c5266b12bf1f3"
+    },
+    {
+      "byte_count": 12779,
+      "path": "site/module/index.html",
+      "sha256": "dc049ba26cae7ee474500e979470b28cc53329a6a2d4ddedff5b45d6ae72551e"
+    },
+    {
+      "byte_count": 668263,
+      "path": "site/offline/N-GS-Pay-Math-Lab-1977-2026.html",
+      "sha256": "3a9baf3c48e8340813a734dc7e0cf1ef773ccbee62ca84bd87a3ea1e1e917587"
+    },
+    {
+      "byte_count": 13509,
+      "path": "site/styles.css",
+      "sha256": "faacef2fc4e9570f6a1daa98549a59ff8bb2bf1174810e520da54e31d51d2e86"
+    }
+  ],
+  "repository_worktree_bytes_excluding_git": 4808653,
+  "single_file_offline_bytes": 668263,
+  "size_summary": {
+    "calculation_package_without_brand_imagery": 764054,
+    "complete_deployed_package_with_brand_imagery": 1217547,
+    "equations": {
+      "bytes_per_pay_cell": "artifact_bytes / represented_pay_cells",
+      "static_to_formula_multiple": "static_equivalent_bytes / formula_artifact_bytes",
+      "storage_reduction_percent": "100 * (1 - formula_artifact_bytes / static_equivalent_bytes)"
+    },
+    "formula_artifact_bytes": 764054,
+    "generated_at": "2026-08-08T00:00:00Z",
+    "measurements": [
+      {
+        "bytes_per_pay_cell": 3.0858666666666665,
+        "file_count": 2,
+        "gzip_bytes": 6090,
+        "id": "core_calculation_engine",
+        "kib": 22.6,
+        "label": "Core calculation engine",
+        "mib": 0.0221,
+        "notes": "",
+        "raw_bytes": 23144,
+        "represented_pay_cells": 7500,
+        "short_label": "Core calculation engine",
+        "show_in_ui": false,
+        "static_to_formula_multiple": 0.03029105272663974,
+        "storage_reduction_percent": -3201.304873833391
+      },
+      {
+        "bytes_per_pay_cell": 1.4734666666666667,
+        "file_count": 5,
+        "gzip_bytes": 4086,
+        "id": "historical_data_checkpoints",
+        "kib": 10.79,
+        "label": "Historical data and checkpoints",
+        "mib": 0.0105,
+        "notes": "",
+        "raw_bytes": 11051,
+        "represented_pay_cells": 7500,
+        "short_label": "Historical data and checkpoints",
+        "show_in_ui": false,
+        "static_to_formula_multiple": 0.014463637386886267,
+        "storage_reduction_percent": -6813.890145688172
+      },
+      {
+        "bytes_per_pay_cell": 3.4032,
+        "file_count": 2,
+        "gzip_bytes": 7005,
+        "id": "html",
+        "kib": 24.93,
+        "label": "HTML bytes",
+        "mib": 0.0243,
+        "notes": "",
+        "raw_bytes": 25524,
+        "represented_pay_cells": 7500,
+        "short_label": "HTML bytes",
+        "show_in_ui": false,
+        "static_to_formula_multiple": 0.033406015805165605,
+        "storage_reduction_percent": -2893.4728099044037
+      },
+      {
+        "bytes_per_pay_cell": null,
+        "file_count": 1,
+        "gzip_bytes": 3497,
+        "id": "css",
+        "kib": 13.19,
+        "label": "CSS bytes",
+        "mib": 0.0129,
+        "notes": "",
+        "raw_bytes": 13509,
+        "represented_pay_cells": 0,
+        "short_label": "CSS bytes",
+        "show_in_ui": false,
+        "static_to_formula_multiple": 0.017680687490674744,
+        "storage_reduction_percent": -5555.888666814716
+      },
+      {
+        "bytes_per_pay_cell": 5.003333333333333,
+        "file_count": 4,
+        "gzip_bytes": 12053,
+        "id": "javascript",
+        "kib": 36.65,
+        "label": "JavaScript bytes",
+        "mib": 0.0358,
+        "notes": "",
+        "raw_bytes": 37525,
+        "represented_pay_cells": 7500,
+        "short_label": "JavaScript bytes",
+        "show_in_ui": false,
+        "static_to_formula_multiple": 0.04911302080742984,
+        "storage_reduction_percent": -1936.1199200532978
+      },
+      {
+        "bytes_per_pay_cell": null,
+        "file_count": 3,
+        "gzip_bytes": 2842,
+        "id": "source_metadata",
+        "kib": 5.52,
+        "label": "Source/reference metadata bytes",
+        "mib": 0.0054,
+        "notes": "",
+        "raw_bytes": 5654,
+        "represented_pay_cells": 0,
+        "short_label": "Source/reference metadata bytes",
+        "show_in_ui": false,
+        "static_to_formula_multiple": 0.007400000523523207,
+        "storage_reduction_percent": -13413.512557481428
+      },
+      {
+        "bytes_per_pay_cell": null,
+        "file_count": 3,
+        "gzip_bytes": 453085,
+        "id": "optimized_brand_assets",
+        "kib": 442.86,
+        "label": "Optimized N brand assets bytes",
+        "mib": 0.4325,
+        "notes": "",
+        "raw_bytes": 453493,
+        "represented_pay_cells": 0,
+        "short_label": "Optimized N brand assets bytes",
+        "show_in_ui": false,
+        "static_to_formula_multiple": 0.5935352736848443,
+        "storage_reduction_percent": -68.48198318386392
+      },
+      {
+        "bytes_per_pay_cell": 101.87386666666667,
+        "file_count": 10,
+        "gzip_bytes": 498089,
+        "id": "calculation_without_brand",
+        "kib": 746.15,
+        "label": "Calculation package without brand imagery",
+        "mib": 0.7287,
+        "notes": "",
+        "raw_bytes": 764054,
+        "represented_pay_cells": 7500,
+        "short_label": "Formula package",
+        "show_in_ui": true,
+        "static_to_formula_multiple": 1.0,
+        "storage_reduction_percent": 0.0
+      },
+      {
+        "bytes_per_pay_cell": 162.3396,
+        "file_count": 13,
+        "gzip_bytes": 951174,
+        "id": "complete_with_brand",
+        "kib": 1189.01,
+        "label": "Complete deployed package with brand imagery",
+        "mib": 1.1611,
+        "notes": "",
+        "raw_bytes": 1217547,
+        "represented_pay_cells": 7500,
+        "short_label": "Complete package",
+        "show_in_ui": true,
+        "static_to_formula_multiple": 1.5935352736848443,
+        "storage_reduction_percent": 37.246447159740036
+      },
+      {
+        "bytes_per_pay_cell": 640.5810666666666,
+        "file_count": 0,
+        "gzip_bytes": null,
+        "id": "repository_worktree",
+        "kib": 4691.76,
+        "label": "Full repository working-tree bytes excluding .git",
+        "mib": 4.5818,
+        "notes": "",
+        "raw_bytes": 4804358,
+        "represented_pay_cells": 7500,
+        "short_label": "Full repository working-tree bytes excluding .git",
+        "show_in_ui": false,
+        "static_to_formula_multiple": 6.287982263033765,
+        "storage_reduction_percent": 84.0966472523488
+      },
+      {
+        "bytes_per_pay_cell": 89.10173333333333,
+        "file_count": 1,
+        "gzip_bytes": 471171,
+        "id": "offline_single_file",
+        "kib": 652.6,
+        "label": "Single-file offline build",
+        "mib": 0.6373,
+        "notes": "",
+        "raw_bytes": 668263,
+        "represented_pay_cells": 7500,
+        "short_label": "Offline HTML",
+        "show_in_ui": true,
+        "static_to_formula_multiple": 0.8746279713213988,
+        "storage_reduction_percent": -14.33432645530277
+      },
+      {
+        "bytes_per_pay_cell": null,
+        "file_count": 1,
+        "gzip_bytes": 1868802,
+        "id": "original_public_n_image",
+        "kib": 1832.62,
+        "label": "Original Public N Image",
+        "mib": 1.7897,
+        "notes": "",
+        "raw_bytes": 1876603,
+        "represented_pay_cells": 0,
+        "short_label": "Original Public N Image",
+        "show_in_ui": false,
+        "static_to_formula_multiple": 2.456113049601206,
+        "storage_reduction_percent": 59.28526172024664
+      },
+      {
+        "bytes_per_pay_cell": null,
+        "file_count": 1,
+        "gzip_bytes": 19654,
+        "id": "original_pay_lab_html",
+        "kib": 70.61,
+        "label": "Original Pay Lab Html",
+        "mib": 0.069,
+        "notes": "",
+        "raw_bytes": 72305,
+        "represented_pay_cells": 0,
+        "short_label": "Original Pay Lab Html",
+        "show_in_ui": false,
+        "static_to_formula_multiple": 0.09463336361042544,
+        "storage_reduction_percent": -956.7097711084987
+      },
+      {
+        "bytes_per_pay_cell": null,
+        "file_count": 1,
+        "gzip_bytes": 797886,
+        "id": "portal_reference_html",
+        "kib": 1133.15,
+        "label": "Portal Reference Html",
+        "mib": 1.1066,
+        "notes": "",
+        "raw_bytes": 1160342,
+        "represented_pay_cells": 0,
+        "short_label": "Portal Reference Html",
+        "show_in_ui": false,
+        "static_to_formula_multiple": 1.5186649111188477,
+        "storage_reduction_percent": 34.152689465692006
+      },
+      {
+        "bytes_per_pay_cell": 7.424,
+        "file_count": 50,
+        "gzip_bytes": 27445,
+        "id": "annual_csv_tables",
+        "kib": 54.38,
+        "label": "Fifty separate annual CSV tables",
+        "mib": 0.0531,
+        "notes": "",
+        "raw_bytes": 55680,
+        "represented_pay_cells": 7500,
+        "short_label": "50 CSV",
+        "show_in_ui": true,
+        "static_to_formula_multiple": 0.07287443034131096,
+        "storage_reduction_percent": -1272.22341954023
+      },
+      {
+        "bytes_per_pay_cell": 7.430666666666666,
+        "file_count": 50,
+        "gzip_bytes": 27115,
+        "id": "annual_json_tables",
+        "kib": 54.42,
+        "label": "Fifty separate annual JSON tables",
+        "mib": 0.0531,
+        "notes": "",
+        "raw_bytes": 55730,
+        "represented_pay_cells": 7500,
+        "short_label": "50 JSON",
+        "show_in_ui": true,
+        "static_to_formula_multiple": 0.07293987074212033,
+        "storage_reduction_percent": -1270.9922842275257
+      },
+      {
+        "bytes_per_pay_cell": 18.364,
+        "file_count": 50,
+        "gzip_bytes": 37680,
+        "id": "annual_html_tables",
+        "kib": 134.5,
+        "label": "Fifty separate annual static HTML table pages",
+        "mib": 0.1313,
+        "notes": "",
+        "raw_bytes": 137730,
+        "represented_pay_cells": 7500,
+        "short_label": "50 HTML",
+        "show_in_ui": true,
+        "static_to_formula_multiple": 0.180262128069482,
+        "storage_reduction_percent": -454.7476947651202
+      },
+      {
+        "bytes_per_pay_cell": 7.2976,
+        "file_count": 1,
+        "gzip_bytes": 20614,
+        "id": "combined_static_json",
+        "kib": 53.45,
+        "label": "One combined static JSON export containing all 7,500 cells",
+        "mib": 0.0522,
+        "notes": "",
+        "raw_bytes": 54732,
+        "represented_pay_cells": 7500,
+        "short_label": "Combined JSON",
+        "show_in_ui": true,
+        "static_to_formula_multiple": 0.07163368034196536,
+        "storage_reduction_percent": -1295.9913761601988
+      },
+      {
+        "bytes_per_pay_cell": 17.959066666666665,
+        "file_count": 1,
+        "gzip_bytes": 23563,
+        "id": "combined_static_html",
+        "kib": 131.54,
+        "label": "One combined static HTML export containing all 7,500 cells",
+        "mib": 0.1285,
+        "notes": "",
+        "raw_bytes": 134693,
+        "represented_pay_cells": 7500,
+        "short_label": "Combined HTML",
+        "show_in_ui": true,
+        "static_to_formula_multiple": 0.17628727812432105,
+        "storage_reduction_percent": -467.25590787939984
+      },
+      {
+        "bytes_per_pay_cell": null,
+        "file_count": 0,
+        "gzip_bytes": null,
+        "id": "printable_pdfs",
+        "kib": null,
+        "label": "Fifty printable PDFs",
+        "mib": null,
+        "notes": "{\"browser_executable\": \"C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe\", \"browser_version\": \"unavailable\", \"reason\": \"browser version check failed: Command '['C:\\\\\\\\Program Files\\\\\\\\Google\\\\\\\\Chrome\\\\\\\\Application\\\\\\\\chrome.exe', '--version']' timed out after 10 seconds\", \"status\": \"unavailable\"}",
+        "raw_bytes": null,
+        "represented_pay_cells": 7500,
+        "short_label": "50 PDFs",
+        "show_in_ui": true,
+        "static_to_formula_multiple": null,
+        "storage_reduction_percent": null
+      }
+    ],
+    "optimized_brand_assets_bytes": 453493,
+    "represented_pay_cells": 7500
+  }
+}

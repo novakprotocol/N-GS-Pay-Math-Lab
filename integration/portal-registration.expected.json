@@ -1,0 +1,16 @@
+{
+  "area": "technical-tools",
+  "parent": "technical-tools",
+  "module_id": "gs-pay-math-lab",
+  "stable_anchor": "module-gs-pay-math-lab",
+  "title": "GS Pay Math Lab",
+  "short_title": "GS Pay Math",
+  "icon_code": "GS",
+  "authority": "calculation-tool",
+  "steward": "VA-VISION",
+  "lifecycle": "reviewed-test",
+  "presentation_type": "static-module",
+  "entrypoint": "modules/technical-tools/gs-pay-math-lab/index.html",
+  "order_after": "share-capacity",
+  "blocking_warnings": []
+}

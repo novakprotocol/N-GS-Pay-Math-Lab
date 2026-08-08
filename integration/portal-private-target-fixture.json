@@ -1,0 +1,26 @@
+{
+  "repository": {
+    "host": "GHE_HOST_PLACEHOLDER",
+    "owner": "software",
+    "name": "ITOPS-IaT-Storage-GS-Pay-Math-Lab",
+    "visibility": "private",
+    "default_branch": "main",
+    "topics": ["technical-tools", "calculation-tool", "gs-pay"],
+    "custom_properties": {
+      "portal-enabled": true,
+      "portal-area": "technical-tools",
+      "portal-parent": "technical-tools",
+      "portal-authority": "calculation-tool",
+      "portal-lifecycle": "reviewed-test"
+    }
+  },
+  "contract": {
+    "path": ".itops/portal.json",
+    "module_id": "gs-pay-math-lab",
+    "title": "GS Pay Math Lab",
+    "presentation_type": "static-module",
+    "portal_entrypoint": "site/module/index.html",
+    "release_receipt": "site/evidence/release-receipt.json"
+  },
+  "expected_private_only_result": "included"
+}
