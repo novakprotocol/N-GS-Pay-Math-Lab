@@ -244,6 +244,40 @@ button {
 
 main {
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+main > #calculator {
+  order: 1;
+}
+
+main > #pay-surface {
+  order: 2;
+}
+
+main > #ledger {
+  order: 3;
+}
+
+main > #formula-proof {
+  order: 4;
+}
+
+main > #home {
+  order: 5;
+}
+
+main > #math-vs-files {
+  order: 6;
+}
+
+main > #validation {
+  order: 7;
+}
+
+main > #sources {
+  order: 8;
 }
 
 .section {
@@ -258,7 +292,7 @@ main {
 
 .hero {
   position: relative;
-  min-height: calc(100vh - var(--topbar-h) - 36px);
+  min-height: 360px;
   display: flex;
   align-items: center;
   overflow: hidden;
@@ -397,6 +431,156 @@ main {
 .table-note,
 .fine-print {
   color: var(--muted);
+}
+
+.pay-table-section {
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--panel) 94%, var(--cyan)), color-mix(in srgb, var(--panel-soft) 88%, var(--orange))),
+    var(--panel);
+}
+
+.pay-table-section .section-inner {
+  width: min(1380px, 100%);
+}
+
+.pay-table-section h2 {
+  font-size: 2.15rem;
+}
+
+.pay-picture-panel,
+.pay-table-panel {
+  margin-top: 18px;
+}
+
+.pay-picture-panel {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--panel);
+  box-shadow: var(--shadow);
+}
+
+#payPicture {
+  display: block;
+  width: 100%;
+  height: auto;
+  min-height: 210px;
+}
+
+#payPicture text {
+  font-family: var(--sans);
+}
+
+.pay-picture-bg {
+  fill: var(--panel);
+}
+
+.pay-picture-grid {
+  fill: none;
+  stroke: var(--line);
+  stroke-width: 1;
+}
+
+.pay-picture-kicker {
+  fill: var(--teal);
+  font-size: 15px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.pay-picture-title {
+  fill: var(--ink);
+  font-size: 32px;
+  font-weight: 850;
+}
+
+.pay-picture-sub,
+.pay-picture-value {
+  fill: var(--ink);
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.pay-picture-value {
+  font-size: 28px;
+}
+
+.pay-picture-muted,
+.pay-picture-small {
+  fill: var(--muted);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.pay-picture-small {
+  font-size: 13px;
+}
+
+.pay-picture-base {
+  fill: var(--teal);
+}
+
+.pay-picture-base-side {
+  fill: color-mix(in srgb, var(--teal) 62%, var(--navy));
+}
+
+.pay-picture-lift {
+  fill: var(--orange);
+}
+
+.pay-picture-lift-side {
+  fill: color-mix(in srgb, var(--orange) 70%, var(--navy));
+}
+
+.pay-picture-marker {
+  stroke: var(--ink);
+  stroke-width: 3;
+}
+
+.pay-picture-cap {
+  stroke: var(--magenta);
+  stroke-width: 3;
+  stroke-dasharray: 7 6;
+}
+
+.pay-picture-cap-text {
+  fill: var(--magenta);
+}
+
+.pay-picture-card rect {
+  fill: var(--panel-soft);
+  stroke: var(--line);
+}
+
+.pay-picture-card text:first-of-type {
+  fill: var(--muted);
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.pay-picture-card text:last-of-type {
+  fill: var(--ink);
+  font-size: 20px;
+  font-weight: 850;
+}
+
+.pay-table-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: end;
+  margin-bottom: 12px;
+}
+
+.pay-table-heading h3,
+.table-kicker {
+  margin: 0;
+}
+
+.pay-table-heading .section-lede {
+  margin: 0;
+  text-align: right;
 }
 
 .status-pill,

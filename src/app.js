@@ -1,4 +1,4 @@
-﻿(function () {
+(function () {
   "use strict";
 
   const math = window.NGSPayMath;
@@ -28,6 +28,7 @@
     biweeklyResult: $("biweeklyResult"),
     statusBadge: $("statusBadge"),
     resultNote: $("resultNote"),
+    payPicture: $("payPicture"),
     traceList: $("traceList"),
     tracePlain: $("tracePlain"),
     scheduleTitle: $("scheduleTitle"),
@@ -221,6 +222,60 @@
     const area = selectedLocalityArea();
     const areaText = area ? `${area.name} locality (${math.pct(area.percentage)})` : `manual locality (${math.pct(result.localityPct)})`;
     els.resultNote.textContent = `${areaText}. ${eraDescription(result)}. ${diff >= 0 ? "+" : "-"}${math.money0.format(Math.abs(diff))} (${diffPct >= 0 ? "+" : ""}${diffPct.toFixed(1)}%) vs. ${compare.year}.`;
+  }
+
+  function renderPayPicture(result) {
+    if (!els.payPicture) return;
+    const area = selectedLocalityArea();
+    const areaCode = area ? area.code : "Custom";
+    const areaName = area ? area.name : "Manual locality";
+    const shortAreaName = areaName.length > 30 ? areaName.slice(0, 27) + "..." : areaName;
+    const localityLift = Math.max(0, result.localityRounded - result.base);
+    const capLoss = result.capped ? result.localityRounded - result.annual : 0;
+    const maxValue = Math.max(result.localityRounded, result.annual, result.capIsValid ? result.cap : 0, 1);
+    const scale = (value) => 500 * clamp(value / maxValue, 0, 1);
+    const baseW = Math.max(16, scale(result.base));
+    const liftW = localityLift > 0 ? Math.max(4, Math.min(500 - baseW, scale(localityLift))) : 0;
+    const annualX = 280 + scale(result.annual);
+    const capX = result.capIsValid ? 280 + scale(result.cap) : null;
+    const capText = result.capIsValid ? (result.capped ? `Cap trims ${math.money0.format(capLoss)}` : "Cap not binding") : "No cap selected";
+    const annualLabel = result.capped ? "Capped annual" : "Payable annual";
+    const safeArea = math.escapeHtml(shortAreaName);
+    const safeCode = math.escapeHtml(areaCode);
+    const safePct = math.escapeHtml(math.pct(result.localityPct));
+    const capMarker = capX === null ? "" : `<line class="pay-picture-cap" x1="${capX.toFixed(1)}" x2="${capX.toFixed(1)}" y1="64" y2="144"></line><text class="pay-picture-small pay-picture-cap-text" x="${Math.min(840, Math.max(300, capX + 8)).toFixed(1)}" y="58">${math.escapeHtml(capText)}</text>`;
+    els.payPicture.innerHTML = `
+      <rect class="pay-picture-bg" x="0" y="0" width="980" height="260" rx="8"></rect>
+      <path class="pay-picture-grid" d="M278 58H844M278 142H844M278 58V142M844 58V142"></path>
+      <text class="pay-picture-kicker" x="32" y="38">Selected Pay Cell</text>
+      <text class="pay-picture-title" x="32" y="70">GS-${result.grade} Step ${result.step}</text>
+      <text class="pay-picture-sub" x="32" y="96">${result.year} | ${safeCode} | ${safePct}</text>
+      <text class="pay-picture-muted" x="32" y="121">${safeArea}</text>
+      <g class="pay-picture-bar" transform="translate(280 82)">
+        <rect class="pay-picture-base" x="0" y="0" width="${baseW.toFixed(1)}" height="42" rx="5"></rect>
+        <polygon class="pay-picture-base-side" points="${baseW.toFixed(1)},0 ${Math.min(500, baseW + 18).toFixed(1)},-14 ${Math.min(500, baseW + 18).toFixed(1)},28 ${baseW.toFixed(1)},42"></polygon>
+        <rect class="pay-picture-lift" x="${baseW.toFixed(1)}" y="0" width="${liftW.toFixed(1)}" height="42" rx="${liftW > 0 ? 5 : 0}"></rect>
+        <polygon class="pay-picture-lift-side" points="${(baseW + liftW).toFixed(1)},0 ${Math.min(500, baseW + liftW + 18).toFixed(1)},-14 ${Math.min(500, baseW + liftW + 18).toFixed(1)},28 ${(baseW + liftW).toFixed(1)},42"></polygon>
+      </g>
+      <line class="pay-picture-marker" x1="${annualX.toFixed(1)}" x2="${annualX.toFixed(1)}" y1="72" y2="135"></line>
+      <text class="pay-picture-value" x="870" y="85" text-anchor="end">${math.money2.format(result.annual)}</text>
+      <text class="pay-picture-muted" x="870" y="109" text-anchor="end">${annualLabel}</text>
+      ${capMarker}
+      <text class="pay-picture-small" x="280" y="158">Base ${math.money0.format(result.base)}</text>
+      <text class="pay-picture-small" x="470" y="158">Locality lift ${math.money0.format(localityLift)}</text>
+      <text class="pay-picture-small" x="676" y="158">${math.escapeHtml(capText)}</text>
+      <g class="pay-picture-card" transform="translate(32 178)">
+        <rect width="210" height="58" rx="6"></rect><text x="14" y="23">Base</text><text x="14" y="45">${math.money0.format(result.base)}</text>
+      </g>
+      <g class="pay-picture-card" transform="translate(262 178)">
+        <rect width="210" height="58" rx="6"></rect><text x="14" y="23">Locality/cap</text><text x="14" y="45">${math.money0.format(result.annual)}</text>
+      </g>
+      <g class="pay-picture-card" transform="translate(492 178)">
+        <rect width="210" height="58" rx="6"></rect><text x="14" y="23">Hourly</text><text x="14" y="45">${math.money2.format(result.hourly)}</text>
+      </g>
+      <g class="pay-picture-card" transform="translate(722 178)">
+        <rect width="210" height="58" rx="6"></rect><text x="14" y="23">Biweekly</text><text x="14" y="45">${math.money2.format(result.biweekly)}</text>
+      </g>`;
   }
 
   function renderTrace(result) {
@@ -922,6 +977,7 @@
       percentage: input.localityArea.percentage
     } : null;
     renderSummary(result, compare);
+    renderPayPicture(result);
     renderTrace(result);
     renderSchedule(input.year, input.grade, input.step);
     renderChart(input.year, input.grade, input.step);
@@ -1069,5 +1125,3 @@
   renderSources();
   renderAll();
 })();
-
-

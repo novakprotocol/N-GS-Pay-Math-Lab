@@ -12,7 +12,7 @@
 <body>
   <header class="topbar">
     <div class="topbar-inner">
-      <a class="brand" href="#home" aria-label="N-GS Pay Math Lab home">
+      <a class="brand" href="#calculator" aria-label="N-GS Pay Math Lab pay table">
         <img src="assets/brand/n-mark-256.png" alt="Colorful transparent N mark">
         <span class="brand-title"><strong>N-GS Pay Math Lab</strong><span>v0.01 | 1977-2026</span></span>
       </a>
@@ -31,12 +31,11 @@
         <button class="icon-button" id="drawerClose" type="button" aria-label="Close navigation">Close</button>
       </div>
       <nav class="nav-list" aria-label="Mobile">
-        <a href="#home">Home</a>
-        <a href="#calculator">Calculator</a>
-        <a href="#formula-proof">Formula Proof</a>
-        <a href="#ledger">Fifty-Year Ledger</a>
+        <a href="#calculator">Pay Table</a>
         <a href="#pay-surface">3D Pay Lab</a>
-        <a href="#full-schedule">Full Schedule</a>
+        <a href="#ledger">Fifty-Year Ledger</a>
+        <a href="#formula-proof">Formula Proof</a>
+        <a href="#home">About</a>
         <a href="#math-vs-files">Math vs. Files</a>
         <a href="#validation">Validation</a>
         <a href="#sources">Sources</a>
@@ -48,12 +47,11 @@
     <aside class="sidebar" aria-label="Desktop navigation">
       <p class="side-label">N-GS Pay Math Lab</p>
       <nav class="nav-list">
-        <a href="#home">Home</a>
-        <a href="#calculator">Calculator</a>
-        <a href="#formula-proof">Formula Proof</a>
-        <a href="#ledger">Fifty-Year Ledger</a>
+        <a href="#calculator">Pay Table</a>
         <a href="#pay-surface">3D Pay Lab</a>
-        <a href="#full-schedule">Full Schedule</a>
+        <a href="#ledger">Fifty-Year Ledger</a>
+        <a href="#formula-proof">Formula Proof</a>
+        <a href="#home">About</a>
         <a href="#math-vs-files">Math vs. Files</a>
         <a href="#validation">Validation</a>
         <a href="#sources">Sources</a>
@@ -84,11 +82,11 @@
         </div>
       </section>
 
-      <section class="section" id="calculator">
+      <section class="section pay-table-section" id="calculator">
         <div class="section-inner">
-          <p class="kicker">Calculator</p>
-          <h2>Run a pay-cell proof</h2>
-          <p class="section-lede">Select a year, grade, step, locality area or percentage, and cap. The visible result and downloadable calculation record come from the same formula functions.</p>
+          <p class="kicker">Pay Table</p>
+          <h2>Choose grade, step, locality, and year first</h2>
+          <p class="section-lede">The pay table now starts here: pick the year, GS grade, step, locality area or custom percentage, and cap to update the selected cell, quick picture, and full schedule.</p>
           <div class="form-grid">
             <div class="field"><label for="year">Year</label><select id="year"></select></div>
             <div class="field"><label for="grade">Grade</label><select id="grade"></select></div>
@@ -113,6 +111,22 @@
             <div class="metric"><span>Biweekly</span><strong id="biweeklyResult">$0.00</strong></div>
           </div>
           <p class="result-note"><span class="status-pill" id="statusBadge" data-status-class="recon">Formula reconstruction</span> <span id="resultNote"></span></p>
+          <div class="pay-picture-panel" aria-label="Selected pay picture">
+            <svg id="payPicture" viewBox="0 0 980 260" role="img" aria-label="Selected pay breakdown picture"></svg>
+          </div>
+          <div class="pay-table-panel" id="full-schedule">
+            <div class="pay-table-heading">
+              <div>
+                <p class="kicker table-kicker">Full Schedule</p>
+                <h3 id="scheduleTitle">Generated General Schedule base table</h3>
+              </div>
+              <p class="section-lede"><span class="status-pill" id="scheduleBadge">Formula reconstruction year</span> <span id="scheduleMeta"></span></p>
+            </div>
+            <div class="table-wrap">
+              <table id="scheduleTable"></table>
+            </div>
+            <p class="table-note">Base pay only. Locality schedules, special rates, LEO schedules, title 38 schedules, and agency payroll determinations are outside this calculator.</p>
+          </div>
         </div>
       </section>
 
@@ -195,17 +209,6 @@
         </div>
       </section>
 
-      <section class="section" id="full-schedule">
-        <div class="section-inner">
-          <p class="kicker">Full Schedule</p>
-          <h2 id="scheduleTitle">Generated General Schedule base table</h2>
-          <p class="section-lede"><span class="status-pill" id="scheduleBadge">Formula reconstruction year</span> <span id="scheduleMeta"></span></p>
-          <div class="table-wrap">
-            <table id="scheduleTable"></table>
-          </div>
-          <p class="table-note">Base pay only. Locality schedules, special rates, LEO schedules, title 38 schedules, and agency payroll determinations are outside this calculator.</p>
-        </div>
-      </section>
 
       <section class="section" id="math-vs-files">
         <div class="section-inner">
@@ -253,7 +256,7 @@
           <h2>Source notes and limitations</h2>
           <p class="section-lede">Official and reconstructed values are visibly distinguished. Reconstructed values are never described as official published tables.</p>
           <ol class="source-list" id="sourceList"></ol>
-          <p class="fine-print" id="buildMeta">Build n-gs-pay-math-lab-v0.01 | commit e0f848df82205b8b8472a04ec4430b2888b6c334</p>
+          <p class="fine-print" id="buildMeta">Build n-gs-pay-math-lab-v0.01 | commit e436771f19a76b93a2c79dee82bc2f84c018e7ed</p>
         </div>
       </section>
     </main>
