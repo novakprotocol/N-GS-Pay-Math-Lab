@@ -77,9 +77,6 @@ def copy_runtime(site: Path) -> None:
             encoding="utf-8",
         )
         copy_file(size_json, evidence_dir / "size-comparison.json")
-        size_md = ROOT / "evidence" / "size-comparison.md"
-        if size_md.exists():
-            copy_file(size_md, evidence_dir / "size-comparison.md")
     else:
         (evidence_dir / "size-comparison.js").write_text("window.NGSPaySizeReceipt = null;\n", encoding="utf-8")
 
@@ -162,4 +159,5 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
 

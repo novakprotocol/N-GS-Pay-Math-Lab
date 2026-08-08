@@ -293,11 +293,11 @@ def main() -> None:
         "window.NGSPaySizeReceipt = " + json.dumps(receipt, sort_keys=True, separators=(",", ":")) + ";\n",
         encoding="utf-8",
     )
-    shutil.copy2(ROOT / "evidence" / "size-comparison.md", site_evidence / "size-comparison.md")
     print(f"size comparison written: formula package {formula_artifact_bytes} bytes, complete site {complete_raw} bytes")
 
 
 if __name__ == "__main__":
     main()
+
 
 
