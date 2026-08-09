@@ -868,7 +868,7 @@
     const canvas = els.agencyPressureCanvas;
     if (!canvas) return;
     const colors = themeColors(canvas);
-    const { ctx, width, height } = canvasMetrics(canvas, 390);
+    const { ctx, width, height } = canvasMetrics(canvas, 480);
     clearCanvas(ctx, width, height, colors);
     const top = rows.slice(0, 12);
     if (!top.length) return;

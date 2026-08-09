@@ -683,21 +683,89 @@ main {
   border-top: 1px solid var(--line);
 }
 
+.agency-pressure-head {
+  align-items: end;
+  margin-bottom: 8px;
+}
+
 .agency-pressure-form {
   margin-bottom: 14px;
 }
 
-.agency-pressure-grid {
+.agency-pressure-kpis {
   display: grid;
-  grid-template-columns: minmax(320px, 0.82fr) minmax(520px, 1.18fr);
-  gap: 14px;
-  align-items: stretch;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin: 16px 0 14px;
+}
+
+.agency-kpi-card {
+  min-width: 0;
+  min-height: 128px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 9px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px;
+  background: color-mix(in srgb, var(--panel) 92%, var(--bg));
+  box-shadow: var(--shadow);
+}
+
+.agency-kpi-card.is-primary {
+  border-color: color-mix(in srgb, var(--cyan) 52%, var(--line));
+}
+
+.agency-kpi-card span {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 850;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.agency-kpi-card strong {
+  color: var(--ink);
+  font-size: clamp(1.25rem, 1.55vw, 1.95rem);
+  line-height: 1.08;
+  overflow-wrap: anywhere;
+}
+
+.agency-kpi-card b,
+.agency-kpi-card em {
+  color: var(--muted);
+  font-size: 0.88rem;
+  font-style: normal;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.agency-pressure-wide-chart {
+  margin-top: 0;
 }
 
 .agency-pressure-chart-card canvas {
   display: block;
   width: 100%;
-  height: 390px;
+  height: 480px;
+}
+
+.agency-watch-dropdown .dropdown-body {
+  padding: 12px 14px 14px;
+}
+
+.agency-watch-dropdown .rank-list {
+  margin-top: 0;
+}
+
+.agency-pressure-explain .dropdown-body {
+  padding: 0;
+}
+
+.agency-pressure-explain .detail-line {
+  margin: 0;
+  padding: 14px;
 }
 
 .agency-pressure-table-wrap {
@@ -1816,7 +1884,7 @@ html[data-shell="module"] .layout {
 
   .surface-lab,
   .cost-pressure-kpis,
-  .agency-pressure-grid,
+  .agency-pressure-kpis,
   .state-pressure-grid,
   .county-map-grid,
   .remote-duty-grid {
@@ -1831,7 +1899,8 @@ html[data-shell="module"] .layout {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .cost-pressure-kpis {
+  .cost-pressure-kpis,
+  .agency-pressure-kpis {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -1899,7 +1968,7 @@ html[data-shell="module"] .layout {
   .context-grid,
   .locality-highlights,
   .cost-pressure-kpis,
-  .agency-pressure-grid,
+  .agency-pressure-kpis,
   .state-pressure-grid,
   .pressure-stat-grid,
   .remote-duty-grid,

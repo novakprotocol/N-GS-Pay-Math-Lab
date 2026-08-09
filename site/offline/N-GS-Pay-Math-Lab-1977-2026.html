@@ -693,21 +693,89 @@ main {
   border-top: 1px solid var(--line);
 }
 
+.agency-pressure-head {
+  align-items: end;
+  margin-bottom: 8px;
+}
+
 .agency-pressure-form {
   margin-bottom: 14px;
 }
 
-.agency-pressure-grid {
+.agency-pressure-kpis {
   display: grid;
-  grid-template-columns: minmax(320px, 0.82fr) minmax(520px, 1.18fr);
-  gap: 14px;
-  align-items: stretch;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin: 16px 0 14px;
+}
+
+.agency-kpi-card {
+  min-width: 0;
+  min-height: 128px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 9px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px;
+  background: color-mix(in srgb, var(--panel) 92%, var(--bg));
+  box-shadow: var(--shadow);
+}
+
+.agency-kpi-card.is-primary {
+  border-color: color-mix(in srgb, var(--cyan) 52%, var(--line));
+}
+
+.agency-kpi-card span {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 850;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.agency-kpi-card strong {
+  color: var(--ink);
+  font-size: clamp(1.25rem, 1.55vw, 1.95rem);
+  line-height: 1.08;
+  overflow-wrap: anywhere;
+}
+
+.agency-kpi-card b,
+.agency-kpi-card em {
+  color: var(--muted);
+  font-size: 0.88rem;
+  font-style: normal;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.agency-pressure-wide-chart {
+  margin-top: 0;
 }
 
 .agency-pressure-chart-card canvas {
   display: block;
   width: 100%;
-  height: 390px;
+  height: 480px;
+}
+
+.agency-watch-dropdown .dropdown-body {
+  padding: 12px 14px 14px;
+}
+
+.agency-watch-dropdown .rank-list {
+  margin-top: 0;
+}
+
+.agency-pressure-explain .dropdown-body {
+  padding: 0;
+}
+
+.agency-pressure-explain .detail-line {
+  margin: 0;
+  padding: 14px;
 }
 
 .agency-pressure-table-wrap {
@@ -1826,7 +1894,7 @@ html[data-shell="module"] .layout {
 
   .surface-lab,
   .cost-pressure-kpis,
-  .agency-pressure-grid,
+  .agency-pressure-kpis,
   .state-pressure-grid,
   .county-map-grid,
   .remote-duty-grid {
@@ -1841,7 +1909,8 @@ html[data-shell="module"] .layout {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .cost-pressure-kpis {
+  .cost-pressure-kpis,
+  .agency-pressure-kpis {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -1909,7 +1978,7 @@ html[data-shell="module"] .layout {
   .context-grid,
   .locality-highlights,
   .cost-pressure-kpis,
-  .agency-pressure-grid,
+  .agency-pressure-kpis,
   .state-pressure-grid,
   .pressure-stat-grid,
   .remote-duty-grid,
@@ -2274,36 +2343,66 @@ html[data-shell="module"] .layout {
           </details>
           <p class="fine-print" id="costPressureNote">OPM redacted locality/pay records are excluded from area dollar totals and shown in the audit text.</p>
           <div class="agency-pressure-block" id="agency-pressure">
-            <div class="chart-head">
+            <div class="chart-head agency-pressure-head">
               <div>
                 <p class="kicker table-kicker">Agency Breakdown</p>
-                <h3>Which agencies and components carry the high-grade load</h3>
+                <h3>Agency payroll and high-grade concentration</h3>
               </div>
               <div class="chart-metric"><strong id="agencyPressureMetric">0 groups</strong><span>OPM visible public records</span></div>
             </div>
-            <p class="section-lede">Switch between top-level OPM agency records and agency subelements/components. FBI is a DOJ subelement in OPM data; VA and DOL are top-level agency records.</p>
+            <p class="section-lede">Switch between department-level OPM agency records and OPM component records. FBI is listed as a DOJ component; VA and DOL are department-level records.</p>
+            <div class="source-strip source-strip-three agency-pressure-source-strip">
+              <span><b>Source</b> OPM Federal Workforce Data public employment snapshot</span>
+              <span><b>Grouping</b> agency and component fields, not guessed org charts</span>
+              <span><b>Review rows</b> VA, FBI, and DOL are pinned below the chart</span>
+            </div>
             <div class="form-grid agency-pressure-form">
               <div class="field"><label for="agencyPressureLevel">Group by</label><select id="agencyPressureLevel"><option value="agency" selected>Agency / department</option><option value="component">Component / bureau</option></select></div>
               <div class="field wide-field"><label for="agencyPressureSort">Rank agencies by</label><select id="agencyPressureSort"><option value="payroll" selected>Total visible payroll</option><option value="high-share">GS-13+ plus SES percentage</option><option value="ses-share">SES percentage</option><option value="high-payroll">GS-13+ plus SES visible payroll</option><option value="average-pay">Average visible pay</option><option value="employees">Visible public records</option></select></div>
             </div>
-            <div class="agency-pressure-grid">
-              <div class="highlight-card pressure-readout-card">
-                <div class="chart-head">
-                  <h3 id="agencyPressureTopName">Top agency</h3>
-                  <div class="chart-metric"><strong id="agencyPressureTopValue">$0</strong><span id="agencyPressureTopMeta">selected ranking</span></div>
-                </div>
-                <p class="detail-line" id="agencyPressureSummary">Agency pressure data will render after the app loads.</p>
-                <div class="rank-list" id="agencyPressureExamples"></div>
+            <div class="agency-pressure-kpis" aria-label="Agency breakdown headline metrics">
+              <div class="agency-kpi-card is-primary">
+                <span>Top selected view</span>
+                <strong id="agencyPressureTopValue">$0</strong>
+                <b id="agencyPressureTopName">Top agency</b>
+                <em id="agencyPressureTopMeta">selected ranking</em>
               </div>
-              <div class="chart-card agency-pressure-chart-card">
-                <div class="chart-head">
-                  <h3 id="agencyPressureChartTitle">Agency pressure</h3>
-                  <div class="chart-metric"><strong id="agencyPressureChartMetric">0 records</strong><span>OPM agency fields</span></div>
-                </div>
-                <canvas id="agencyPressureCanvas" width="980" height="430" role="img" aria-describedby="agencyPressureDescription">Your browser does not support Canvas.</canvas>
-                <p id="agencyPressureDescription" class="fine-print">Bar length follows the selected ranking. Orange underline shows GS-13+ plus SES share.</p>
+              <div class="agency-kpi-card">
+                <span>Pinned review rows</span>
+                <strong>VA / FBI / DOL</strong>
+                <b>kept visible in every grouping</b>
+              </div>
+              <div class="agency-kpi-card">
+                <span>High-grade lens</span>
+                <strong>GS-13+ / SES</strong>
+                <b>ranking options compare concentration and payroll</b>
+              </div>
+              <div class="agency-kpi-card">
+                <span>Dollar totals</span>
+                <strong>Visible pay</strong>
+                <b>redacted pay records stay out of totals</b>
               </div>
             </div>
+            <div class="chart-card agency-pressure-chart-card agency-pressure-wide-chart">
+              <div class="chart-head">
+                <h3 id="agencyPressureChartTitle">Agency pressure</h3>
+                <div class="chart-metric"><strong id="agencyPressureChartMetric">0 records</strong><span>OPM agency fields</span></div>
+              </div>
+              <canvas id="agencyPressureCanvas" width="1200" height="520" role="img" aria-describedby="agencyPressureDescription">Your browser does not support Canvas.</canvas>
+              <p id="agencyPressureDescription" class="fine-print">Bar length follows the selected ranking. The thin orange overlay shows GS-13+ plus SES share.</p>
+            </div>
+            <details class="data-dropdown agency-watch-dropdown">
+              <summary><span>Open pinned review rows</span><span>VA, FBI, and DOL</span></summary>
+              <div class="dropdown-body">
+                <div class="rank-list" id="agencyPressureExamples"></div>
+              </div>
+            </details>
+            <details class="data-dropdown agency-pressure-explain">
+              <summary><span>Open agency model notes</span><span>source limits and grouping rules</span></summary>
+              <div class="dropdown-body">
+                <p class="detail-line" id="agencyPressureSummary">Agency pressure data will render after the app loads.</p>
+              </div>
+            </details>
             <details class="data-dropdown">
               <summary><span>Open all agency/component records</span><span>Full OPM agency breakdown</span></summary>
               <div class="table-wrap agency-pressure-table-wrap">
@@ -2708,7 +2807,7 @@ html[data-shell="module"] .layout {
           <h2>Source notes and limitations</h2>
           <p class="section-lede">Official and reconstructed values are visibly distinguished. Reconstructed values are never described as official published tables.</p>
           <ol class="source-list" id="sourceList"></ol>
-          <p class="fine-print" id="buildMeta">Build n-gs-pay-math-lab-v0.01 | commit a0bde35076be3dc6c8f9ee151cafb90e6e6e5a22</p>
+          <p class="fine-print" id="buildMeta">Build n-gs-pay-math-lab-v0.01 | commit c1dc699946d5b33df95d2dcb1034dd11a85edc93</p>
         </div>
       </section>
 
@@ -3908,7 +4007,7 @@ window.NGSPaySizeReceipt = {"calculation_package_without_brand_imagery":4796873,
     const canvas = els.agencyPressureCanvas;
     if (!canvas) return;
     const colors = themeColors(canvas);
-    const { ctx, width, height } = canvasMetrics(canvas, 390);
+    const { ctx, width, height } = canvasMetrics(canvas, 480);
     clearCanvas(ctx, width, height, colors);
     const top = rows.slice(0, 12);
     if (!top.length) return;
