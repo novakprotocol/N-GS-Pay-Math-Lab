@@ -1641,7 +1641,8 @@
     const source = data.source || {};
     const limits = Array.isArray(source.limitations) ? source.limitations.join(" ") : "Procedure records are not additive.";
     setText(els.vaFacilityNote, `${source.patient_count_grain || "Facility-by-procedure records"}. ${limits}`);
-    els.vaFacilityTable.innerHTML = `<thead><tr><th>Administrative parent facility</th><th>Selected count</th><th>Largest single-procedure count</th><th>Largest procedure code / label</th><th>99214 office-visit count</th><th>Procedure-count sum</th><th>Procedure coverage</th></tr></thead><tbody>${rows.map((row, index) => vaFacilityTableRow(row, index, sort)).join("")}</tbody>`;
+    const colgroup = `<colgroup><col class="facility-col"><col class="selected-col"><col class="largest-count-col"><col class="procedure-col"><col class="office-col"><col class="sum-col"><col class="coverage-col"></colgroup>`;
+    els.vaFacilityTable.innerHTML = `${colgroup}<thead><tr><th>Administrative parent facility</th><th>Selected count</th><th>Largest single-procedure count</th><th>Largest procedure code / label</th><th>99214 office-visit count</th><th>Procedure-count sum</th><th>Procedure coverage</th></tr></thead><tbody>${rows.map((row, index) => vaFacilityTableRow(row, index, sort)).join("")}</tbody>`;
   }
 
   function renderFederalStatePressure() {

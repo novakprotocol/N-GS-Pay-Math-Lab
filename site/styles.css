@@ -1055,53 +1055,73 @@ main {
 }
 
 .va-facility-table-wrap table {
-  min-width: 1180px;
+  min-width: 1320px;
   table-layout: fixed;
+}
+
+.va-facility-table-wrap col.facility-col {
+  width: 30%;
+}
+
+.va-facility-table-wrap col.selected-col,
+.va-facility-table-wrap col.largest-count-col,
+.va-facility-table-wrap col.office-col,
+.va-facility-table-wrap col.sum-col {
+  width: 11%;
+}
+
+.va-facility-table-wrap col.procedure-col {
+  width: 18%;
+}
+
+.va-facility-table-wrap col.coverage-col {
+  width: 8%;
 }
 
 .va-facility-table-wrap th,
 .va-facility-table-wrap td {
+  box-sizing: border-box;
+  min-width: 0;
   white-space: normal;
   overflow-wrap: anywhere;
   line-height: 1.35;
+  vertical-align: top;
 }
 
-.va-facility-table-wrap table th {
-  min-width: 0;
+.va-facility-table-wrap thead th:nth-child(1),
+.va-facility-table-wrap tbody th,
+.va-facility-table-wrap thead th:nth-child(4),
+.va-facility-table-wrap tbody td:nth-child(4) {
+  text-align: left;
 }
 
-.va-facility-table-wrap th:first-child {
-  width: 34%;
-}
-
-.va-facility-table-wrap th:nth-child(2),
-.va-facility-table-wrap th:nth-child(3),
-.va-facility-table-wrap th:nth-child(5),
-.va-facility-table-wrap th:nth-child(6) {
-  width: 12%;
-}
-
-.va-facility-table-wrap th:nth-child(4) {
-  width: 18%;
-}
-
-.va-facility-table-wrap th:nth-child(7) {
-  width: 10%;
+.va-facility-table-wrap thead th:nth-child(2),
+.va-facility-table-wrap thead th:nth-child(3),
+.va-facility-table-wrap thead th:nth-child(5),
+.va-facility-table-wrap thead th:nth-child(6),
+.va-facility-table-wrap thead th:nth-child(7),
+.va-facility-table-wrap tbody td:nth-child(2),
+.va-facility-table-wrap tbody td:nth-child(3),
+.va-facility-table-wrap tbody td:nth-child(5),
+.va-facility-table-wrap tbody td:nth-child(6),
+.va-facility-table-wrap tbody td:nth-child(7) {
+  text-align: right;
 }
 
 .va-facility-table-wrap td.metric-cell {
   color: var(--ink);
+  font-variant-numeric: tabular-nums;
   font-weight: 850;
 }
 
 .va-facility-table-wrap td.procedure-cell {
-  text-align: left;
   color: var(--muted);
   font-size: 0.84rem;
   font-weight: 750;
 }
 
-.va-facility-table-wrap td span {
+.va-facility-table-wrap td span,
+.va-facility-table-wrap th span {
   display: block;
   margin-top: 2px;
   color: var(--muted);
