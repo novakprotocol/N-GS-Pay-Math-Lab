@@ -482,6 +482,82 @@ main {
   background: color-mix(in srgb, var(--panel-soft) 74%, var(--orange));
 }
 
+
+.data-dropdown {
+  margin-top: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.data-dropdown summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 14px;
+  cursor: pointer;
+  color: var(--ink);
+  font-weight: 800;
+  list-style: none;
+}
+
+.data-dropdown summary::-webkit-details-marker {
+  display: none;
+}
+
+.data-dropdown summary::after {
+  content: "+";
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  flex: 0 0 auto;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--panel-soft);
+  color: var(--cyan);
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.data-dropdown[open] summary::after {
+  content: "-";
+}
+
+.data-dropdown summary span:last-child {
+  color: var(--muted);
+  font-size: 0.86rem;
+  font-weight: 700;
+  text-align: right;
+}
+
+.data-dropdown .table-wrap {
+  margin-top: 0;
+  border: 0;
+  border-top: 1px solid var(--line);
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.state-pressure-section {
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--panel-soft) 92%, var(--teal)), color-mix(in srgb, var(--panel) 90%, var(--blue))),
+    var(--panel-soft);
+}
+
+.state-pressure-section .section-inner {
+  width: min(1380px, 100%);
+}
+
+.state-pressure-section .state-pressure-block {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
 .agency-pressure-block {
   margin-top: 20px;
   padding-top: 18px;
