@@ -7,7 +7,7 @@
   <meta name="description" content="N-GS Pay Math Lab reconstructs and verifies General Schedule base-pay math from 1977 through 2026.">
   <title>N-GS Pay Math Lab</title>
   <link rel="icon" href="../assets/brand/favicon.png">
-  <link rel="stylesheet" href="../styles.css?v=n-gs-pay-math-lab-v0.01-948d646e1b70">
+  <link rel="stylesheet" href="../styles.css?v=n-gs-pay-math-lab-v0.01-e36f6ed42293">
 </head>
 <body>
   <header class="topbar">
@@ -331,38 +331,60 @@
         <div class="section-inner">
           <p class="kicker">VA Remote Posts</p>
           <h2>Philippines, St. Croix, territories, and nonforeign VA duty stations</h2>
-          <p class="section-lede">Selected grade, step, year, locality rules, and cap drive the pay chart. Visible VA employee counts come from OPM Federal Workforce Data June 2026 duty-station public records; redacted or missing public records are called out instead of guessed.</p>
+          <p class="section-lede">Selected grade, step, year, locality rules, and cap drive this view. Counts use visible VA duty-station public records and call out redactions instead of guessing.</p>
+          <div class="source-strip source-strip-three remote-duty-source-strip">
+            <span><b>OPM FWD</b> 2026-06 duty-station public employment snapshot</span>
+            <span><b>VA.gov</b> facility links only where an official VA page is loaded</span>
+            <span><b>Local build</b> bundled static data; no live browser calls</span>
+          </div>
           <div class="form-grid remote-duty-form">
             <div class="field wide-field"><label for="remoteDutyLocation">Location</label><select id="remoteDutyLocation"></select></div>
-            <div class="field"><label for="remoteDutySort">Sort table by</label><select id="remoteDutySort"><option value="pay" selected>Selected pay</option><option value="count">Visible VA count</option><option value="locality">Locality/COLA</option></select></div>
+            <div class="field"><label for="remoteDutySort">Rank posts by</label><select id="remoteDutySort"><option value="pay" selected>Selected pay</option><option value="count">Visible VA count</option><option value="locality">Locality/COLA</option></select></div>
           </div>
-          <div class="remote-duty-grid">
-            <div class="highlight-card remote-duty-focus">
-              <div class="chart-head">
-                <h3 id="remoteDutyName">Remote duty station</h3>
-                <div class="chart-metric"><strong id="remoteDutyPay">$0</strong><span id="remoteDutyMeta">selected pay</span></div>
-              </div>
-              <div class="remote-duty-metrics">
-                <div class="mini-metric"><span>OPM locality</span><strong id="remoteDutyLocality">N/A</strong></div>
-                <div class="mini-metric"><span>Visible VA records</span><strong id="remoteDutyEmployees">N/A</strong></div>
-                <div class="mini-metric"><span>Visible GS records</span><strong id="remoteDutyGsRows">N/A</strong></div>
-                <div class="mini-metric"><span>Nonforeign COLA</span><strong id="remoteDutyCola">N/A</strong></div>
-              </div>
+          <div class="remote-duty-kpis" aria-label="Remote duty headline metrics">
+            <div class="remote-kpi-card is-primary">
+              <span>Selected post</span>
+              <strong id="remoteDutyPay">$0</strong>
+              <b id="remoteDutyName">Remote duty station</b>
+              <em id="remoteDutyMeta">selected pay</em>
+            </div>
+            <div class="remote-kpi-card">
+              <span>OPM locality</span>
+              <strong id="remoteDutyLocality">N/A</strong>
+              <b>2026 locality rule used for pay math</b>
+            </div>
+            <div class="remote-kpi-card">
+              <span>Visible VA records</span>
+              <strong id="remoteDutyEmployees">N/A</strong>
+              <b><span id="remoteDutyGsRows">N/A</span> visible GS records</b>
+            </div>
+            <div class="remote-kpi-card">
+              <span>Nonforeign COLA</span>
+              <strong id="remoteDutyCola">N/A</strong>
+              <b>shown separately from OPM locality pay</b>
+            </div>
+          </div>
+          <div class="chart-card remote-duty-chart-card remote-duty-wide-chart">
+            <div class="chart-head">
+              <h3 id="remoteDutyChartTitle">Selected pay by post</h3>
+              <div class="chart-metric"><strong id="remoteDutyChartMetric">0 posts</strong><span>OPM/federal sources only</span></div>
+            </div>
+            <canvas id="remoteDutyCanvas" width="1200" height="520" role="img" aria-describedby="remoteDutyChartDescription">Your browser does not support Canvas.</canvas>
+            <p id="remoteDutyChartDescription" class="fine-print">Annual pay bars use the selected grade and step. Small right bars show visible VA employee records.</p>
+          </div>
+          <details class="data-dropdown remote-duty-notes">
+            <summary><span>Open remote-post notes</span><span>pay model, source limits, and redactions</span></summary>
+            <div class="dropdown-body remote-duty-note-grid">
               <p class="detail-line" id="remoteDutyNote">OPM duty-station data will render after the app loads.</p>
+              <p class="detail-line" id="remoteDutySourceNote">Counts are OPM FWD visible VA employment records, not official VA facility staffing rosters.</p>
             </div>
-            <div class="chart-card remote-duty-chart-card">
-              <div class="chart-head">
-                <h3 id="remoteDutyChartTitle">Selected pay by post</h3>
-                <div class="chart-metric"><strong id="remoteDutyChartMetric">0 posts</strong><span>OPM/federal sources only</span></div>
-              </div>
-              <canvas id="remoteDutyCanvas" width="980" height="430" role="img" aria-describedby="remoteDutyChartDescription">Your browser does not support Canvas.</canvas>
-              <p id="remoteDutyChartDescription" class="fine-print">Foreign duty records use GS base pay only; territories use OPM Rest of U.S. locality unless Alaska or Hawaii has its own locality schedule.</p>
+          </details>
+          <details class="data-dropdown">
+            <summary><span>Open remote post table</span><span>all locations, locality, COLA, counts</span></summary>
+            <div class="table-wrap remote-duty-table-wrap">
+              <table id="remoteDutyTable"></table>
             </div>
-          </div>
-          <div class="table-wrap remote-duty-table-wrap">
-            <table id="remoteDutyTable"></table>
-          </div>
-          <p class="fine-print" id="remoteDutySourceNote">Counts are OPM FWD visible VA employment records, not official VA facility staffing rosters.</p>
+          </details>
         </div>
       </section>
 
@@ -720,17 +742,17 @@
           <h2>Source notes and limitations</h2>
           <p class="section-lede">Official and reconstructed values are visibly distinguished. Reconstructed values are never described as official published tables.</p>
           <ol class="source-list" id="sourceList"></ol>
-          <p class="fine-print" id="buildMeta">Build n-gs-pay-math-lab-v0.01 | commit 948d646e1b70f19c7bd81470254f7abaf9ec7b4c</p>
+          <p class="fine-print" id="buildMeta">Build n-gs-pay-math-lab-v0.01 | commit e36f6ed4229319c18d51bae318b5e6fe5044d3e1</p>
         </div>
       </section>
 
     </main>
   </div>
 
-  <script src="../data/pay-data.js?v=n-gs-pay-math-lab-v0.01-948d646e1b70"></script>
-  <script src="../evidence/size-comparison.js?v=n-gs-pay-math-lab-v0.01-948d646e1b70"></script>
-  <script src="../data-loader.js?v=n-gs-pay-math-lab-v0.01-948d646e1b70"></script>
-  <script src="../formulas.js?v=n-gs-pay-math-lab-v0.01-948d646e1b70"></script>
-  <script src="../app.js?v=n-gs-pay-math-lab-v0.01-948d646e1b70"></script>
+  <script src="../data/pay-data.js?v=n-gs-pay-math-lab-v0.01-e36f6ed42293"></script>
+  <script src="../evidence/size-comparison.js?v=n-gs-pay-math-lab-v0.01-e36f6ed42293"></script>
+  <script src="../data-loader.js?v=n-gs-pay-math-lab-v0.01-e36f6ed42293"></script>
+  <script src="../formulas.js?v=n-gs-pay-math-lab-v0.01-e36f6ed42293"></script>
+  <script src="../app.js?v=n-gs-pay-math-lab-v0.01-e36f6ed42293"></script>
 </body>
 </html>

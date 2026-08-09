@@ -769,6 +769,29 @@ main {
   margin-top: 0;
 }
 
+.mini-metric {
+  min-width: 0;
+  border-left: 3px solid var(--cyan);
+  padding-left: 10px;
+}
+
+.mini-metric span,
+.cost-pressure-table-wrap th span,
+.agency-pressure-table-wrap th span,
+.remote-duty-table-wrap th span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 750;
+}
+
+.mini-metric strong {
+  display: block;
+  color: var(--ink);
+  font-size: 1.18rem;
+  margin-top: 2px;
+}
+
 .agency-pressure-explain .dropdown-body {
   padding: 0;
 }
@@ -891,52 +914,90 @@ main {
   margin-bottom: 14px;
 }
 
-.remote-duty-grid {
+.remote-duty-kpis {
   display: grid;
-  grid-template-columns: minmax(320px, 0.82fr) minmax(520px, 1.18fr);
-  gap: 14px;
-  align-items: stretch;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin: 16px 0 14px;
 }
 
-.remote-duty-focus {
+.remote-kpi-card {
+  min-width: 0;
+  min-height: 128px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  justify-content: space-between;
+  gap: 9px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px;
+  background: color-mix(in srgb, var(--panel) 92%, var(--bg));
+  box-shadow: var(--shadow);
 }
 
-.remote-duty-metrics {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px 16px;
+.remote-kpi-card.is-primary {
+  border-color: color-mix(in srgb, var(--green) 48%, var(--line));
 }
 
-.mini-metric {
-  min-width: 0;
-  border-left: 3px solid var(--cyan);
-  padding-left: 10px;
-}
-
-.mini-metric span,
-.cost-pressure-table-wrap th span,
-.agency-pressure-table-wrap th span,
-.remote-duty-table-wrap th span {
-  display: block;
+.remote-kpi-card > span {
   color: var(--muted);
-  font-size: 0.82rem;
-  font-weight: 750;
+  font-size: 0.78rem;
+  font-weight: 850;
+  letter-spacing: 0;
+  text-transform: uppercase;
 }
 
-.mini-metric strong {
-  display: block;
+.remote-kpi-card strong {
   color: var(--ink);
-  font-size: 1.18rem;
-  margin-top: 2px;
+  font-size: clamp(1.25rem, 1.55vw, 1.95rem);
+  line-height: 1.08;
+  overflow-wrap: anywhere;
+}
+
+.remote-kpi-card b,
+.remote-kpi-card em {
+  color: var(--muted);
+  font-size: 0.88rem;
+  font-style: normal;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.remote-kpi-card b span {
+  color: inherit;
+  display: inline;
+  font: inherit;
+  text-transform: none;
+}
+
+.remote-duty-wide-chart {
+  margin-top: 0;
 }
 
 .remote-duty-chart-card canvas {
   display: block;
   width: 100%;
-  height: 390px;
+  height: 480px;
+}
+
+.remote-duty-notes .dropdown-body {
+  padding: 0;
+}
+
+.remote-duty-note-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0;
+}
+
+.remote-duty-note-grid .detail-line {
+  margin: 0;
+  padding: 14px;
+  border-right: 1px solid var(--line);
+}
+
+.remote-duty-note-grid .detail-line:last-child {
+  border-right: 0;
 }
 
 .remote-duty-table-wrap {
@@ -1895,9 +1956,9 @@ html[data-shell="module"] .layout {
   .surface-lab,
   .cost-pressure-kpis,
   .agency-pressure-kpis,
+  .remote-duty-kpis,
   .state-pressure-grid,
-  .county-map-grid,
-  .remote-duty-grid {
+  .county-map-grid {
     grid-template-columns: minmax(0, 1fr);
   }
 
@@ -1910,7 +1971,8 @@ html[data-shell="module"] .layout {
   }
 
   .cost-pressure-kpis,
-  .agency-pressure-kpis {
+  .agency-pressure-kpis,
+  .remote-duty-kpis {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -1979,9 +2041,9 @@ html[data-shell="module"] .layout {
   .locality-highlights,
   .cost-pressure-kpis,
   .agency-pressure-kpis,
+  .remote-duty-kpis,
   .state-pressure-grid,
   .pressure-stat-grid,
-  .remote-duty-grid,
   .remote-duty-metrics,
   .raise-panel-grid,
   .forecast-grid,
@@ -1990,16 +2052,19 @@ html[data-shell="module"] .layout {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .cost-pressure-note-grid {
+  .cost-pressure-note-grid,
+  .remote-duty-note-grid {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .cost-pressure-note-grid .detail-line {
+  .cost-pressure-note-grid .detail-line,
+  .remote-duty-note-grid .detail-line {
     border-right: 0;
     border-bottom: 1px solid var(--line);
   }
 
-  .cost-pressure-note-grid .detail-line:last-child {
+  .cost-pressure-note-grid .detail-line:last-child,
+  .remote-duty-note-grid .detail-line:last-child {
     border-bottom: 0;
   }
 
@@ -2418,38 +2483,60 @@ html[data-shell="module"] .layout {
         <div class="section-inner">
           <p class="kicker">VA Remote Posts</p>
           <h2>Philippines, St. Croix, territories, and nonforeign VA duty stations</h2>
-          <p class="section-lede">Selected grade, step, year, locality rules, and cap drive the pay chart. Visible VA employee counts come from OPM Federal Workforce Data June 2026 duty-station public records; redacted or missing public records are called out instead of guessed.</p>
+          <p class="section-lede">Selected grade, step, year, locality rules, and cap drive this view. Counts use visible VA duty-station public records and call out redactions instead of guessing.</p>
+          <div class="source-strip source-strip-three remote-duty-source-strip">
+            <span><b>OPM FWD</b> 2026-06 duty-station public employment snapshot</span>
+            <span><b>VA.gov</b> facility links only where an official VA page is loaded</span>
+            <span><b>Local build</b> bundled static data; no live browser calls</span>
+          </div>
           <div class="form-grid remote-duty-form">
             <div class="field wide-field"><label for="remoteDutyLocation">Location</label><select id="remoteDutyLocation"></select></div>
-            <div class="field"><label for="remoteDutySort">Sort table by</label><select id="remoteDutySort"><option value="pay" selected>Selected pay</option><option value="count">Visible VA count</option><option value="locality">Locality/COLA</option></select></div>
+            <div class="field"><label for="remoteDutySort">Rank posts by</label><select id="remoteDutySort"><option value="pay" selected>Selected pay</option><option value="count">Visible VA count</option><option value="locality">Locality/COLA</option></select></div>
           </div>
-          <div class="remote-duty-grid">
-            <div class="highlight-card remote-duty-focus">
-              <div class="chart-head">
-                <h3 id="remoteDutyName">Remote duty station</h3>
-                <div class="chart-metric"><strong id="remoteDutyPay">$0</strong><span id="remoteDutyMeta">selected pay</span></div>
-              </div>
-              <div class="remote-duty-metrics">
-                <div class="mini-metric"><span>OPM locality</span><strong id="remoteDutyLocality">N/A</strong></div>
-                <div class="mini-metric"><span>Visible VA records</span><strong id="remoteDutyEmployees">N/A</strong></div>
-                <div class="mini-metric"><span>Visible GS records</span><strong id="remoteDutyGsRows">N/A</strong></div>
-                <div class="mini-metric"><span>Nonforeign COLA</span><strong id="remoteDutyCola">N/A</strong></div>
-              </div>
+          <div class="remote-duty-kpis" aria-label="Remote duty headline metrics">
+            <div class="remote-kpi-card is-primary">
+              <span>Selected post</span>
+              <strong id="remoteDutyPay">$0</strong>
+              <b id="remoteDutyName">Remote duty station</b>
+              <em id="remoteDutyMeta">selected pay</em>
+            </div>
+            <div class="remote-kpi-card">
+              <span>OPM locality</span>
+              <strong id="remoteDutyLocality">N/A</strong>
+              <b>2026 locality rule used for pay math</b>
+            </div>
+            <div class="remote-kpi-card">
+              <span>Visible VA records</span>
+              <strong id="remoteDutyEmployees">N/A</strong>
+              <b><span id="remoteDutyGsRows">N/A</span> visible GS records</b>
+            </div>
+            <div class="remote-kpi-card">
+              <span>Nonforeign COLA</span>
+              <strong id="remoteDutyCola">N/A</strong>
+              <b>shown separately from OPM locality pay</b>
+            </div>
+          </div>
+          <div class="chart-card remote-duty-chart-card remote-duty-wide-chart">
+            <div class="chart-head">
+              <h3 id="remoteDutyChartTitle">Selected pay by post</h3>
+              <div class="chart-metric"><strong id="remoteDutyChartMetric">0 posts</strong><span>OPM/federal sources only</span></div>
+            </div>
+            <canvas id="remoteDutyCanvas" width="1200" height="520" role="img" aria-describedby="remoteDutyChartDescription">Your browser does not support Canvas.</canvas>
+            <p id="remoteDutyChartDescription" class="fine-print">Annual pay bars use the selected grade and step. Small right bars show visible VA employee records.</p>
+          </div>
+          <details class="data-dropdown remote-duty-notes">
+            <summary><span>Open remote-post notes</span><span>pay model, source limits, and redactions</span></summary>
+            <div class="dropdown-body remote-duty-note-grid">
               <p class="detail-line" id="remoteDutyNote">OPM duty-station data will render after the app loads.</p>
+              <p class="detail-line" id="remoteDutySourceNote">Counts are OPM FWD visible VA employment records, not official VA facility staffing rosters.</p>
             </div>
-            <div class="chart-card remote-duty-chart-card">
-              <div class="chart-head">
-                <h3 id="remoteDutyChartTitle">Selected pay by post</h3>
-                <div class="chart-metric"><strong id="remoteDutyChartMetric">0 posts</strong><span>OPM/federal sources only</span></div>
-              </div>
-              <canvas id="remoteDutyCanvas" width="980" height="430" role="img" aria-describedby="remoteDutyChartDescription">Your browser does not support Canvas.</canvas>
-              <p id="remoteDutyChartDescription" class="fine-print">Foreign duty records use GS base pay only; territories use OPM Rest of U.S. locality unless Alaska or Hawaii has its own locality schedule.</p>
+          </details>
+          <details class="data-dropdown">
+            <summary><span>Open remote post table</span><span>all locations, locality, COLA, counts</span></summary>
+            <div class="table-wrap remote-duty-table-wrap">
+              <table id="remoteDutyTable"></table>
             </div>
-          </div>
-          <div class="table-wrap remote-duty-table-wrap">
-            <table id="remoteDutyTable"></table>
-          </div>
-          <p class="fine-print" id="remoteDutySourceNote">Counts are OPM FWD visible VA employment records, not official VA facility staffing rosters.</p>
+          </details>
         </div>
       </section>
 
@@ -2807,7 +2894,7 @@ html[data-shell="module"] .layout {
           <h2>Source notes and limitations</h2>
           <p class="section-lede">Official and reconstructed values are visibly distinguished. Reconstructed values are never described as official published tables.</p>
           <ol class="source-list" id="sourceList"></ol>
-          <p class="fine-print" id="buildMeta">Build n-gs-pay-math-lab-v0.01 | commit 948d646e1b70f19c7bd81470254f7abaf9ec7b4c</p>
+          <p class="fine-print" id="buildMeta">Build n-gs-pay-math-lab-v0.01 | commit e36f6ed4229319c18d51bae318b5e6fe5044d3e1</p>
         </div>
       </section>
 
@@ -4765,7 +4852,7 @@ window.NGSPaySizeReceipt = {"calculation_package_without_brand_imagery":4796873,
     const canvas = els.remoteDutyCanvas;
     if (!canvas) return;
     const colors = themeColors(canvas);
-    const { ctx, width, height } = canvasMetrics(canvas, 390);
+    const { ctx, width, height } = canvasMetrics(canvas, 480);
     clearCanvas(ctx, width, height, colors);
     const chartRows = rows.slice(0, 10);
     if (!chartRows.length) {

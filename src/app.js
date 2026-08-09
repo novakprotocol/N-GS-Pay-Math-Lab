@@ -1626,7 +1626,7 @@
     const canvas = els.remoteDutyCanvas;
     if (!canvas) return;
     const colors = themeColors(canvas);
-    const { ctx, width, height } = canvasMetrics(canvas, 390);
+    const { ctx, width, height } = canvasMetrics(canvas, 480);
     clearCanvas(ctx, width, height, colors);
     const chartRows = rows.slice(0, 10);
     if (!chartRows.length) {

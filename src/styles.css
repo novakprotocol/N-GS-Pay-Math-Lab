@@ -759,6 +759,29 @@ main {
   margin-top: 0;
 }
 
+.mini-metric {
+  min-width: 0;
+  border-left: 3px solid var(--cyan);
+  padding-left: 10px;
+}
+
+.mini-metric span,
+.cost-pressure-table-wrap th span,
+.agency-pressure-table-wrap th span,
+.remote-duty-table-wrap th span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 750;
+}
+
+.mini-metric strong {
+  display: block;
+  color: var(--ink);
+  font-size: 1.18rem;
+  margin-top: 2px;
+}
+
 .agency-pressure-explain .dropdown-body {
   padding: 0;
 }
@@ -881,52 +904,90 @@ main {
   margin-bottom: 14px;
 }
 
-.remote-duty-grid {
+.remote-duty-kpis {
   display: grid;
-  grid-template-columns: minmax(320px, 0.82fr) minmax(520px, 1.18fr);
-  gap: 14px;
-  align-items: stretch;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin: 16px 0 14px;
 }
 
-.remote-duty-focus {
+.remote-kpi-card {
+  min-width: 0;
+  min-height: 128px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  justify-content: space-between;
+  gap: 9px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px;
+  background: color-mix(in srgb, var(--panel) 92%, var(--bg));
+  box-shadow: var(--shadow);
 }
 
-.remote-duty-metrics {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px 16px;
+.remote-kpi-card.is-primary {
+  border-color: color-mix(in srgb, var(--green) 48%, var(--line));
 }
 
-.mini-metric {
-  min-width: 0;
-  border-left: 3px solid var(--cyan);
-  padding-left: 10px;
-}
-
-.mini-metric span,
-.cost-pressure-table-wrap th span,
-.agency-pressure-table-wrap th span,
-.remote-duty-table-wrap th span {
-  display: block;
+.remote-kpi-card > span {
   color: var(--muted);
-  font-size: 0.82rem;
-  font-weight: 750;
+  font-size: 0.78rem;
+  font-weight: 850;
+  letter-spacing: 0;
+  text-transform: uppercase;
 }
 
-.mini-metric strong {
-  display: block;
+.remote-kpi-card strong {
   color: var(--ink);
-  font-size: 1.18rem;
-  margin-top: 2px;
+  font-size: clamp(1.25rem, 1.55vw, 1.95rem);
+  line-height: 1.08;
+  overflow-wrap: anywhere;
+}
+
+.remote-kpi-card b,
+.remote-kpi-card em {
+  color: var(--muted);
+  font-size: 0.88rem;
+  font-style: normal;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.remote-kpi-card b span {
+  color: inherit;
+  display: inline;
+  font: inherit;
+  text-transform: none;
+}
+
+.remote-duty-wide-chart {
+  margin-top: 0;
 }
 
 .remote-duty-chart-card canvas {
   display: block;
   width: 100%;
-  height: 390px;
+  height: 480px;
+}
+
+.remote-duty-notes .dropdown-body {
+  padding: 0;
+}
+
+.remote-duty-note-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0;
+}
+
+.remote-duty-note-grid .detail-line {
+  margin: 0;
+  padding: 14px;
+  border-right: 1px solid var(--line);
+}
+
+.remote-duty-note-grid .detail-line:last-child {
+  border-right: 0;
 }
 
 .remote-duty-table-wrap {
@@ -1885,9 +1946,9 @@ html[data-shell="module"] .layout {
   .surface-lab,
   .cost-pressure-kpis,
   .agency-pressure-kpis,
+  .remote-duty-kpis,
   .state-pressure-grid,
-  .county-map-grid,
-  .remote-duty-grid {
+  .county-map-grid {
     grid-template-columns: minmax(0, 1fr);
   }
 
@@ -1900,7 +1961,8 @@ html[data-shell="module"] .layout {
   }
 
   .cost-pressure-kpis,
-  .agency-pressure-kpis {
+  .agency-pressure-kpis,
+  .remote-duty-kpis {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -1969,9 +2031,9 @@ html[data-shell="module"] .layout {
   .locality-highlights,
   .cost-pressure-kpis,
   .agency-pressure-kpis,
+  .remote-duty-kpis,
   .state-pressure-grid,
   .pressure-stat-grid,
-  .remote-duty-grid,
   .remote-duty-metrics,
   .raise-panel-grid,
   .forecast-grid,
@@ -1980,16 +2042,19 @@ html[data-shell="module"] .layout {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .cost-pressure-note-grid {
+  .cost-pressure-note-grid,
+  .remote-duty-note-grid {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .cost-pressure-note-grid .detail-line {
+  .cost-pressure-note-grid .detail-line,
+  .remote-duty-note-grid .detail-line {
     border-right: 0;
     border-bottom: 1px solid var(--line);
   }
 
-  .cost-pressure-note-grid .detail-line:last-child {
+  .cost-pressure-note-grid .detail-line:last-child,
+  .remote-duty-note-grid .detail-line:last-child {
     border-bottom: 0;
   }
 
