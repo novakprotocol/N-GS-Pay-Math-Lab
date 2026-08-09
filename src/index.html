@@ -150,7 +150,7 @@
         <div class="section-inner">
           <p class="kicker">County Map</p>
           <h2>OPM locality lookup by county</h2>
-          <p class="section-lede">OPM locality definitions are joined to Census county representative points for a compact county-level lookup. Official OPM locality definitions still control.</p>
+          <p class="section-lede">OPM locality definitions are joined to Census generalized county boundary polygons for a compact county-level map and lookup. Official OPM locality definitions still control.</p>
           <div class="form-grid map-form">
             <div class="field"><label for="localityMapState">State</label><select id="localityMapState"></select></div>
             <div class="field wide-field"><label for="localityMapCounty">County</label><select id="localityMapCounty"></select></div>
@@ -159,11 +159,11 @@
           <div class="county-map-grid">
             <div class="chart-card county-map-card">
               <div class="chart-head">
-                <h3 id="localityMapTitle">County locality point map</h3>
+                <h3 id="localityMapTitle">County locality boundary map</h3>
                 <div class="chart-metric"><strong id="localityMapMetric">0 counties</strong><span id="localityMapMeta"></span></div>
               </div>
               <canvas id="localityMapCanvas" width="1100" height="470" role="img" aria-describedby="localityMapDescription">Your browser does not support Canvas.</canvas>
-              <p id="localityMapDescription" class="fine-print">Census county representative points are used for display only; this is not an official boundary polygon map or duty-station determination.</p>
+              <p id="localityMapDescription" class="fine-print">Census cartographic county boundaries are generalized for display; this is not a legal duty-station determination.</p>
             </div>
             <aside class="county-map-side" aria-label="County locality details">
               <div class="highlight-card">

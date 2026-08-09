@@ -55,6 +55,7 @@ def combined_pay_data() -> dict[str, Any]:
         "locality": read_json(ROOT / "data" / "locality-examples.json"),
         "localityRates": read_json(ROOT / "data" / "locality-rates.json"),
         "localityDefinitions": read_json(ROOT / "data" / "locality-definitions.json"),
+        "localityBoundaries": read_json(ROOT / "data" / "locality-boundaries.json"),
         "inflation": read_json(ROOT / "data" / "inflation-cpi.json"),
         "stateTaxFlags": read_json(ROOT / "data" / "state-tax-flags.json"),
         "regionalPriceParities": read_json(ROOT / "data" / "regional-price-parities.json"),

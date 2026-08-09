@@ -174,7 +174,7 @@ button {
 .primary-button {
   border-color: color-mix(in srgb, var(--blue) 72%, var(--navy));
   background: var(--blue);
-  color: #ffffff;
+  color: var(--ink);
 }
 
 .secondary-button {
@@ -971,21 +971,36 @@ thead th {
 .pressure-row {
   border-color: color-mix(in srgb, var(--orange) 58%, var(--line));
 }
+.surface-section,
+.county-map-section {
+  --bg: #eaf1f6;
+  --panel: #ffffff;
+  --panel-soft: #f6f9fb;
+  --ink: #17324d;
+  --muted: #617487;
+  --line: #d5e1ea;
+  --line-strong: #aabccb;
+  --blue: #0067a8;
+  --cyan: #0a8daa;
+  --teal: #16847d;
+  --red: #c22a3b;
+  --orange: #d86f22;
+  --green: #2f7d45;
+  --magenta: #7256a5;
+}
 .surface-section {
-  background:
-    linear-gradient(135deg, color-mix(in srgb, var(--navy) 92%, black), color-mix(in srgb, var(--navy) 76%, var(--teal))),
-    var(--navy);
-  color: #ffffff;
+  background: linear-gradient(180deg, var(--panel), var(--panel-soft));
+  color: var(--ink);
 }
 
 .surface-section .kicker,
 .surface-section .tag {
-  color: color-mix(in srgb, #ffffff 72%, var(--teal));
+  color: var(--blue);
 }
 
 .surface-section .section-lede,
 .surface-section .field label {
-  color: color-mix(in srgb, #ffffff 68%, var(--line));
+  color: var(--muted);
 }
 
 .surface-inner {
@@ -1021,9 +1036,11 @@ thead th {
   width: 100%;
   height: clamp(380px, 48vw, 660px);
   display: block;
+  border: 1px solid var(--line);
   border-radius: 8px;
   cursor: grab;
   touch-action: none;
+  background: var(--panel);
 }
 
 #paySurfaceCanvas:active {
@@ -1043,10 +1060,12 @@ thead th {
 }
 
 .surface-panel {
-  border: 1px solid color-mix(in srgb, var(--teal) 28%, transparent);
+  border: 1px solid var(--line);
   border-radius: 8px;
   padding: 12px;
-  background: color-mix(in srgb, var(--navy) 58%, transparent);
+  background: var(--panel);
+  color: var(--ink);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.06);
 }
 
 .control-panel {
@@ -1074,7 +1093,7 @@ thead th {
 
 .surface-readouts span {
   display: block;
-  color: color-mix(in srgb, #ffffff 68%, var(--line));
+  color: var(--muted);
   font-size: 0.72rem;
   font-weight: 800;
   text-transform: uppercase;
@@ -1083,7 +1102,7 @@ thead th {
 .surface-readouts strong {
   display: block;
   margin-top: 3px;
-  color: #ffffff;
+  color: var(--ink);
   font-size: 1.2rem;
 }
 
@@ -1154,10 +1173,11 @@ thead th {
 
 .rating-note {
   margin: 0;
-  border-left: 3px solid color-mix(in srgb, var(--orange) 80%, white);
+  border-left: 3px solid var(--orange);
   padding: 10px 12px;
-  color: color-mix(in srgb, #ffffff 76%, var(--line));
-  background: color-mix(in srgb, var(--navy) 52%, transparent);
+  color: var(--muted);
+  background: var(--panel);
+  border-radius: 6px;
 }
 
 .county-map-section {
@@ -1178,9 +1198,12 @@ thead th {
 
 .county-map-card canvas {
   width: 100%;
-  height: clamp(310px, 36vw, 470px);
+  height: clamp(330px, 40vw, 540px);
   display: block;
+  border: 1px solid var(--line);
   border-radius: 8px;
+  cursor: crosshair;
+  background: var(--panel);
 }
 
 .county-map-side {

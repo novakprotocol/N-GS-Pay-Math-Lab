@@ -28,6 +28,12 @@
       "note": "Used for compact county representative latitude and longitude points; these are not boundary polygons or legal duty-station determinations."
     },
     {
+      "id": "census-2025-county-boundaries-20m",
+      "title": "Census 2025 county cartographic boundary shapefile, 1:20,000,000",
+      "url": "https://www2.census.gov/geo/tiger/GENZ2025/shp/cb_2025_us_county_20m.zip",
+      "note": "Used for generalized county polygon geometry in the locality map; OPM locality definitions still control the pay-area assignment."
+    },
+    {
       "id": "opm-2026-rus",
       "title": "OPM 2026 Rest of U.S. locality schedule",
       "url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/2026/locality-pay-area-definitions/",
