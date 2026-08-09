@@ -11,8 +11,10 @@ Public site target: https://novakprotocol.github.io/N-GS-Pay-Math-Lab/
 - Highlights the highest-paying 2026 OPM locality areas, Census T40 income-tax collection flags, and BEA RPP price-level gaps.
 - Compares selected base pay growth against BLS CPI inflation to show buying-power drift.
 - Adds a Historical Context Lab for average raises, pressure years, presidential administration and party, VA conflict eras, BLS CPI, and a Federal Reserve Z.1 market proxy.
+- Adds a Raise Intelligence Lab for best and worst administration raises, party-plus-conflict comparisons, CPI pressure, historical analog odds, and rating-sensitive personal step scenarios.
 - Shows formulas, substituted numbers, intermediate rounding, and final results.
-- Adds offline canvas views for the grade/year pay surface, locality lift, and cap pressure.
+- Adds a compact OPM locality county mapper using OPM FIPS definitions and Census county representative points.
+- Adds offline canvas views for raise intelligence, the optional grade/year pay surface, locality lift, cap pressure, and locality county points.
 - Distinguishes official tables, official checkpoints, formula reconstructions, reverse calculations, and user-entered scenarios.
 - Provides a downloadable single-file offline build.
 - Measures the formula package against generated static CSV, JSON, HTML, and optional PDF alternatives.
@@ -84,6 +86,6 @@ The private promotion path is profile-driven. A later private implementation may
 
 ## Limitations
 
-This project is an independent calculation and verification tool, not an official OPM service or payroll determination. It does not calculate special rates, law-enforcement schedules, title 38 schedules, agency payroll exceptions, tax liability, deductions, or individual employment records. Census T40 income-tax collection flags are informational only and do not account for residence, worksite, local taxes, sales taxes, property taxes, deductions, or capital-gains taxes. BEA RPP values are price-level comparisons, not OPM locality-pay or nonforeign-COLA determinations. Historical correlations are descriptive, not causal. Dow Jones index history is excluded under the federal-.gov-only source rule; the Historical Context Lab uses Federal Reserve Z.1 household corporate equities as a broad market proxy instead of a tradable stock index.
+This project is an independent calculation and verification tool, not an official OPM service or payroll determination. It does not calculate special rates, law-enforcement schedules, title 38 schedules, agency payroll exceptions, tax liability, deductions, or individual employment records. Census T40 income-tax collection flags are informational only and do not account for residence, worksite, local taxes, sales taxes, property taxes, deductions, or capital-gains taxes. BEA RPP values are price-level comparisons, not OPM locality-pay or nonforeign-COLA determinations. Historical correlations and raise analog estimates are descriptive, not causal or official forecasts. Employee ratings do not determine the government-wide GS annual base raise; rating scenarios only show possible personal step sensitivity. The county locality mapper uses Census representative points, not official boundary polygons or legal duty-station determinations. Dow Jones index history is excluded under the federal-.gov-only source rule; the Historical Context Lab uses Federal Reserve Z.1 household corporate equities as a broad market proxy instead of a tradable stock index.
 
 No license is granted by publication. See `NOTICE.md`.

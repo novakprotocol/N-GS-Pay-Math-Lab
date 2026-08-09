@@ -35,7 +35,8 @@
       <nav class="nav-list" aria-label="Mobile">
         <a href="#calculator">Pay Table</a>
         <a href="#locality-highlights">Locality Picks</a>
-        <a href="#pay-surface">3D Pay Lab</a>
+        <a href="#locality-map">County Map</a>
+        <a href="#pay-surface">Raise Lab</a>
         <a href="#inflation">Inflation Check</a>
         <a href="#context-lab">History Lab</a>
         <a href="#ledger">Fifty-Year Ledger</a>
@@ -53,7 +54,8 @@
       <nav class="nav-list">
         <a href="#calculator">Pay Table</a>
         <a href="#locality-highlights">Locality Picks</a>
-        <a href="#pay-surface">3D Pay Lab</a>
+        <a href="#locality-map">County Map</a>
+        <a href="#pay-surface">Raise Lab</a>
         <a href="#inflation">Inflation Check</a>
         <a href="#context-lab">History Lab</a>
         <a href="#ledger">Fifty-Year Ledger</a>
@@ -144,37 +146,96 @@
 
 
 
+      <section class="section county-map-section" id="locality-map">
+        <div class="section-inner">
+          <p class="kicker">County Map</p>
+          <h2>OPM locality lookup by county</h2>
+          <p class="section-lede">OPM locality definitions are joined to Census county representative points for a compact county-level lookup. Official OPM locality definitions still control.</p>
+          <div class="form-grid map-form">
+            <div class="field"><label for="localityMapState">State</label><select id="localityMapState"></select></div>
+            <div class="field wide-field"><label for="localityMapCounty">County</label><select id="localityMapCounty"></select></div>
+            <div class="field wide-field"><label for="localityMapFocus">Highlight</label><select id="localityMapFocus"><option value="selected" selected>Selected pay-table locality</option><option value="highest">Highest locality areas</option><option value="not-rus">Non-RUS counties</option><option value="all">All county points</option></select></div>
+          </div>
+          <div class="county-map-grid">
+            <div class="chart-card county-map-card">
+              <div class="chart-head">
+                <h3 id="localityMapTitle">County locality point map</h3>
+                <div class="chart-metric"><strong id="localityMapMetric">0 counties</strong><span id="localityMapMeta"></span></div>
+              </div>
+              <canvas id="localityMapCanvas" width="1100" height="470" role="img" aria-describedby="localityMapDescription">Your browser does not support Canvas.</canvas>
+              <p id="localityMapDescription" class="fine-print">Census county representative points are used for display only; this is not an official boundary polygon map or duty-station determination.</p>
+            </div>
+            <aside class="county-map-side" aria-label="County locality details">
+              <div class="highlight-card">
+                <h3>Selected county</h3>
+                <p class="detail-line" id="localityCountyDetail">Choose a state or county.</p>
+              </div>
+              <div class="highlight-card">
+                <h3>Map summary</h3>
+                <p class="detail-line" id="localityMapSummary">County data will render after the app loads.</p>
+              </div>
+              <div class="highlight-card">
+                <h3>Visible locality mix</h3>
+                <div class="chip-list" id="localityAreaChips"></div>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+
       <section class="section surface-section" id="pay-surface">
         <div class="section-inner surface-inner">
-          <p class="kicker">3D Pay Lab</p>
-          <h2>Career earnings, raises, locality, and cap pressure</h2>
-          <p class="section-lede">The selected calculator inputs drive realistic earnings comparisons from one year to another, including adjacent GS paths and a base-only baseline.</p>
-          <div class="surface-lab">
+          <p class="kicker">Raise Lab</p>
+          <h2>Raise intelligence, pressure years, and career money</h2>
+          <p class="section-lede">The selected pay cell drives career totals, historical raise pressure, best and worst administrations, conflict-era comparisons, CPI pressure, and a clearly labeled historical analog estimate for the next raise.</p>
+          <div class="surface-lab raise-lab">
             <div class="surface-stage">
               <div class="surface-head">
                 <div>
-                  <span class="tag">Orbitable earnings view</span>
-                  <h3 id="surfaceTitle">Career earnings</h3>
+                  <span class="tag">Historical analog estimate</span>
+                  <h3 id="surfaceTitle">Raise intelligence</h3>
                 </div>
-                <div class="chart-metric"><strong id="surfacePeak">$0</strong><span id="surfaceRange">selected range</span></div>
+                <div class="chart-metric"><strong id="surfacePeak">0%</strong><span id="surfaceRange">federal-source model</span></div>
               </div>
               <canvas id="paySurfaceCanvas" width="1200" height="660" tabindex="0" role="img" aria-describedby="paySurfaceDescription">Your browser does not support Canvas.</canvas>
-              <p id="paySurfaceDescription" class="sr-output">Three-dimensional pay surface by year and grade for the selected step, locality percentage, and cap settings.</p>
+              <p id="paySurfaceDescription" class="sr-output">Raise intelligence chart showing selected pay, CPI pressure, administrations, conflict eras, and historical analog estimate.</p>
+              <div class="raise-panel-grid">
+                <div class="surface-panel raise-forecast-card" id="raiseForecastCard"></div>
+                <div class="surface-panel raise-table-card">
+                  <h3>Best administration raises</h3>
+                  <div class="mini-table" id="bestPresidentRaises"></div>
+                </div>
+                <div class="surface-panel raise-table-card">
+                  <h3>Worst administration raises</h3>
+                  <div class="mini-table" id="worstPresidentRaises"></div>
+                </div>
+                <div class="surface-panel raise-table-card">
+                  <h3>Party and conflict matrix</h3>
+                  <div class="mini-table" id="partyConflictMatrix"></div>
+                </div>
+                <div class="surface-panel raise-table-card analog-card">
+                  <h3>Closest historical analog years</h3>
+                  <div class="rank-list" id="raiseAnalogYears"></div>
+                </div>
+              </div>
             </div>
-            <aside class="surface-controls" aria-label="3D pay lab controls">
+            <aside class="surface-controls" aria-label="Raise lab controls">
               <div class="surface-panel control-panel">
-                <div class="field"><label for="surfaceMode">View</label><select id="surfaceMode"><option value="career" selected>Career earnings</option><option value="annual">Annual grade surface</option><option value="base">Base pay surface</option><option value="hourly">Hourly surface</option></select></div>
+                <div class="field"><label for="surfaceMode">View</label><select id="surfaceMode"><option value="career" selected>Raise intelligence</option><option value="annual">3D annual grade surface</option><option value="base">3D base pay surface</option><option value="hourly">3D hourly surface</option></select></div>
                 <div class="field"><label for="earnStart">From</label><select id="earnStart"></select></div>
                 <div class="field"><label for="earnEnd">To</label><select id="earnEnd"></select></div>
                 <div class="field"><label for="compareMode">Compare</label><select id="compareMode"><option value="grades" selected>Adjacent grades</option><option value="steps">Adjacent steps</option><option value="locality">Locality/base-only</option></select></div>
+                <div class="field"><label for="ratingProfile">Rating profile</label><select id="ratingProfile"><option value="successful" selected>Successful</option><option value="excellent">Excellent</option><option value="outstanding">Outstanding/QSI case</option></select></div>
                 <div class="field"><label for="surfaceYearSpan">Surface span</label><select id="surfaceYearSpan"><option value="10">10 years</option><option value="25" selected>25 years</option><option value="50">50 years</option></select></div>
               </div>
               <div class="surface-panel surface-readouts">
                 <div><span id="surfaceSelectedLabel">Career total</span><strong id="surfaceSelected">$0</strong></div>
                 <div><span id="surfaceSpreadLabel">Vs base-only</span><strong id="surfaceSpread">$0</strong></div>
-                <div><span>This-year raise</span><strong id="surfaceRaise">$0</strong></div>
-                <div><span>Compare spread</span><strong id="surfaceCompare">$0</strong></div>
+                <div><span>This-year raise</span><strong id="surfaceRaise">0%</strong></div>
+                <div><span id="surfaceCompareLabel">Rating overlay</span><strong id="surfaceCompare">$0</strong></div>
               </div>
+              <p class="rating-note" id="ratingOverlayNote"></p>
               <div class="surface-panel mini-chart-panel">
                 <h3>Locality lift</h3>
                 <canvas id="localityLiftCanvas" width="520" height="280" role="img" aria-label="Locality lift chart">Your browser does not support Canvas.</canvas>
@@ -187,7 +248,6 @@
           </div>
         </div>
       </section>
-
 
 
       <section class="section inflation-section" id="inflation">

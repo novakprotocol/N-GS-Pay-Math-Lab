@@ -1057,7 +1057,8 @@ thead th {
 
 .control-panel .field:first-child,
 .control-panel .field:nth-child(4),
-.control-panel .field:nth-child(5) {
+.control-panel .field:nth-child(5),
+.control-panel .field:nth-child(6) {
   grid-column: 1 / -1;
 }
 
@@ -1084,6 +1085,136 @@ thead th {
   margin-top: 3px;
   color: #ffffff;
   font-size: 1.2rem;
+}
+
+.raise-panel-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.raise-forecast-card,
+.raise-table-card {
+  background: color-mix(in srgb, var(--panel) 95%, var(--blue));
+  color: var(--ink);
+}
+
+.raise-table-card h3,
+.raise-forecast-card h3 {
+  margin: 0 0 10px;
+}
+
+.forecast-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.forecast-grid div {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 8px;
+  background: var(--panel-soft);
+}
+
+.forecast-grid span,
+.probability-row span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.forecast-grid strong {
+  display: block;
+  margin-top: 4px;
+  color: var(--ink);
+  font-size: 1rem;
+}
+
+.probability-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin: 10px 0;
+}
+
+.probability-row span {
+  border-left: 3px solid var(--teal);
+  padding: 7px 8px;
+  background: var(--panel-soft);
+  color: var(--ink);
+}
+
+.analog-card {
+  grid-column: 1 / -1;
+}
+
+.rating-note {
+  margin: 0;
+  border-left: 3px solid color-mix(in srgb, var(--orange) 80%, white);
+  padding: 10px 12px;
+  color: color-mix(in srgb, #ffffff 76%, var(--line));
+  background: color-mix(in srgb, var(--navy) 52%, transparent);
+}
+
+.county-map-section {
+  background: linear-gradient(180deg, var(--panel-soft), var(--bg));
+}
+
+.map-form {
+  margin-top: 16px;
+}
+
+.county-map-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 360px);
+  gap: 16px;
+  align-items: start;
+  margin-top: 16px;
+}
+
+.county-map-card canvas {
+  width: 100%;
+  height: clamp(310px, 36vw, 470px);
+  display: block;
+  border-radius: 8px;
+}
+
+.county-map-side {
+  display: grid;
+  gap: 12px;
+}
+
+.detail-line {
+  margin: 0;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.locality-chip {
+  display: inline-flex;
+  gap: 5px;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 6px 9px;
+  background: var(--panel-soft);
+  color: var(--ink);
+  font-size: 0.82rem;
+}
+
+.locality-chip.is-selected {
+  border-color: var(--red);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--red) 40%, transparent);
 }
 
 .mini-chart-panel canvas {
@@ -1222,7 +1353,8 @@ html[data-shell="module"] .layout {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
-  .surface-lab {
+  .surface-lab,
+  .county-map-grid {
     grid-template-columns: minmax(0, 1fr);
   }
 
@@ -1293,6 +1425,9 @@ html[data-shell="module"] .layout {
   .context-metrics,
   .context-grid,
   .locality-highlights,
+  .raise-panel-grid,
+  .forecast-grid,
+  .probability-row,
   .columns {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -1318,7 +1453,8 @@ html[data-shell="module"] .layout {
 
   .control-panel .field:first-child,
   .control-panel .field:nth-child(4),
-  .control-panel .field:nth-child(5) {
+  .control-panel .field:nth-child(5),
+  .control-panel .field:nth-child(6) {
     grid-column: auto;
   }
 
