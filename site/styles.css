@@ -264,6 +264,17 @@ main {
   margin: 0 auto;
 }
 
+.surface-section .section-inner,
+.inflation-section .section-inner,
+.context-section .section-inner,
+#ledger .section-inner,
+#formula-proof .section-inner,
+#math-vs-files .section-inner,
+#validation .section-inner,
+#sources .section-inner {
+  width: min(1380px, 100%);
+}
+
 .watermark {
   position: fixed;
   right: clamp(8px, 5vw, 72px);
