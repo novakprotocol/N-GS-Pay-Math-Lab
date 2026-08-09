@@ -122,7 +122,8 @@
     localityMapSummary: $("localityMapSummary"),
     localityAreaChips: $("localityAreaChips"),
     sourceList: $("sourceList"),
-    buildMeta: $("buildMeta")
+    buildMeta: $("buildMeta"),
+    repoSizeBadge: $("repoSizeBadge")
   };
 
   let lastRecord = null;
@@ -965,7 +966,14 @@
   function renderSizeLab() {
     if (!sizeReceipt || !Array.isArray(sizeReceipt.measurements)) {
       els.sizeStamp.textContent = "Size measurements will appear after the evidence script runs.";
+      if (els.repoSizeBadge) els.repoSizeBadge.textContent = "Repo size unavailable";
       return;
+    }
+    const repoSize = sizeReceipt.measurements.find((item) => item.id === "repository_worktree");
+    if (els.repoSizeBadge) {
+      const rawBytes = repoSize && Number.isFinite(repoSize.raw_bytes) ? repoSize.raw_bytes : null;
+      els.repoSizeBadge.textContent = rawBytes ? `Repo size ${formatBytes(rawBytes)}` : "Repo size unavailable";
+      if (rawBytes) els.repoSizeBadge.title = `Full repository working-tree bytes excluding .git: ${rawBytes.toLocaleString()} bytes`;
     }
     els.sizeStamp.textContent = `Measured ${sizeReceipt.generated_at} | formula artifact ${formatBytes(sizeReceipt.formula_artifact_bytes)}`;
     document.querySelectorAll("[data-size-total='core']").forEach((node) => {

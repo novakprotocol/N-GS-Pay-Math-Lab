@@ -145,6 +145,12 @@ button {
   font-size: 0.75rem;
 }
 
+.brand-title .repo-size {
+  color: color-mix(in srgb, #ffffff 88%, var(--orange));
+  font-size: 0.68rem;
+  line-height: 1.15;
+}
+
 .top-actions {
   display: flex;
   align-items: center;
