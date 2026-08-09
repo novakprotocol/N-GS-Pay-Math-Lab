@@ -13,6 +13,10 @@ ALLOWLIST_EXTENSIONS = {".html", ".css", ".js", ".json", ".png", ".webp", ".svg"
 BUILD_ID = "n-gs-pay-math-lab-v0.01"
 
 
+def asset_version() -> str:
+    return f"{BUILD_ID}-{get_commit_sha(ROOT)[:12]}"
+
+
 def require_relative(path_text: str) -> Path:
     path = Path(path_text)
     if path.is_absolute() or ".." in path.parts:
@@ -112,6 +116,7 @@ def render_template(prefix: str, shell_mode: str, brand: dict[str, Any]) -> str:
         "{{BRAND_ALT}}": brand["emblem_alt"],
         "{{BUILD_ID}}": BUILD_ID,
         "{{COMMIT_SHA}}": get_commit_sha(ROOT),
+        "{{ASSET_VERSION}}": asset_version(),
     }
     for needle, value in replacements.items():
         template = template.replace(needle, str(value))
@@ -139,16 +144,17 @@ def build_offline(site: Path, brand: dict[str, Any]) -> None:
     n256 = b64_data_uri(site / "assets" / "brand" / "n-mark-256.png")
     n512 = b64_data_uri(site / "assets" / "brand" / "n-mark-512.png")
     html = html.replace('<link rel="icon" href="assets/brand/favicon.png">', "")
-    html = html.replace('<link rel="stylesheet" href="styles.css">', f"<style>\n{css}\n</style>")
+    version = asset_version()
+    html = html.replace(f'<link rel="stylesheet" href="styles.css?v={version}">', f"<style>\n{css}\n</style>")
     html = html.replace('src="assets/brand/n-mark-256.png"', f'src="{n256}"')
     html = html.replace('src="assets/brand/n-mark-512.png"', f'src="{n512}"')
     script_block = "\n".join([data_js, size_js, loader_js, formulas_js, app_js])
     for tag in (
-        '<script src="data/pay-data.js"></script>',
-        '<script src="evidence/size-comparison.js"></script>',
-        '<script src="data-loader.js"></script>',
-        '<script src="formulas.js"></script>',
-        '<script src="app.js"></script>',
+        f'<script src="data/pay-data.js?v={version}"></script>',
+        f'<script src="evidence/size-comparison.js?v={version}"></script>',
+        f'<script src="data-loader.js?v={version}"></script>',
+        f'<script src="formulas.js?v={version}"></script>',
+        f'<script src="app.js?v={version}"></script>',
     ):
         html = html.replace(tag, "")
     html = html.replace("</body>", f"<script>\n{script_block}\n</script>\n</body>")
