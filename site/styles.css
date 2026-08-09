@@ -573,6 +573,40 @@ main {
   box-shadow: none;
 }
 
+.source-strip {
+  display: grid;
+  gap: 10px;
+  margin: 14px 0 18px;
+}
+
+.source-strip-three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.source-strip-four {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.source-strip span {
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--panel) 86%, var(--teal));
+  color: var(--muted);
+  padding: 10px 12px;
+  font-size: 0.84rem;
+  font-weight: 750;
+  line-height: 1.35;
+}
+
+.source-strip b {
+  display: block;
+  color: var(--ink);
+  font-size: 0.78rem;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
 .state-pressure-section {
   background:
     linear-gradient(180deg, color-mix(in srgb, var(--panel-soft) 92%, var(--teal)), color-mix(in srgb, var(--panel) 90%, var(--blue))),
@@ -646,6 +680,48 @@ main {
   display: block;
   width: 100%;
   height: 390px;
+}
+
+.state-map-grid {
+  grid-template-columns: minmax(560px, 1.35fr) minmax(320px, 0.65fr);
+}
+
+.state-pressure-chart-card.state-map-card canvas {
+  height: 460px;
+}
+
+.state-summary-card .state-stat-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.state-top-dropdown,
+.va-contract-dropdown {
+  margin-top: 14px;
+}
+
+.va-contract-block {
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+}
+
+.va-contract-form {
+  margin-bottom: 14px;
+}
+
+.va-contract-grid {
+  display: grid;
+  grid-template-columns: minmax(320px, 0.85fr) minmax(420px, 1.15fr);
+  gap: 14px;
+  align-items: start;
+}
+
+.va-contract-table-wrap {
+  margin-top: 14px;
+}
+
+.va-contract-table-wrap table th {
+  min-width: 260px;
 }
 
 .state-pressure-table-wrap,

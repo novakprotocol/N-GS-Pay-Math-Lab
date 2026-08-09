@@ -188,6 +188,12 @@
       "title": "VA Facilities Aggregated and Order FY2024",
       "url": "https://www.data.va.gov/dataset/VA-Facilities-Aggregated-and-Order-FY2024/unhx-5tdv",
       "note": "Used for VA facility/site counts by state and facility type."
+    },
+    {
+      "id": "usaspending-va-contracts-fy2024-geography",
+      "title": "USAspending.gov FY2024 VA contract obligations by county geography",
+      "url": "https://api.usaspending.gov/docs/endpoints",
+      "note": "Used for Department of Veterans Affairs FY2024 contract-type award obligations by county place of performance from the search/spending_by_geography endpoint. The site uses a locally bundled snapshot and does not call the API live in the browser."
     }
   ]
 }

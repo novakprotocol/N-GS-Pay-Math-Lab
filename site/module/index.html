@@ -7,7 +7,7 @@
   <meta name="description" content="N-GS Pay Math Lab reconstructs and verifies General Schedule base-pay math from 1977 through 2026.">
   <title>N-GS Pay Math Lab</title>
   <link rel="icon" href="../assets/brand/favicon.png">
-  <link rel="stylesheet" href="../styles.css?v=n-gs-pay-math-lab-v0.01-158a5860f6b9">
+  <link rel="stylesheet" href="../styles.css?v=n-gs-pay-math-lab-v0.01-9d86ddc25e85">
 </head>
 <body>
   <header class="topbar">
@@ -35,8 +35,8 @@
       <nav class="nav-list" aria-label="Mobile">
         <a href="#calculator">Pay Table</a>
         <a href="#locality-highlights">Locality Picks</a>
-        <a href="#cost-pressure">Cost Pressure</a>
         <a href="#locality-map">County Map</a>
+        <a href="#cost-pressure">Cost Pressure</a>
         <a href="#remote-duty">VA Remote Posts</a>
         <a href="#state-pressure">State Audit</a>
         <a href="#pay-surface">Raise Lab</a>
@@ -57,8 +57,8 @@
       <nav class="nav-list">
         <a href="#calculator">Pay Table</a>
         <a href="#locality-highlights">Locality Picks</a>
-        <a href="#cost-pressure">Cost Pressure</a>
         <a href="#locality-map">County Map</a>
+        <a href="#cost-pressure">Cost Pressure</a>
         <a href="#remote-duty">VA Remote Posts</a>
         <a href="#state-pressure">State Audit</a>
         <a href="#pay-surface">Raise Lab</a>
@@ -150,6 +150,49 @@
 
 
 
+      <section class="section county-map-section" id="locality-map">
+        <div class="section-inner">
+          <p class="kicker">County Map</p>
+          <h2>OPM locality lookup by county</h2>
+          <p class="section-lede">OPM locality definitions are joined to Census generalized county boundary polygons for a compact county-level map and lookup. Official OPM locality definitions still control.</p>
+          <div class="source-strip source-strip-three county-source-strip" aria-label="County map data sources">
+            <span><b>OPM locality definitions</b> 2026</span>
+            <span><b>Census county geometry</b> 2025 cartographic boundaries</span>
+            <span><b>Written locally</b> static JSON/JS bundle; no live browser lookup</span>
+          </div>
+          <div class="form-grid map-form">
+            <div class="field"><label for="localityMapState">State</label><select id="localityMapState"></select></div>
+            <div class="field wide-field"><label for="localityMapCounty">County</label><select id="localityMapCounty"></select></div>
+            <div class="field wide-field"><label for="localityMapFocus">Highlight</label><select id="localityMapFocus"><option value="selected" selected>Selected pay-table locality</option><option value="highest">Highest locality areas</option><option value="not-rus">Non-RUS counties</option><option value="all">All county points</option></select></div>
+          </div>
+          <div class="county-map-grid">
+            <div class="chart-card county-map-card">
+              <div class="chart-head">
+                <h3 id="localityMapTitle">County locality boundary map</h3>
+                <div class="chart-metric"><strong id="localityMapMetric">0 counties</strong><span id="localityMapMeta"></span></div>
+              </div>
+              <canvas id="localityMapCanvas" width="1100" height="470" role="img" aria-describedby="localityMapDescription">Your browser does not support Canvas.</canvas>
+              <p id="localityMapDescription" class="fine-print">Census cartographic county boundaries are generalized for display; this is not a legal duty-station determination.</p>
+            </div>
+            <aside class="county-map-side" aria-label="County locality details">
+              <div class="highlight-card">
+                <h3>Selected county</h3>
+                <p class="detail-line" id="localityCountyDetail">Choose a state or county.</p>
+              </div>
+              <div class="highlight-card">
+                <h3>Map summary</h3>
+                <p class="detail-line" id="localityMapSummary">County data will render after the app loads.</p>
+              </div>
+              <div class="highlight-card">
+                <h3>Visible locality mix</h3>
+                <div class="chip-list" id="localityAreaChips"></div>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+
       <section class="section cost-pressure-section" id="cost-pressure">
         <div class="section-inner">
           <p class="kicker">Federal Cost Pressure</p>
@@ -237,44 +280,6 @@
 
         </div>
       </section>
-      <section class="section county-map-section" id="locality-map">
-        <div class="section-inner">
-          <p class="kicker">County Map</p>
-          <h2>OPM locality lookup by county</h2>
-          <p class="section-lede">OPM locality definitions are joined to Census generalized county boundary polygons for a compact county-level map and lookup. Official OPM locality definitions still control.</p>
-          <div class="form-grid map-form">
-            <div class="field"><label for="localityMapState">State</label><select id="localityMapState"></select></div>
-            <div class="field wide-field"><label for="localityMapCounty">County</label><select id="localityMapCounty"></select></div>
-            <div class="field wide-field"><label for="localityMapFocus">Highlight</label><select id="localityMapFocus"><option value="selected" selected>Selected pay-table locality</option><option value="highest">Highest locality areas</option><option value="not-rus">Non-RUS counties</option><option value="all">All county points</option></select></div>
-          </div>
-          <div class="county-map-grid">
-            <div class="chart-card county-map-card">
-              <div class="chart-head">
-                <h3 id="localityMapTitle">County locality boundary map</h3>
-                <div class="chart-metric"><strong id="localityMapMetric">0 counties</strong><span id="localityMapMeta"></span></div>
-              </div>
-              <canvas id="localityMapCanvas" width="1100" height="470" role="img" aria-describedby="localityMapDescription">Your browser does not support Canvas.</canvas>
-              <p id="localityMapDescription" class="fine-print">Census cartographic county boundaries are generalized for display; this is not a legal duty-station determination.</p>
-            </div>
-            <aside class="county-map-side" aria-label="County locality details">
-              <div class="highlight-card">
-                <h3>Selected county</h3>
-                <p class="detail-line" id="localityCountyDetail">Choose a state or county.</p>
-              </div>
-              <div class="highlight-card">
-                <h3>Map summary</h3>
-                <p class="detail-line" id="localityMapSummary">County data will render after the app loads.</p>
-              </div>
-              <div class="highlight-card">
-                <h3>Visible locality mix</h3>
-                <div class="chip-list" id="localityAreaChips"></div>
-              </div>
-            </aside>
-          </div>
-        </div>
-      </section>
-
-
       <section class="section remote-duty-section" id="remote-duty">
         <div class="section-inner">
           <p class="kicker">VA Remote Posts</p>
@@ -320,40 +325,102 @@
             <div class="chart-head">
               <div>
                 <p class="kicker table-kicker">State Audit</p>
-                <h3>Payroll stacking, agency spread, VA medical spend, and density by state</h3>
+                <h3>Payroll map, agency mix, VA dollars, facilities, and contract geography</h3>
               </div>
-              <div class="chart-metric"><strong id="statePressureMetric">0 states</strong><span>OPM + Census + VA</span></div>
+              <div class="chart-metric"><strong id="statePressureMetric">0 states</strong><span>OPM + Census + VA + USAspending</span></div>
             </div>
-            <p class="section-lede">State records combine OPM visible payroll and employment, Census land area and resident population, VA projected Veteran population, VA FY2024 facility counts, Census income-tax collection flags, and VA FY2024 GDX expenditure geography. Flags are screening indicators for review, not accusations.</p>
+            <p class="section-lede">Use the U.S. map first, then open the dropdowns for ranked lists. State records combine OPM visible payroll and employment, Census population and land area, VA projected Veteran population, VA FY2024 facility counts, VA FY2024 GDX expenditure geography, and USAspending FY2024 VA contract obligations by county place of performance. Flags are screening indicators for review, not accusations.</p>
+            <div class="source-strip source-strip-four state-source-strip" aria-label="State audit data dates and local source notes">
+              <span><b>OPM FWD</b> 2026-06, published 2026-08-03</span>
+              <span><b>Census</b> 2025 population, land, county geometry</span>
+              <span><b>VA</b> FY2024 GDX/facilities, VetPop FY2026</span>
+              <span><b>Local build</b> bundled static JSON; no live browser calls</span>
+            </div>
             <div class="form-grid state-pressure-form">
-              <div class="field wide-field"><label for="statePressureSort">Rank states by</label><select id="statePressureSort"><option value="outlier-score" selected>Multi-denominator pressure</option><option value="payroll">Total visible payroll</option><option value="payroll-per-resident">Visible payroll per resident</option><option value="payroll-vs-pop">Payroll share vs population share</option><option value="employees">Federal public records</option><option value="employees-per-100k">Federal records per 100k residents</option><option value="payroll-density">Visible payroll per sq. mile</option><option value="employee-density">Employees per sq. mile</option><option value="agencies">Agency count</option><option value="components">Component count</option><option value="high-share">GS-13+ plus SES percentage</option><option value="ses-share">SES percentage</option><option value="va-medical">VA FY24 medical care</option><option value="va-medical-per-veteran">VA medical care per Veteran</option><option value="va-total-per-veteran">VA total expenditure per Veteran</option><option value="va-medical-vs-vets">VA medical share vs Veteran share</option><option value="va-facilities">VA facility/site count</option><option value="facilities-per-veteran">VA facilities per 100k Veterans</option><option value="veterans-per-facility">Veterans per VA facility/site</option><option value="medical-per-facility">VA medical care per facility/site</option><option value="va-medical-density">VA medical care per sq. mile</option><option value="flag-count">Audit flag count</option></select></div>
-              <div class="field wide-field"><label for="statePressureFocus">Focus</label><select id="statePressureFocus"><option value="all" selected>All states</option><option value="watch">Watch/audit flags only</option><option value="no-tax">No Census T40 income-tax collection</option><option value="va-medical">Top VA medical-care states</option><option value="va-vet-gap">VA dollars exceed Veteran share</option><option value="pop-gap">Federal payroll exceeds population share</option><option value="facility-pressure">Facility footprint/coverage pressure</option><option value="dense-high-grade">Dense high-grade overlap</option></select></div>
+              <div class="field wide-field"><label for="statePressureSort">Map / rank metric</label><select id="statePressureSort"><option value="outlier-score" selected>Multi-denominator pressure</option><option value="payroll">Total visible payroll</option><option value="payroll-share">Percent of visible payroll dollars</option><option value="payroll-per-resident">Visible payroll per resident</option><option value="payroll-vs-pop">Payroll share vs population share</option><option value="employees">Federal public records</option><option value="employees-per-100k">Federal records per 100k residents</option><option value="payroll-density">Visible payroll per sq. mile</option><option value="employee-density">Employees per sq. mile</option><option value="agencies">Agency count</option><option value="components">Component count</option><option value="high-share">GS-13+ plus SES percentage</option><option value="ses-share">SES percentage</option><option value="va-medical">VA FY24 medical care</option><option value="va-medical-per-veteran">VA medical care per Veteran</option><option value="va-total-per-veteran">VA total expenditure per Veteran</option><option value="va-medical-vs-vets">VA medical share vs Veteran share</option><option value="va-facilities">VA facility/site count</option><option value="facilities-per-veteran">VA facilities per 100k Veterans</option><option value="veterans-per-facility">Veterans per VA facility/site</option><option value="medical-per-facility">VA medical care per facility/site</option><option value="va-medical-density">VA medical care per sq. mile</option><option value="flag-count">Review flag count</option></select></div>
+              <div class="field wide-field"><label for="statePressureAgency">Agency view</label><select id="statePressureAgency"><option value="all" selected>All agencies</option></select></div>
+              <div class="field wide-field"><label for="statePressureGrade">Pay / grade bucket</label><select id="statePressureGrade"><option value="all" selected>All public pay records</option><option value="high-payroll">GS-13+ plus SES visible payroll</option><option value="high-count">GS-13+ plus SES records</option><option value="gs13-count">GS-13 to GS-15 records</option><option value="ses-count">SES records</option></select></div>
+              <div class="field wide-field"><label for="statePressureFocus">Focus</label><select id="statePressureFocus"><option value="all" selected>All states</option><option value="watch">Watch/review flags only</option><option value="no-tax">No Census T40 income-tax collection</option><option value="va-medical">Top VA medical-care states</option><option value="va-vet-gap">VA dollars exceed Veteran share</option><option value="pop-gap">Federal payroll exceeds population share</option><option value="facility-pressure">Facility footprint/coverage pressure</option><option value="dense-high-grade">Dense high-grade overlap</option></select></div>
             </div>
-            <div class="state-pressure-grid">
-              <div class="highlight-card pressure-readout-card">
+            <div class="state-pressure-grid state-map-grid">
+              <div class="chart-card state-pressure-chart-card state-map-card">
+                <div class="chart-head">
+                  <h3 id="statePressureChartTitle">State payroll map</h3>
+                  <div class="chart-metric"><strong id="statePressureChartMetric">0 records</strong><span>visible OPM public records</span></div>
+                </div>
+                <canvas id="statePressureCanvas" width="1100" height="520" role="img" aria-describedby="statePressureDescription">Your browser does not support Canvas.</canvas>
+                <p id="statePressureDescription" class="fine-print">U.S. counties are shaded by the selected state metric. Labels show the top states for the selected view.</p>
+              </div>
+              <div class="highlight-card pressure-readout-card state-summary-card">
                 <div class="chart-head">
                   <h3 id="statePressureTopName">Top state</h3>
                   <div class="chart-metric"><strong id="statePressureTopValue">$0</strong><span id="statePressureTopMeta">selected ranking</span></div>
                 </div>
                 <p class="detail-line" id="statePressureSummary">State audit data will render after the app loads.</p>
+                <div class="pressure-stat-grid state-stat-grid">
+                  <div class="mini-metric"><span>Payroll share</span><strong id="statePressurePayrollShare">0%</strong></div>
+                  <div class="mini-metric"><span>Top OPM agency</span><strong id="statePressureTopAgency">N/A</strong></div>
+                  <div class="mini-metric"><span>VA facility pressure</span><strong id="statePressureVaFacility">N/A</strong></div>
+                  <div class="mini-metric"><span>VA contract county</span><strong id="statePressureContractCounty">N/A</strong></div>
+                </div>
                 <div class="rank-list" id="statePressureFlags"></div>
               </div>
-              <div class="chart-card state-pressure-chart-card">
-                <div class="chart-head">
-                  <h3 id="statePressureChartTitle">State pressure</h3>
-                  <div class="chart-metric"><strong id="statePressureChartMetric">0 records</strong><span>visible OPM public records</span></div>
-                </div>
-                <canvas id="statePressureCanvas" width="980" height="430" role="img" aria-describedby="statePressureDescription">Your browser does not support Canvas.</canvas>
-                <p id="statePressureDescription" class="fine-print">Bar length follows the selected ranking. Thin markers show high GS+SES share and VA medical-care density context.</p>
-              </div>
             </div>
+            <details class="data-dropdown state-top-dropdown">
+              <summary><span>Open top state list</span><span id="statePressureTopListMeta">Selected map ranking</span></summary>
+              <div class="dropdown-body">
+                <div class="rank-list" id="statePressureTopList"></div>
+              </div>
+            </details>
             <details class="data-dropdown">
               <summary><span>Open state audit records</span><span>All states, denominators, flags</span></summary>
               <div class="table-wrap state-pressure-table-wrap">
                 <table id="statePressureTable"></table>
               </div>
             </details>
-            <p class="fine-print" id="statePressureNote">OPM redacted pay records are excluded from dollar totals. Audit flags are outlier/context markers, not legal findings.</p>
+            <p class="fine-print" id="statePressureNote">OPM redacted pay records are excluded from dollar totals. Review flags are outlier/context markers, not legal findings.</p>
+            <div class="va-contract-block" id="va-contracts">
+              <div class="chart-head">
+                <div>
+                  <p class="kicker table-kicker">VA Contract Geography</p>
+                  <h3>Where FY2024 VA contract obligations show up by county</h3>
+                </div>
+                <div class="chart-metric"><strong id="vaContractMetric">0 counties</strong><span>USAspending FY2024</span></div>
+              </div>
+              <p class="section-lede">USAspending county totals are place-of-performance contract obligations for the Department of Veterans Affairs. They are not recipient headquarters, not a facility budget, and not proof that one hospital received the full county total.</p>
+              <div class="source-strip source-strip-three va-contract-source-strip" aria-label="VA contract data source">
+                <span><b>USAspending.gov</b> FY2024, 2023-10-01 to 2024-09-30</span>
+                <span><b>Scope</b> county place of performance, contract-type awards</span>
+                <span><b>Written locally</b> bundled from API snapshot</span>
+              </div>
+              <div class="form-grid va-contract-form">
+                <div class="field wide-field"><label for="vaContractSort">Rank counties by</label><select id="vaContractSort"><option value="obligations" selected>Contract obligations</option><option value="share">Share of VA contract dollars</option><option value="per-capita">Contract obligations per resident</option></select></div>
+                <div class="field wide-field"><label for="vaContractFocus">County view</label><select id="vaContractFocus"><option value="top" selected>Top counties</option><option value="comparison">Beckley/Raleigh vs Madison/Dane</option><option value="positive">Positive obligations only</option></select></div>
+              </div>
+              <div class="state-pressure-grid va-contract-grid">
+                <div class="highlight-card pressure-readout-card">
+                  <div class="chart-head">
+                    <h3 id="vaContractTopName">Top contract county</h3>
+                    <div class="chart-metric"><strong id="vaContractTopValue">$0</strong><span>obligated amount</span></div>
+                  </div>
+                  <p class="detail-line" id="vaContractSummary">VA contract geography data will render after the app loads.</p>
+                  <div class="rank-list" id="vaContractComparison"></div>
+                </div>
+                <details class="data-dropdown va-contract-dropdown">
+                  <summary><span>Open VA contract county list</span><span>FY2024 USAspending counties</span></summary>
+                  <div class="dropdown-body">
+                    <div class="rank-list" id="vaContractTopList"></div>
+                  </div>
+                </details>
+              </div>
+              <details class="data-dropdown">
+                <summary><span>Open VA contract county table</span><span>USAspending geography rows</span></summary>
+                <div class="table-wrap va-contract-table-wrap">
+                  <table id="vaContractTable"></table>
+                </div>
+              </details>
+              <p class="fine-print" id="vaContractNote">USAspending totals can include deobligations and other transaction adjustments in the selected fiscal year.</p>
+            </div>
             <div class="va-facility-block" id="va-facility-utilization">
               <div class="chart-head">
                 <div>
@@ -606,17 +673,17 @@
           <h2>Source notes and limitations</h2>
           <p class="section-lede">Official and reconstructed values are visibly distinguished. Reconstructed values are never described as official published tables.</p>
           <ol class="source-list" id="sourceList"></ol>
-          <p class="fine-print" id="buildMeta">Build n-gs-pay-math-lab-v0.01 | commit 158a5860f6b9cfecfd62cd8b3029bea26e504e01</p>
+          <p class="fine-print" id="buildMeta">Build n-gs-pay-math-lab-v0.01 | commit 9d86ddc25e85268690f181269c0fcfcedc1bba39</p>
         </div>
       </section>
 
     </main>
   </div>
 
-  <script src="../data/pay-data.js?v=n-gs-pay-math-lab-v0.01-158a5860f6b9"></script>
-  <script src="../evidence/size-comparison.js?v=n-gs-pay-math-lab-v0.01-158a5860f6b9"></script>
-  <script src="../data-loader.js?v=n-gs-pay-math-lab-v0.01-158a5860f6b9"></script>
-  <script src="../formulas.js?v=n-gs-pay-math-lab-v0.01-158a5860f6b9"></script>
-  <script src="../app.js?v=n-gs-pay-math-lab-v0.01-158a5860f6b9"></script>
+  <script src="../data/pay-data.js?v=n-gs-pay-math-lab-v0.01-9d86ddc25e85"></script>
+  <script src="../evidence/size-comparison.js?v=n-gs-pay-math-lab-v0.01-9d86ddc25e85"></script>
+  <script src="../data-loader.js?v=n-gs-pay-math-lab-v0.01-9d86ddc25e85"></script>
+  <script src="../formulas.js?v=n-gs-pay-math-lab-v0.01-9d86ddc25e85"></script>
+  <script src="../app.js?v=n-gs-pay-math-lab-v0.01-9d86ddc25e85"></script>
 </body>
 </html>
