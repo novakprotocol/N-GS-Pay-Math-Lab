@@ -58,10 +58,14 @@
     costPressureSavingsSummary: $("costPressureSavingsSummary"),
     agencyPressureLevel: $("agencyPressureLevel"),
     agencyPressureSort: $("agencyPressureSort"),
+    agencyPressureFocus: $("agencyPressureFocus"),
     agencyPressureMetric: $("agencyPressureMetric"),
     agencyPressureTopName: $("agencyPressureTopName"),
     agencyPressureTopValue: $("agencyPressureTopValue"),
     agencyPressureTopMeta: $("agencyPressureTopMeta"),
+    agencyPressureFocusName: $("agencyPressureFocusName"),
+    agencyPressureFocusValue: $("agencyPressureFocusValue"),
+    agencyPressureFocusMeta: $("agencyPressureFocusMeta"),
     agencyPressureSummary: $("agencyPressureSummary"),
     agencyPressureExamples: $("agencyPressureExamples"),
     agencyPressureChartTitle: $("agencyPressureChartTitle"),
@@ -865,36 +869,90 @@
     return agencyPressureGroups(level).find((row) => agencyPressureCode(row, level) === code) || null;
   }
 
-  function agencyPressureIsWatch(row, level) {
-    const code = agencyPressureCode(row, level);
-    return (level === "agency" && (code === "VA" || code === "DL")) || (level === "component" && (code === "DJ02" || code === "VATA" || code === "DLLS"));
+  function agencyPressureFocusDefault(level) {
+    const groups = agencyPressureGroups(level);
+    if (level === "agency") {
+      const va = agencyPressureFind("VA", "agency");
+      if (va) return "VA";
+    }
+    if (level === "component") {
+      const vaComponent = groups
+        .filter((row) => row.agency_code === "VA")
+        .slice()
+        .sort((a, b) => Number(b.total_visible_adjusted_basic_pay) - Number(a.total_visible_adjusted_basic_pay))[0];
+      if (vaComponent) return agencyPressureCode(vaComponent, level);
+    }
+    const leader = agencyPressureRows(level, "payroll")[0] || groups[0];
+    return leader ? agencyPressureCode(leader, level) : "";
   }
 
-  function agencyPressureWatchRows() {
-    return [
-      { label: "VA", level: "agency", row: agencyPressureFind("VA", "agency") },
-      { label: "FBI", level: "component", row: agencyPressureFind("DJ02", "component") },
-      { label: "DOL", level: "agency", row: agencyPressureFind("DL", "agency") }
-    ].filter((item) => item.row);
+  function fillAgencyPressureFocusOptions(level) {
+    if (!els.agencyPressureFocus) return;
+    const groups = agencyPressureGroups(level)
+      .slice()
+      .sort((a, b) => agencyPressurePlainName(a, level).localeCompare(agencyPressurePlainName(b, level)) || agencyPressureCode(a, level).localeCompare(agencyPressureCode(b, level)));
+    const current = els.agencyPressureFocus.value;
+    const currentExists = current && groups.some((row) => agencyPressureCode(row, level) === current);
+    els.agencyPressureFocus.innerHTML = "";
+    groups.forEach((row) => els.agencyPressureFocus.appendChild(option(agencyPressureName(row, level), agencyPressureCode(row, level))));
+    const fallback = currentExists ? current : agencyPressureFocusDefault(level);
+    if (fallback) els.agencyPressureFocus.value = fallback;
   }
 
-  function agencyPressureExampleRow(item) {
+  function selectedAgencyPressureRow(level) {
+    const code = els.agencyPressureFocus ? els.agencyPressureFocus.value : agencyPressureFocusDefault(level);
+    return agencyPressureFind(code, level) || agencyPressureFind(agencyPressureFocusDefault(level), level);
+  }
+
+  function agencyPressureChartRows(rows, level, selectedCode) {
+    const top = rows.slice(0, 12);
+    if (!selectedCode || top.some((row) => agencyPressureCode(row, level) === selectedCode)) return top;
+    const selected = rows.find((row) => agencyPressureCode(row, level) === selectedCode) || agencyPressureFind(selectedCode, level);
+    if (!selected) return top;
+    return top.length >= 12 ? top.slice(0, 11).concat(selected) : top.concat(selected);
+  }
+
+  function agencyPressureComparisonRow(item, rows, level, sort, selectedCode) {
     const row = item.row;
-    return `<div class="rank-row is-watch"><span class="rank-index">${math.escapeHtml(item.label)}</span><span class="rank-main"><span class="rank-title">${math.escapeHtml(agencyPressureName(row, item.level))}</span><span class="rank-meta">${math.escapeHtml(agencyPressureParent(row, item.level))} | ${Number(row.employee_count).toLocaleString()} records | high GS+SES ${sharePercent(row.high_grade_ses_share)} | SES ${Number(row.ses_count).toLocaleString()}</span></span><span class="rank-value">${compactMoney(row.total_visible_adjusted_basic_pay)}</span></div>`;
+    if (!row) return "";
+    const code = agencyPressureCode(row, level);
+    const rank = rows.findIndex((candidate) => agencyPressureCode(candidate, level) === code);
+    const rankText = rank >= 0 ? `rank #${rank + 1} by ${costPressureSortLabel(sort)}` : "outside current rank filter";
+    const selectedClass = selectedCode && code === selectedCode ? " is-selected" : "";
+    return `<div class="rank-row${selectedClass}"><span class="rank-index">${math.escapeHtml(item.label)}</span><span class="rank-main"><span class="rank-title">${math.escapeHtml(agencyPressureName(row, level))}</span><span class="rank-meta">${math.escapeHtml(rankText)} | ${Number(row.employee_count).toLocaleString()} visible records | high GS+SES ${sharePercent(row.high_grade_ses_share)} | SES ${Number(row.ses_count).toLocaleString()}</span></span><span class="rank-value">${agencyPressureMetricText(row, sort)}</span></div>`;
   }
 
-  function agencyPressureTableRow(row, index, level) {
-    const watch = agencyPressureIsWatch(row, level);
-    return `<tr class="${watch ? "is-watch" : ""}"><th scope="row">#${index + 1} ${math.escapeHtml(agencyPressureName(row, level))}<span>${math.escapeHtml(agencyPressureParent(row, level))} | pay visible ${sharePercent(row.pay_visible_share)} | redacted pay records ${Number(row.pay_redacted_count).toLocaleString()}</span></th><td>${compactMoney(row.total_visible_adjusted_basic_pay)}</td><td>${Number(row.employee_count).toLocaleString()}</td><td>${compactMoney(row.average_visible_adjusted_basic_pay)}</td><td>${Number(row.gs13_15_count).toLocaleString()} | ${sharePercent(row.gs13_15_share)}</td><td>${Number(row.ses_count).toLocaleString()} | ${sharePercent(row.ses_share, 2)}</td><td>${sharePercent(row.high_grade_ses_share)}</td><td>${compactMoney(row.high_grade_ses_visible_payroll)}</td></tr>`;
+  function renderAgencyPressureComparison(rows, level, sort, selectedRow, payrollLeader, highLeader) {
+    if (!els.agencyPressureExamples) return;
+    const selectedCode = selectedRow ? agencyPressureCode(selectedRow, level) : "";
+    const items = [];
+    const seen = new Set();
+    const addItem = (label, row) => {
+      if (!row) return;
+      const code = agencyPressureCode(row, level);
+      if (seen.has(code)) return;
+      seen.add(code);
+      items.push({ label, row });
+    };
+    addItem("Selected", selectedRow);
+    addItem("Rank #1", rows[0]);
+    addItem("Payroll", payrollLeader);
+    addItem("High GS", highLeader);
+    els.agencyPressureExamples.innerHTML = items.map((item) => agencyPressureComparisonRow(item, rows, level, sort, selectedCode)).join("");
   }
 
-  function renderAgencyPressureChart(rows, level, sort) {
+  function agencyPressureTableRow(row, index, level, selectedCode) {
+    const selected = selectedCode && agencyPressureCode(row, level) === selectedCode;
+    return `<tr class="${selected ? "is-selected" : ""}"><th scope="row">#${index + 1} ${math.escapeHtml(agencyPressureName(row, level))}<span>${math.escapeHtml(agencyPressureParent(row, level))} | pay visible ${sharePercent(row.pay_visible_share)} | redacted pay records ${Number(row.pay_redacted_count).toLocaleString()}</span></th><td>${compactMoney(row.total_visible_adjusted_basic_pay)}</td><td>${Number(row.employee_count).toLocaleString()}</td><td>${compactMoney(row.average_visible_adjusted_basic_pay)}</td><td>${Number(row.gs13_15_count).toLocaleString()} | ${sharePercent(row.gs13_15_share)}</td><td>${Number(row.ses_count).toLocaleString()} | ${sharePercent(row.ses_share, 2)}</td><td>${sharePercent(row.high_grade_ses_share)}</td><td>${compactMoney(row.high_grade_ses_visible_payroll)}</td></tr>`;
+  }
+
+  function renderAgencyPressureChart(rows, level, sort, selectedCode) {
     const canvas = els.agencyPressureCanvas;
     if (!canvas) return;
     const colors = themeColors(canvas);
     const { ctx, width, height } = canvasMetrics(canvas, 480);
     clearCanvas(ctx, width, height, colors);
-    const top = rows.slice(0, 12);
+    const top = agencyPressureChartRows(rows, level, selectedCode);
     if (!top.length) return;
     const left = Math.min(level === "component" ? 230 : 260, Math.max(128, width * 0.31));
     const right = 30;
@@ -913,10 +971,10 @@
     ctx.textBaseline = "middle";
     top.forEach((row, index) => {
       const y = topPad + index * rowH + rowH / 2;
-      const watch = agencyPressureIsWatch(row, level);
+      const selected = selectedCode && agencyPressureCode(row, level) === selectedCode;
       const barW = Math.max(3, (agencyPressureMetricValue(row, sort) / maxValue) * chartW);
-      ctx.fillStyle = watch ? colors.orange : (index < 3 ? colors.teal : colors.blue);
-      ctx.globalAlpha = watch ? 0.94 : 0.72;
+      ctx.fillStyle = selected ? colors.orange : (index < 3 ? colors.teal : colors.blue);
+      ctx.globalAlpha = selected ? 0.94 : 0.72;
       ctx.beginPath();
       ctx.roundRect(left, y - rowH * 0.27, barW, rowH * 0.36, 5);
       ctx.fill();
@@ -958,7 +1016,10 @@
       if (els.agencyPressureCodeKey) els.agencyPressureCodeKey.innerHTML = "";
       return;
     }
+    fillAgencyPressureFocusOptions(level);
     const rows = agencyPressureRows(level, sort);
+    const selectedRow = selectedAgencyPressureRow(level);
+    const selectedCode = selectedRow ? agencyPressureCode(selectedRow, level) : "";
     const payrollLeader = agencyPressureRows(level, "payroll")[0];
     const highLeader = agencyPressureRows(level, "high-share")[0];
     const highPayrollLeader = agencyPressureRows(level, "high-payroll")[0];
@@ -969,17 +1030,21 @@
     setText(els.agencyPressureTopName, top ? agencyPressureName(top, level) : "No agency records");
     setText(els.agencyPressureTopValue, top ? agencyPressureMetricText(top, sort) : "N/A");
     setText(els.agencyPressureTopMeta, costPressureSortLabel(sort));
+    const selectedRank = selectedCode ? rows.findIndex((row) => agencyPressureCode(row, level) === selectedCode) : -1;
+    setText(els.agencyPressureFocusName, selectedRow ? agencyPressureName(selectedRow, level) : "Choose a row");
+    setText(els.agencyPressureFocusValue, selectedRow ? agencyPressureMetricText(selectedRow, sort) : "N/A");
+    setText(els.agencyPressureFocusMeta, selectedRow ? `${selectedRank >= 0 ? `rank #${selectedRank + 1}` : "outside current rank filter"} | ${Number(selectedRow.employee_count).toLocaleString()} visible records` : "highlighted where it appears");
     setText(els.agencyPressureChartTitle, `${level === "component" ? "Component" : "Agency"} pressure ranked by ${costPressureSortLabel(sort)}`);
     setText(els.agencyPressureChartMetric, `${rows.length} ranked${minimum ? ` | min ${minimum.toLocaleString()} records` : ""}`);
     const highText = highLeader ? `${agencyPressureName(highLeader, level)} has the highest GS-13+ plus SES concentration among ${groupLabel} with at least ${agencyPressureMinimum(level, "high-share").toLocaleString()} visible public records.` : "No high-grade concentration leader is available.";
     const payrollText = payrollLeader ? `${agencyPressureName(payrollLeader, level)} carries the largest visible payroll at ${compactMoney(payrollLeader.total_visible_adjusted_basic_pay)}.` : "No payroll leader is available.";
     const highPayrollText = highPayrollLeader ? ` ${agencyPressureName(highPayrollLeader, level)} carries the largest high GS+SES visible payroll at ${compactMoney(highPayrollLeader.high_grade_ses_visible_payroll)}.` : "";
-    setText(els.agencyPressureSummary, `${payrollText} ${highText}${highPayrollText} VA, FBI, and DOL are pinned below even when the current grouping differs.`);
-    if (els.agencyPressureExamples) els.agencyPressureExamples.innerHTML = agencyPressureWatchRows().map(agencyPressureExampleRow).join("");
-    setText(els.agencyPressureNote, `OPM FWD employment snapshot ${snapshot.year}-${snapshot.month}, published ${snapshot.published}. ${Number(snapshot.pay_redacted_rows || 0).toLocaleString()} pay records are redacted; dollar totals use only numeric annualized_adjusted_basic_pay records. FBI is component DJ02 under DOJ in OPM agency_subelement fields.`);
-    renderAgencyPressureChart(rows, level, sort);
-    renderAgencyPressureCodeKey(rows, level);
-    els.agencyPressureTable.innerHTML = `<thead><tr><th>${level === "component" ? "Component / bureau" : "Agency / department"}</th><th>Visible payroll</th><th>Visible records</th><th>Average pay</th><th>GS-13 to GS-15</th><th>SES</th><th>High GS + SES</th><th>High GS + SES payroll</th></tr></thead><tbody>${rows.map((row, index) => agencyPressureTableRow(row, index, level)).join("")}</tbody>`;
+    setText(els.agencyPressureSummary, `${payrollText} ${highText}${highPayrollText} Use the selector to compare any loaded OPM agency or component against the ranked leaders.`);
+    renderAgencyPressureComparison(rows, level, sort, selectedRow, payrollLeader, highLeader);
+    setText(els.agencyPressureNote, `OPM FWD employment snapshot ${snapshot.year}-${snapshot.month}, published ${snapshot.published}. ${Number(snapshot.pay_redacted_rows || 0).toLocaleString()} pay records are redacted; dollar totals use only numeric annualized_adjusted_basic_pay records. Agency and component names are the OPM fields in the public snapshot.`);
+    renderAgencyPressureChart(rows, level, sort, selectedCode);
+    renderAgencyPressureCodeKey(agencyPressureChartRows(rows, level, selectedCode), level);
+    els.agencyPressureTable.innerHTML = `<thead><tr><th>${level === "component" ? "Component / bureau" : "Agency / department"}</th><th>Visible payroll</th><th>Visible records</th><th>Average pay</th><th>GS-13 to GS-15</th><th>SES</th><th>High GS + SES</th><th>High GS + SES payroll</th></tr></thead><tbody>${rows.map((row, index) => agencyPressureTableRow(row, index, level, selectedCode)).join("")}</tbody>`;
   }
 
 
@@ -1660,10 +1725,12 @@
       return;
     }
     const left = Math.min(230, Math.max(150, width * 0.28));
-    const right = 114;
-    const top = 44;
-    const bottom = height - 34;
-    const plotW = Math.max(160, width - left - right);
+    const right = 178;
+    const top = 58;
+    const bottom = height - 42;
+    const plotW = Math.max(150, width - left - right);
+    const countLeft = width - right + 24;
+    const countMaxW = Math.max(36, right - 108);
     const rowH = Math.max(28, Math.min(38, (bottom - top) / chartRows.length));
     const maxPay = Math.max(...chartRows.map((row) => row.result.annual), 1);
     const maxCount = Math.max(...chartRows.map((row) => row.employeeCount || 0), 1);
@@ -1671,10 +1738,19 @@
     ctx.font = "800 13px Segoe UI, system-ui, sans-serif";
     ctx.textAlign = "left";
     ctx.fillText(`GS-${input.grade} Step ${input.step} | ${input.year} base with 2026 location rule`, 18, 24);
+    ctx.fillStyle = rgbaColor(colors.muted, 0.94);
+    ctx.font = "800 11px Segoe UI, system-ui, sans-serif";
+    ctx.fillText("Selected annual pay", left, 44);
+    ctx.fillText("Visible VA employee records", countLeft, 44);
+    ctx.strokeStyle = rgbaColor(colors.line, 0.72);
+    ctx.beginPath();
+    ctx.moveTo(width - right + 8, 36);
+    ctx.lineTo(width - right + 8, bottom + 8);
+    ctx.stroke();
     chartRows.forEach((row, index) => {
       const y = top + index * rowH + rowH * 0.52;
       const barW = Math.max(4, (row.result.annual / maxPay) * plotW);
-      const countW = row.employeeCount ? Math.max(3, (row.employeeCount / maxCount) * Math.min(82, right - 26)) : 0;
+      const countW = row.employeeCount ? Math.max(4, (row.employeeCount / maxCount) * countMaxW) : 0;
       const isSelected = row.location.id === selectedId;
       ctx.fillStyle = rgbaColor(colors.ink, isSelected ? 0.98 : 0.78);
       ctx.font = `${isSelected ? "800" : "700"} 12px Segoe UI, system-ui, sans-serif`;
@@ -1689,12 +1765,14 @@
       ctx.fillStyle = rgbaColor(colors.ink, 0.95);
       ctx.font = "800 12px Segoe UI, system-ui, sans-serif";
       ctx.textAlign = "left";
-      ctx.fillText(math.money0.format(row.result.annual), left + barW + 8, y + 4);
-      ctx.fillStyle = row.employeeCount === null ? rgbaColor(colors.orange, 0.85) : rgbaColor(colors.blue, 0.62);
-      ctx.fillRect(width - right + 20, y - 5, countW || 24, 10);
-      ctx.fillStyle = rgbaColor(colors.ink, 0.86);
-      ctx.font = "700 11px Segoe UI, system-ui, sans-serif";
-      ctx.fillText(formatOptionalCount(row.employeeCount), width - right + 20, y - 11);
+      ctx.fillText(math.money0.format(row.result.annual), Math.min(width - right - 82, left + barW + 8), y + 4);
+      ctx.fillStyle = row.employeeCount === null ? rgbaColor(colors.orange, 0.86) : rgbaColor(colors.blue, 0.66);
+      ctx.fillRect(countLeft, y - 6, countW || 18, 12);
+      ctx.strokeStyle = rgbaColor(colors.line, 0.62);
+      ctx.strokeRect(countLeft, y - 6, countW || 18, 12);
+      ctx.fillStyle = rgbaColor(colors.ink, 0.9);
+      ctx.font = "800 11px Segoe UI, system-ui, sans-serif";
+      ctx.fillText(`${formatOptionalCount(row.employeeCount)} records`, countLeft + (countW || 18) + 8, y + 4);
     });
     ctx.strokeStyle = rgbaColor(colors.line, 0.75);
     ctx.lineWidth = 1;
@@ -1705,7 +1783,7 @@
     ctx.fillStyle = rgbaColor(colors.muted, 0.92);
     ctx.font = "700 11px Segoe UI, system-ui, sans-serif";
     ctx.textAlign = "left";
-    ctx.fillText("Annual pay bars; small right bars show visible VA employee records", 18, height - 12);
+    ctx.fillText("Pay bars are dollars. Right-column bars are OPM FWD visible VA employee records only.", 18, height - 14);
   }
 
   function renderRemoteDutyStations(input) {
@@ -1728,9 +1806,9 @@
     setText(els.remoteDutyCola, formatOptionalPercent(selectedRow.location.nonforeign_cola_percent_2026));
     setText(els.remoteDutyNote, selectedRow.location.count_note || selectedRow.rule.note || "Counts are visible OPM FWD VA employment records.");
     setText(els.remoteDutyChartTitle, `Selected pay by post | GS-${input.grade} Step ${input.step}`);
-    setText(els.remoteDutyChartMetric, `${rows.length} posts`);
+    setText(els.remoteDutyChartMetric, `${rows.length} posts | right column = visible VA employee records`);
     setText(els.remoteDutySourceNote, `OPM FWD employment snapshot ${vaDutyStationData().snapshot.year}-${vaDutyStationData().snapshot.month}, published ${vaDutyStationData().snapshot.published}. Counts are duty-station records from department_code VA; redacted public records are not reassigned to any location.`);
-    els.remoteDutyTable.innerHTML = `<thead><tr><th>Location</th><th>Pay model</th><th>2026 OPM locality</th><th>2026 COLA</th><th>Selected annual</th><th>Locality lift</th><th>Visible VA records</th><th>Visible GS records</th></tr></thead><tbody>${rows.map((row) => remoteDutyTableRow(row, selectedId)).join("")}</tbody>`;
+    els.remoteDutyTable.innerHTML = `<thead><tr><th>Location</th><th>Pay model</th><th>2026 OPM locality</th><th>2026 COLA</th><th>Selected annual</th><th>Locality lift</th><th>Visible VA employee records</th><th>Visible GS records</th></tr></thead><tbody>${rows.map((row) => remoteDutyTableRow(row, selectedId)).join("")}</tbody>`;
     renderRemoteDutyChart(input, rows, selectedId);
   }
   function renderTrace(result) {
@@ -3293,7 +3371,7 @@
         renderAll();
       });
     }
-    [els.localityMapCounty, els.localityMapFocus, els.remoteDutyLocation, els.remoteDutySort, els.costPressureSort, els.agencyPressureLevel, els.agencyPressureSort, els.statePressureSort, els.statePressureAgency, els.statePressureGrade, els.statePressureFocus, els.vaContractSort, els.vaContractFocus, els.vaFacilitySort, els.vaFacilityState].filter(Boolean).forEach((el) => el.addEventListener("change", renderAll));
+    [els.localityMapCounty, els.localityMapFocus, els.remoteDutyLocation, els.remoteDutySort, els.costPressureSort, els.agencyPressureLevel, els.agencyPressureSort, els.agencyPressureFocus, els.statePressureSort, els.statePressureAgency, els.statePressureGrade, els.statePressureFocus, els.vaContractSort, els.vaContractFocus, els.vaFacilitySort, els.vaFacilityState].filter(Boolean).forEach((el) => el.addEventListener("change", renderAll));
     if (els.localityMapCanvas) {
       els.localityMapCanvas.addEventListener("click", (event) => {
         if (!localityMapTargets.length) return;

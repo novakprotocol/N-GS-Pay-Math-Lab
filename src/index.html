@@ -265,15 +265,16 @@
               </div>
               <div class="chart-metric"><strong id="agencyPressureMetric">0 groups</strong><span>OPM visible public records</span></div>
             </div>
-            <p class="section-lede">Switch between department-level OPM agency records and OPM component records. FBI is listed as a DOJ component; VA and DOL are department-level records.</p>
+            <p class="section-lede">Switch between department-level OPM agency records and OPM component records, then choose any agency or component to compare against the ranked view.</p>
             <div class="source-strip source-strip-three agency-pressure-source-strip">
               <span><b>Source</b> OPM Federal Workforce Data public employment snapshot</span>
               <span><b>Grouping</b> agency and component fields, not guessed org charts</span>
-              <span><b>Review rows</b> VA, FBI, and DOL are pinned below the chart</span>
+              <span><b>Selection</b> chosen row is highlighted in the chart and full table</span>
             </div>
             <div class="form-grid agency-pressure-form">
               <div class="field"><label for="agencyPressureLevel">Group by</label><select id="agencyPressureLevel"><option value="agency" selected>Agency / department</option><option value="component">Component / bureau</option></select></div>
               <div class="field wide-field"><label for="agencyPressureSort">Rank agencies by</label><select id="agencyPressureSort"><option value="payroll" selected>Total visible payroll</option><option value="high-share">GS-13+ plus SES percentage</option><option value="ses-share">SES percentage</option><option value="high-payroll">GS-13+ plus SES visible payroll</option><option value="average-pay">Average visible pay</option><option value="employees">Visible public records</option></select></div>
+              <div class="field wide-field"><label for="agencyPressureFocus">Compare selected</label><select id="agencyPressureFocus"></select></div>
             </div>
             <div class="agency-pressure-kpis" aria-label="Agency breakdown headline metrics">
               <div class="agency-kpi-card is-primary">
@@ -283,9 +284,10 @@
                 <em id="agencyPressureTopMeta">selected ranking</em>
               </div>
               <div class="agency-kpi-card">
-                <span>Pinned review rows</span>
-                <strong>VA / FBI / DOL</strong>
-                <b>kept visible in every grouping</b>
+                <span>Selected comparison</span>
+                <strong id="agencyPressureFocusValue">$0</strong>
+                <b id="agencyPressureFocusName">Choose a row</b>
+                <em id="agencyPressureFocusMeta">highlighted where it appears</em>
               </div>
               <div class="agency-kpi-card">
                 <span>High-grade lens</span>
@@ -307,8 +309,8 @@
               <p id="agencyPressureDescription" class="fine-print">Bar length follows the selected ranking. The thin orange overlay shows GS-13+ plus SES share. The code key below defines the short labels drawn on the chart.</p>
               <div class="agency-code-key" id="agencyPressureCodeKey" aria-label="OPM agency and component code definitions"></div>
             </div>
-            <details class="data-dropdown agency-watch-dropdown">
-              <summary><span>Open pinned review rows</span><span>VA, FBI, and DOL</span></summary>
+            <details class="data-dropdown agency-focus-dropdown">
+              <summary><span>Open selected comparison</span><span>selected row vs ranked leaders</span></summary>
               <div class="dropdown-body">
                 <div class="rank-list" id="agencyPressureExamples"></div>
               </div>
@@ -360,7 +362,7 @@
               <b>2026 locality rule used for pay math</b>
             </div>
             <div class="remote-kpi-card">
-              <span>Visible VA records</span>
+              <span>Visible VA employee records</span>
               <strong id="remoteDutyEmployees">N/A</strong>
               <b><span id="remoteDutyGsRows">N/A</span> visible GS records</b>
             </div>
@@ -376,7 +378,7 @@
               <div class="chart-metric"><strong id="remoteDutyChartMetric">0 posts</strong><span>OPM/federal sources only</span></div>
             </div>
             <canvas id="remoteDutyCanvas" width="1200" height="520" role="img" aria-describedby="remoteDutyChartDescription">Your browser does not support Canvas.</canvas>
-            <p id="remoteDutyChartDescription" class="fine-print">Annual pay bars use the selected grade and step. Small right bars show visible VA employee records.</p>
+            <p id="remoteDutyChartDescription" class="fine-print">Large bars are selected annual pay. The separate right column is visible VA duty-station employee records from OPM FWD, not dollars, patient workload, or veteran counts.</p>
           </div>
           <details class="data-dropdown remote-duty-notes">
             <summary><span>Open remote-post notes</span><span>pay model, source limits, and redactions</span></summary>

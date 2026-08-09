@@ -912,11 +912,11 @@ main {
   font-weight: 750;
 }
 
-.agency-watch-dropdown .dropdown-body {
+.agency-focus-dropdown .dropdown-body {
   padding: 12px 14px 14px;
 }
 
-.agency-watch-dropdown .rank-list {
+.agency-focus-dropdown .rank-list {
   margin-top: 0;
 }
 
@@ -960,7 +960,7 @@ main {
   min-width: 240px;
 }
 
-.agency-pressure-table-wrap tbody tr.is-watch {
+.agency-pressure-table-wrap tbody tr.is-selected {
   box-shadow: inset 4px 0 0 var(--orange);
   background: color-mix(in srgb, var(--panel-soft) 74%, var(--orange));
 }
