@@ -977,8 +977,7 @@ thead th {
 .pressure-row {
   border-color: color-mix(in srgb, var(--orange) 58%, var(--line));
 }
-.surface-section,
-.county-map-section {
+.surface-section {
   --bg: #eaf1f6;
   --panel: #ffffff;
   --panel-soft: #f6f9fb;
