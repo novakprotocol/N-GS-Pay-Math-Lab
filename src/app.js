@@ -129,6 +129,8 @@
   const surfaceDrag = { active: false, pointerId: null, x: 0, y: 0 };
   const surfaceView = { yaw: 34, tilt: 38 };
   let resizeTimer = null;
+  let localityShapeCache = null;
+  let localityMapTargets = [];
 
   function setText(el, value) {
     if (el) el.textContent = value;
@@ -158,6 +160,24 @@
       counties: Array.isArray(defs.counties) ? defs.counties : [],
       year: defs.year || 2026
     };
+  }
+
+  function localityBoundaries() {
+    const boundaries = math.DATA.localityBoundaries || {};
+    return {
+      counties: Array.isArray(boundaries.counties) ? boundaries.counties : [],
+      boundaryYear: boundaries.boundary_year || 2025
+    };
+  }
+
+  function localityShapes() {
+    if (localityShapeCache) return localityShapeCache;
+    const infoByFips = new Map(localityDefinitions().counties.map((county) => [county.fips, county]));
+    localityShapeCache = localityBoundaries().counties.map((shape) => {
+      const info = infoByFips.get(shape.fips) || {};
+      return { ...shape, name: info.name || shape.fips, state_abbr: info.state_abbr || shape.state_abbr };
+    }).filter((shape) => Array.isArray(shape.rings) && shape.rings.length);
+    return localityShapeCache;
   }
 
   function localityAreaByCode(year, code) {
@@ -964,11 +984,11 @@
   }
 
 
-  function themeColors() {
-    const root = getComputedStyle(document.documentElement);
+  function themeColors(source = document.documentElement) {
+    const root = getComputedStyle(source || document.documentElement);
     const read = (name, fallback) => root.getPropertyValue(name).trim() || fallback;
     return {
-      bg: read("--navy", "#071a2d"),
+      bg: read("--panel-soft", "#f4f7fa"),
       panel: read("--panel", "#ffffff"),
       ink: read("--ink", "#172033"),
       muted: read("--muted", "#637083"),
@@ -1024,18 +1044,25 @@
   }
 
   function clearCanvas(ctx, width, height, colors) {
-    const bg = ctx.createLinearGradient(0, 0, width, height);
-    bg.addColorStop(0, rgbaColor(colors.bg, 0.96));
-    bg.addColorStop(0.55, rgbaColor(colors.blue, 0.32));
-    bg.addColorStop(1, rgbaColor(colors.teal, 0.24));
+    const bg = ctx.createLinearGradient(0, 0, 0, height);
+    bg.addColorStop(0, colors.panel);
+    bg.addColorStop(1, colors.bg);
     ctx.fillStyle = bg;
     ctx.fillRect(0, 0, width, height);
-    ctx.strokeStyle = rgbaColor(colors.cyan, 0.16);
+
+    const wash = ctx.createLinearGradient(0, 0, width, 0);
+    wash.addColorStop(0, rgbaColor(colors.blue, 0.04));
+    wash.addColorStop(0.5, rgbaColor(colors.cyan, 0.025));
+    wash.addColorStop(1, rgbaColor(colors.teal, 0.04));
+    ctx.fillStyle = wash;
+    ctx.fillRect(0, 0, width, height);
+
+    ctx.strokeStyle = rgbaColor(colors.line, 0.42);
     ctx.lineWidth = 1;
-    for (let x = -height; x < width + height; x += 44) {
+    for (let y = 48; y < height; y += 56) {
       ctx.beginPath();
-      ctx.moveTo(x, height);
-      ctx.lineTo(x + height, 0);
+      ctx.moveTo(0, y);
+      ctx.lineTo(width, y);
       ctx.stroke();
     }
   }
@@ -1082,7 +1109,7 @@
   function renderPaySurface(input) {
     const canvas = els.paySurfaceCanvas;
     if (!canvas) return;
-    const colors = themeColors();
+    const colors = themeColors(canvas);
     const { ctx, width, height } = canvasMetrics(canvas, 360);
     clearCanvas(ctx, width, height, colors);
     const mode = els.surfaceMode.value || "annual";
@@ -1203,8 +1230,7 @@
     return years.reduce((sum, year) => sum + scenarioPay(year, scenario), 0);
   }
 
-  function careerScenarios(input) {
-    const colors = themeColors();
+  function careerScenarios(input, colors = themeColors()) {
     const baseScenario = {
       key: "base",
       label: "Base/COLA only",
@@ -1444,11 +1470,11 @@
   function renderCareerEarnings(input) {
     const canvas = els.paySurfaceCanvas;
     if (!canvas) return;
-    const colors = themeColors();
+    const colors = themeColors(canvas);
     const { ctx, width, height } = canvasMetrics(canvas, 390);
     clearCanvas(ctx, width, height, colors);
     const years = careerYears(input);
-    const scenarios = careerScenarios(input);
+    const scenarios = careerScenarios(input, colors);
     const series = scenarios.map((scenario) => ({
       scenario,
       values: years.map((year) => scenarioPay(year, scenario)),
@@ -1616,7 +1642,7 @@
   function renderLocalityLift(input) {
     const canvas = els.localityLiftCanvas;
     if (!canvas) return;
-    const colors = themeColors();
+    const colors = themeColors(canvas);
     const { ctx, width, height } = canvasMetrics(canvas, 180);
     clearCanvas(ctx, width, height, colors);
     const base = math.computePay(input.year, input.grade, input.step, 0, NaN, false).annual;
@@ -1650,7 +1676,7 @@
   function renderCapPressure(input) {
     const canvas = els.capPressureCanvas;
     if (!canvas) return;
-    const colors = themeColors();
+    const colors = themeColors(canvas);
     const { ctx, width, height } = canvasMetrics(canvas, 180);
     clearCanvas(ctx, width, height, colors);
     const grades = Array.from({ length: 15 }, (_, index) => index + 1);
@@ -1705,19 +1731,103 @@
     return blendColor(colors.teal, colors.orange, (t - 0.5) * 2);
   }
 
+  function boundaryRegionKey(shape) {
+    if (shape.state_abbr === "AK") return "AK";
+    if (shape.state_abbr === "HI") return "HI";
+    if (shape.state_abbr === "PR") return "PR";
+    return "CONUS";
+  }
+
+  function boundaryBounds(shapes) {
+    const box = { minLon: Infinity, minLat: Infinity, maxLon: -Infinity, maxLat: -Infinity };
+    shapes.forEach((shape) => {
+      const bbox = shape.bbox || [];
+      box.minLon = Math.min(box.minLon, Number(bbox[0]));
+      box.minLat = Math.min(box.minLat, Number(bbox[1]));
+      box.maxLon = Math.max(box.maxLon, Number(bbox[2]));
+      box.maxLat = Math.max(box.maxLat, Number(bbox[3]));
+    });
+    return box;
+  }
+
+  function mapProjection(bounds, box) {
+    const lonSpan = Math.max(0.01, bounds.maxLon - bounds.minLon);
+    const latSpan = Math.max(0.01, bounds.maxLat - bounds.minLat);
+    const scale = Math.min(box.w / lonSpan, box.h / latSpan);
+    const drawW = lonSpan * scale;
+    const drawH = latSpan * scale;
+    const offsetX = box.x + (box.w - drawW) / 2;
+    const offsetY = box.y + (box.h - drawH) / 2;
+    return (lon, lat) => ({
+      x: offsetX + (lon - bounds.minLon) * scale,
+      y: offsetY + (bounds.maxLat - lat) * scale
+    });
+  }
+
+  function countyFill(shape, selectedCode, highCodes, focus, colors) {
+    const isRus = shape.locality_code === "RUS";
+    const selectedLocality = selectedCode && shape.locality_code === selectedCode;
+    let strong = selectedLocality && selectedCode !== "RUS";
+    if (focus === "all") strong = true;
+    if (focus === "highest") strong = highCodes.has(shape.locality_code);
+    if (focus === "not-rus") strong = !isRus;
+    if (focus === "selected" && selectedCode === "RUS") strong = !isRus;
+    const color = isRus ? blendColor(colors.line, colors.blue, 0.18) : localityPointColor(shape.locality_percent, colors);
+    return rgbaColor(color, strong ? 0.88 : isRus ? 0.24 : 0.48);
+  }
+
+  function drawCountyShape(ctx, shape, project, fill, stroke, lineWidth) {
+    ctx.beginPath();
+    shape.rings.forEach((ring) => {
+      ring.forEach((point, index) => {
+        const projected = project(Number(point[0]), Number(point[1]));
+        if (index === 0) ctx.moveTo(projected.x, projected.y);
+        else ctx.lineTo(projected.x, projected.y);
+      });
+      ctx.closePath();
+    });
+    ctx.fillStyle = fill;
+    ctx.fill("evenodd");
+    ctx.strokeStyle = stroke;
+    ctx.lineWidth = lineWidth;
+    ctx.stroke();
+  }
+
+  function regionBoxes(width, height) {
+    return {
+      CONUS: { x: 18, y: 22, w: width * 0.72, h: height - 54, label: "Lower 48 + DC" },
+      AK: { x: width * 0.73, y: height * 0.54, w: width * 0.24, h: height * 0.34, label: "Alaska" },
+      HI: { x: width * 0.73, y: height * 0.27, w: width * 0.11, h: height * 0.18, label: "Hawaii" },
+      PR: { x: width * 0.86, y: height * 0.27, w: width * 0.11, h: height * 0.18, label: "Puerto Rico" }
+    };
+  }
+
+  function renderRegionFrame(ctx, box, colors) {
+    ctx.strokeStyle = rgbaColor(colors.line, 0.82);
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.roundRect(box.x, box.y, box.w, box.h, 7);
+    ctx.stroke();
+    ctx.fillStyle = rgbaColor(colors.ink, 0.78);
+    ctx.font = "800 11px Segoe UI, system-ui, sans-serif";
+    ctx.textAlign = "left";
+    ctx.fillText(box.label, box.x + 8, box.y + 16);
+  }
+
   function renderLocalityMap(input) {
     const canvas = els.localityMapCanvas;
     if (!canvas) return;
     const defs = localityDefinitions();
-    const counties = defs.counties;
-    const colors = themeColors();
-    const { ctx, width, height } = canvasMetrics(canvas, 300);
+    const shapes = localityShapes();
+    const colors = themeColors(canvas);
+    const { ctx, width, height } = canvasMetrics(canvas, 330);
     clearCanvas(ctx, width, height, colors);
-    if (!counties.length) {
-      setText(els.localityMapMetric, "No data");
-      setText(els.localityMapMeta, "OPM definitions missing");
-      setText(els.localityMapSummary, "No OPM locality definition data is loaded.");
-      setText(els.localityCountyDetail, "No county data loaded.");
+    localityMapTargets = [];
+    if (!shapes.length) {
+      setText(els.localityMapMetric, "No polygons");
+      setText(els.localityMapMeta, "Census boundaries missing");
+      setText(els.localityMapSummary, "No Census county boundary polygons are loaded.");
+      setText(els.localityCountyDetail, "No county geometry loaded.");
       if (els.localityAreaChips) els.localityAreaChips.innerHTML = "";
       return;
     }
@@ -1726,74 +1836,72 @@
     const selectedCounty = selectedLocalityCounty();
     const focus = els.localityMapFocus ? els.localityMapFocus.value : "selected";
     const areaByCode = new Map(defs.areas.map((area) => [area.code, area]));
+    const countyByFips = new Map(defs.counties.map((county) => [county.fips, county]));
     const highCodes = new Set(defs.areas.slice().sort((a, b) => Number(b.percentage) - Number(a.percentage)).slice(0, 8).map((area) => area.code));
-    const visible = counties
-      .filter((county) => !state || county.state_abbr === state)
-      .filter((county) => Number.isFinite(Number(county.lat)) && Number.isFinite(Number(county.lon)));
-    const points = visible.length ? visible : counties.filter((county) => Number.isFinite(Number(county.lat)) && Number.isFinite(Number(county.lon)));
-    const selectedCode = input.localityArea ? input.localityArea.code : (selectedCounty ? selectedCounty.locality_code : null);
-    const strongFor = (county) => {
-      if (selectedCounty && county.fips === selectedCounty.fips) return true;
-      if (focus === "all") return true;
-      if (focus === "highest") return highCodes.has(county.locality_code);
-      if (focus === "not-rus") return county.locality_code !== "RUS";
-      return selectedCode ? county.locality_code === selectedCode : county.locality_code !== "RUS";
-    };
-    const lats = points.map((county) => Number(county.lat));
-    const lons = points.map((county) => Number(county.lon));
-    const minLat = Math.min(...lats);
-    const maxLat = Math.max(...lats);
-    const minLon = Math.min(...lons);
-    const maxLon = Math.max(...lons);
-    const pad = width > 720 ? 34 : 22;
-    const xFor = (lon) => pad + ((lon - minLon) / Math.max(0.01, maxLon - minLon)) * (width - pad * 2);
-    const yFor = (lat) => pad + (1 - ((lat - minLat) / Math.max(0.01, maxLat - minLat))) * (height - pad * 2);
+    const selectedCode = selectedCounty ? selectedCounty.locality_code : (input.localityArea ? input.localityArea.code : null);
+    const visible = shapes.filter((shape) => !state || shape.state_abbr === state);
+    const boxes = regionBoxes(width, height);
+    const groups = new Map();
+    visible.forEach((shape) => {
+      const key = state ? "SELECTED" : boundaryRegionKey(shape);
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key).push(shape);
+    });
+    if (state) boxes.SELECTED = { x: 18, y: 20, w: width - 36, h: height - 44, label: state };
 
-    ctx.fillStyle = rgbaColor(colors.panel, 0.9);
-    ctx.strokeStyle = rgbaColor(colors.line, 0.7);
+    ctx.fillStyle = rgbaColor(colors.panel, 0.93);
+    ctx.strokeStyle = rgbaColor(colors.line, 0.72);
     ctx.lineWidth = 1;
     ctx.beginPath();
-    ctx.roundRect(10, 10, width - 20, height - 20, 8);
+    ctx.roundRect(8, 8, width - 16, height - 16, 8);
     ctx.fill();
     ctx.stroke();
 
-    points.slice().sort((a, b) => Number(strongFor(a)) - Number(strongFor(b))).forEach((county) => {
-      const strong = strongFor(county);
-      const selected = selectedCounty && county.fips === selectedCounty.fips;
-      const x = xFor(Number(county.lon));
-      const y = yFor(Number(county.lat));
-      ctx.beginPath();
-      ctx.arc(x, y, selected ? 6 : strong ? 3.2 : 1.7, 0, Math.PI * 2);
-      ctx.fillStyle = rgbaColor(localityPointColor(county.locality_percent, colors), selected ? 0.98 : strong ? 0.82 : 0.2);
-      ctx.fill();
-      if (selected) {
-        ctx.strokeStyle = rgbaColor(colors.red, 0.95);
-        ctx.lineWidth = 2.4;
-        ctx.stroke();
-        ctx.fillStyle = rgbaColor(colors.ink, 0.94);
-        ctx.font = "800 12px Segoe UI, system-ui, sans-serif";
-        ctx.textAlign = x < width * 0.72 ? "left" : "right";
-        const labelX = x < width * 0.72 ? x + 12 : x - 12;
-        ctx.fillText(`${county.name}, ${county.state_abbr} | ${county.locality_code}`, labelX, Math.max(24, y - 12));
-      }
+    groups.forEach((items, key) => {
+      const box = boxes[key];
+      if (!box || !items.length) return;
+      renderRegionFrame(ctx, box, colors);
+      const project = mapProjection(boundaryBounds(items), { x: box.x + 10, y: box.y + 20, w: box.w - 20, h: box.h - 30 });
+      items.slice().sort((a, b) => Number(a.fips === (selectedCounty && selectedCounty.fips)) - Number(b.fips === (selectedCounty && selectedCounty.fips))).forEach((shape) => {
+        const isSelected = selectedCounty && shape.fips === selectedCounty.fips;
+        const stroke = isSelected ? rgbaColor(colors.red, 0.98) : rgbaColor(colors.ink, state ? 0.24 : 0.16);
+        const lineWidth = isSelected ? 2.6 : state ? 0.7 : 0.45;
+        drawCountyShape(ctx, shape, project, countyFill(shape, selectedCode, highCodes, focus, colors), stroke, lineWidth);
+        const info = countyByFips.get(shape.fips);
+        if (info && Number.isFinite(Number(info.lon)) && Number.isFinite(Number(info.lat))) {
+          const lon = shape.state_abbr === "AK" && Number(info.lon) > 0 ? Number(info.lon) - 360 : Number(info.lon);
+          const target = project(lon, Number(info.lat));
+          localityMapTargets.push({ x: target.x, y: target.y, fips: shape.fips, state: shape.state_abbr });
+        }
+      });
     });
 
-    const explicit = counties.filter((county) => county.locality_code !== "RUS").length;
+    if (selectedCounty) {
+      const target = localityMapTargets.find((item) => item.fips === selectedCounty.fips);
+      if (target) {
+        ctx.fillStyle = colors.red;
+        ctx.beginPath();
+        ctx.arc(target.x, target.y, 4.5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    const explicit = defs.counties.filter((county) => county.locality_code !== "RUS").length;
     const selectedArea = selectedCounty ? areaByCode.get(selectedCounty.locality_code) : (selectedCode ? areaByCode.get(selectedCode) : null);
-    setText(els.localityMapTitle, state ? `${state} county locality map` : "U.S. county locality point map");
-    setText(els.localityMapMetric, `${points.length.toLocaleString()} counties`);
+    setText(els.localityMapTitle, state ? `${state} OPM locality county boundaries` : "OPM locality county boundary map");
+    setText(els.localityMapMetric, `${visible.length.toLocaleString()} counties`);
     setText(els.localityMapMeta, selectedArea ? `${selectedArea.code} | ${math.pct(selectedArea.percentage)}` : (state || "all states"));
     if (selectedCounty) {
-      setText(els.localityCountyDetail, `${selectedCounty.name}, ${selectedCounty.state_abbr} is mapped to ${selectedCounty.locality_code} at ${math.pct(selectedCounty.locality_percent)}. FIPS ${selectedCounty.fips}.`);
+      setText(els.localityCountyDetail, `${selectedCounty.name}, ${selectedCounty.state_abbr}: ${selectedCounty.locality_code} locality at ${math.pct(selectedCounty.locality_percent)}. FIPS ${selectedCounty.fips}.`);
     } else if (selectedArea) {
-      setText(els.localityCountyDetail, `${selectedArea.code} | ${selectedArea.name} is highlighted at ${math.pct(selectedArea.percentage)}. Select a county for exact FIPS detail.`);
+      setText(els.localityCountyDetail, `${selectedArea.code} | ${selectedArea.name} is emphasized at ${math.pct(selectedArea.percentage)}. Click a county or use the selector for FIPS detail.`);
     } else {
-      setText(els.localityCountyDetail, "Select a county for exact FIPS detail, or change the pay-table locality to highlight that area.");
+      setText(els.localityCountyDetail, "Click a county or choose one from the selector for exact OPM locality and FIPS detail.");
     }
-    setText(els.localityMapSummary, `${counties.length.toLocaleString()} Census county/county-equivalent points loaded. ${explicit.toLocaleString()} are explicitly assigned to an OPM locality area; remaining counties use Rest of U.S. unless OPM defines otherwise.`);
+    setText(els.localityMapSummary, `${defs.counties.length.toLocaleString()} county records loaded. ${explicit.toLocaleString()} are explicitly assigned to an OPM locality area; the rest use Rest of U.S. unless OPM defines otherwise. Geometry is generalized Census cartographic boundary data.`);
     if (els.localityAreaChips) {
       const counts = new Map();
-      visible.forEach((county) => counts.set(county.locality_code, (counts.get(county.locality_code) || 0) + 1));
+      visible.forEach((shape) => counts.set(shape.locality_code, (counts.get(shape.locality_code) || 0) + 1));
       els.localityAreaChips.innerHTML = Array.from(counts.entries())
         .map(([code, count]) => ({ code, count, area: areaByCode.get(code) }))
         .sort((a, b) => b.count - a.count || Number(b.area ? b.area.percentage : 0) - Number(a.area ? a.area.percentage : 0))
@@ -1802,6 +1910,7 @@
         .join("");
     }
   }
+
   function render3DLab(input) {
     if (els.surfaceMode.value === "career") renderCareerEarnings(input);
     else {
@@ -1926,6 +2035,22 @@
       });
     }
     [els.localityMapCounty, els.localityMapFocus].filter(Boolean).forEach((el) => el.addEventListener("change", renderAll));
+    if (els.localityMapCanvas) {
+      els.localityMapCanvas.addEventListener("click", (event) => {
+        if (!localityMapTargets.length) return;
+        const rect = els.localityMapCanvas.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+        const nearest = localityMapTargets.reduce((best, target) => {
+          const distance = (target.x - x) ** 2 + (target.y - y) ** 2;
+          return !best || distance < best.distance ? { ...target, distance } : best;
+        }, null);
+        if (!nearest) return;
+        if (els.localityMapState) els.localityMapState.value = nearest.state;
+        fillLocalityCountyOptions(nearest.fips);
+        renderAll();
+      });
+    }
     els.scheduleTable.addEventListener("click", (event) => {
       const button = event.target.closest(".cell-button");
       if (!button) return;
