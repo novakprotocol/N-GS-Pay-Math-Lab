@@ -90,6 +90,7 @@
     earnStart: $("earnStart"),
     earnEnd: $("earnEnd"),
     compareMode: $("compareMode"),
+    ratingProfile: $("ratingProfile"),
     surfaceYearSpan: $("surfaceYearSpan"),
     surfaceTitle: $("surfaceTitle"),
     surfacePeak: $("surfacePeak"),
@@ -99,10 +100,27 @@
     surfaceSpreadLabel: $("surfaceSpreadLabel"),
     surfaceSpread: $("surfaceSpread"),
     surfaceRaise: $("surfaceRaise"),
+    surfaceCompareLabel: $("surfaceCompareLabel"),
     surfaceCompare: $("surfaceCompare"),
     paySurfaceCanvas: $("paySurfaceCanvas"),
     localityLiftCanvas: $("localityLiftCanvas"),
     capPressureCanvas: $("capPressureCanvas"),
+    raiseForecastCard: $("raiseForecastCard"),
+    bestPresidentRaises: $("bestPresidentRaises"),
+    worstPresidentRaises: $("worstPresidentRaises"),
+    partyConflictMatrix: $("partyConflictMatrix"),
+    raiseAnalogYears: $("raiseAnalogYears"),
+    ratingOverlayNote: $("ratingOverlayNote"),
+    localityMapState: $("localityMapState"),
+    localityMapCounty: $("localityMapCounty"),
+    localityMapFocus: $("localityMapFocus"),
+    localityMapCanvas: $("localityMapCanvas"),
+    localityMapTitle: $("localityMapTitle"),
+    localityMapMetric: $("localityMapMetric"),
+    localityMapMeta: $("localityMapMeta"),
+    localityCountyDetail: $("localityCountyDetail"),
+    localityMapSummary: $("localityMapSummary"),
+    localityAreaChips: $("localityAreaChips"),
     sourceList: $("sourceList"),
     buildMeta: $("buildMeta")
   };
@@ -131,6 +149,15 @@
     const rates = math.DATA.localityRates && math.DATA.localityRates.by_year;
     const areas = rates ? rates[String(year)] : null;
     return Array.isArray(areas) ? areas : [];
+  }
+
+  function localityDefinitions() {
+    const defs = math.DATA.localityDefinitions || {};
+    return {
+      areas: Array.isArray(defs.areas) ? defs.areas : [],
+      counties: Array.isArray(defs.counties) ? defs.counties : [],
+      year: defs.year || 2026
+    };
   }
 
   function localityAreaByCode(year, code) {
@@ -170,6 +197,37 @@
     }
   }
 
+  function fillLocalityMapStates() {
+    if (!els.localityMapState) return;
+    const current = els.localityMapState.value;
+    const states = Array.from(new Set(localityDefinitions().counties.map((county) => county.state_abbr).filter(Boolean))).sort();
+    els.localityMapState.innerHTML = "";
+    els.localityMapState.appendChild(option("All states", ""));
+    states.forEach((state) => els.localityMapState.appendChild(option(state, state)));
+    els.localityMapState.value = states.includes(current) ? current : "";
+  }
+
+  function fillLocalityCountyOptions(preferredFips) {
+    if (!els.localityMapCounty) return;
+    const state = els.localityMapState ? els.localityMapState.value : "";
+    const current = preferredFips || els.localityMapCounty.value;
+    const counties = localityDefinitions().counties
+      .filter((county) => !state || county.state_abbr === state)
+      .slice()
+      .sort((a, b) => a.state_abbr.localeCompare(b.state_abbr) || a.name.localeCompare(b.name));
+    els.localityMapCounty.innerHTML = "";
+    els.localityMapCounty.appendChild(option(state ? `All ${state} counties` : "All counties", ""));
+    counties.forEach((county) => {
+      els.localityMapCounty.appendChild(option(`${county.name}, ${county.state_abbr} | ${county.locality_code}`, county.fips));
+    });
+    els.localityMapCounty.value = counties.some((county) => county.fips === current) ? current : "";
+  }
+
+  function selectedLocalityCounty() {
+    if (!els.localityMapCounty || !els.localityMapCounty.value) return null;
+    return localityDefinitions().counties.find((county) => county.fips === els.localityMapCounty.value) || null;
+  }
+
   function fillControls() {
     math.YEARS.slice().reverse().forEach((year) => {
       els.year.appendChild(option(String(year), String(year)));
@@ -197,6 +255,8 @@
     if (els.contextEnd) els.contextEnd.value = "2026";
     fillLocalityAreas(2026, "RUS");
     syncLocalityFromArea();
+    fillLocalityMapStates();
+    fillLocalityCountyOptions();
   }
 
   function knownCap(year) {
@@ -238,7 +298,8 @@
       compareYear: Number(els.compareYear.value),
       earnStart: Number(els.earnStart.value),
       earnEnd: Number(els.earnEnd.value),
-      compareMode: els.compareMode.value || "grades"
+      compareMode: els.compareMode.value || "grades",
+      ratingProfile: els.ratingProfile ? els.ratingProfile.value : "successful"
     };
   }
 
@@ -917,7 +978,8 @@
       blue: read("--blue", "#1d5fa7"),
       orange: read("--orange", "#c65d21"),
       magenta: read("--magenta", "#a73383"),
-      green: read("--green", "#1d7d45")
+      green: read("--green", "#1d7d45"),
+      red: read("--red", "#b91c1c")
     };
   }
 
@@ -1122,6 +1184,7 @@
     setText(els.surfaceSpreadLabel, "Grade spread");
     setText(els.surfaceSpread, surfaceMoney(Math.abs(gradeHigh - gradeLow), mode));
     setText(els.surfaceRaise, `${raise >= 0 ? "+" : "-"}${surfaceMoney(Math.abs(raise), mode)}`);
+    setText(els.surfaceCompareLabel, "Range spread");
     setText(els.surfaceCompare, surfaceMoney(maxValue - minValue, mode));
   }
 
@@ -1215,11 +1278,174 @@
     ctx.fillText(text, x, y);
   }
 
+  function finiteRaiseRows(input) {
+    return contextRows(math.YEARS, input).filter((row) => row.year > math.YEARS[0] && Number.isFinite(row.raise));
+  }
+
+  function rowHasConflict(row) {
+    return Array.isArray(row.conflicts) && row.conflicts.length > 0;
+  }
+
+  function similarityScore(value, target, scale) {
+    if (!Number.isFinite(value) || !Number.isFinite(target)) return 0;
+    return 1 / (1 + Math.abs(value - target) / Math.max(0.1, scale));
+  }
+
+  function weightedAverageItems(items) {
+    const usable = items.filter((item) => Number.isFinite(item.value) && Number.isFinite(item.weight) && item.weight > 0);
+    const totalWeight = usable.reduce((sum, item) => sum + item.weight, 0);
+    return totalWeight ? usable.reduce((sum, item) => sum + item.value * item.weight, 0) / totalWeight : null;
+  }
+
+  function weightedShare(items, predicate) {
+    const usable = items.filter((item) => Number.isFinite(item.weight) && item.weight > 0);
+    const totalWeight = usable.reduce((sum, item) => sum + item.weight, 0);
+    return totalWeight ? usable.filter(predicate).reduce((sum, item) => sum + item.weight, 0) / totalWeight : null;
+  }
+
+  function weightedQuantileItems(items, quantile) {
+    const usable = items
+      .filter((item) => Number.isFinite(item.value) && Number.isFinite(item.weight) && item.weight > 0)
+      .sort((a, b) => a.value - b.value);
+    const totalWeight = usable.reduce((sum, item) => sum + item.weight, 0);
+    if (!totalWeight) return null;
+    let running = 0;
+    for (const item of usable) {
+      running += item.weight;
+      if (running / totalWeight >= quantile) return item.value;
+    }
+    return usable[usable.length - 1].value;
+  }
+
+  function raiseForecast(input) {
+    const rows = finiteRaiseRows(input);
+    const latestYear = math.YEARS[math.YEARS.length - 1];
+    const targetYear = latestYear + 1;
+    const currentAdmin = administrationForYear(latestYear);
+    const currentParty = currentAdmin ? currentAdmin.party : "Unknown";
+    const currentConflict = conflictsForYear(latestYear).length > 0;
+    const latestCompletedCpiYear = latestCpiYear();
+    const targetCpi = latestCompletedCpiYear ? cpiChangeForYear(latestCompletedCpiYear) : null;
+    const priorRaise = baseRaiseForYear(latestYear);
+    const latestMarketYear = Number(federalContext().market_proxy_latest_complete_year) || latestYear;
+    const targetMarket = marketChangeForYear(latestMarketYear);
+    const analogs = rows.map((row) => {
+      const rowPriorRaise = baseRaiseForYear(row.year - 1);
+      const rowPriorCpi = cpiChangeForYear(row.year - 1);
+      const rowPriorMarket = marketChangeForYear(row.year - 1);
+      let weight = 1;
+      if (row.party === currentParty) weight += 1.15;
+      if (rowHasConflict(row) === currentConflict) weight += 0.85;
+      weight += similarityScore(rowPriorRaise, priorRaise, 1.25);
+      weight += similarityScore(rowPriorCpi, targetCpi, 1.75);
+      weight += similarityScore(rowPriorMarket, targetMarket, 12);
+      return { ...row, value: row.raise, weight, rowPriorRaise, rowPriorCpi, rowPriorMarket };
+    }).sort((a, b) => b.weight - a.weight || Math.abs((a.raise || 0) - (priorRaise || 0)) - Math.abs((b.raise || 0) - (priorRaise || 0)));
+    const weightedItems = analogs.map((row) => ({ value: row.raise, weight: row.weight, row }));
+    const mean = weightedAverageItems(weightedItems);
+    const median = weightedQuantileItems(weightedItems, 0.5);
+    const low = weightedQuantileItems(weightedItems, 0.2);
+    const high = weightedQuantileItems(weightedItems, 0.8);
+    return {
+      targetYear,
+      currentParty,
+      currentConflict,
+      targetCpi,
+      priorRaise,
+      targetMarket,
+      mean,
+      median,
+      low,
+      high,
+      freeze: weightedShare(weightedItems, (item) => item.value <= 0.5),
+      lowRaise: weightedShare(weightedItems, (item) => item.value > 0.5 && item.value <= 2),
+      steady: weightedShare(weightedItems, (item) => item.value > 2 && item.value <= 4),
+      highRaise: weightedShare(weightedItems, (item) => item.value > 4),
+      analogs: analogs.slice(0, 6)
+    };
+  }
+
+  function ratingOverlay(input) {
+    const current = math.computePay(input.year, input.grade, input.step, input.localityPct, input.capValue, input.applyCap).annual;
+    const nextStep = input.step < 10 ? math.computePay(input.year, input.grade, input.step + 1, input.localityPct, input.capValue, input.applyCap).annual : current;
+    const stepDelta = Math.max(0, nextStep - current);
+    if (input.ratingProfile === "outstanding") {
+      return {
+        amount: stepDelta,
+        label: "Outstanding",
+        note: stepDelta > 0 ? `Rating does not change the government-wide GS raise. This overlays a possible quality-step scenario worth ${math.money0.format(stepDelta)} annually for the selected pay cell.` : "Rating does not change the government-wide GS raise. Step 10 has no next-step amount to overlay."
+      };
+    }
+    if (input.ratingProfile === "excellent") {
+      return {
+        amount: stepDelta ? stepDelta * 0.5 : 0,
+        label: "Excellent",
+        note: stepDelta > 0 ? `Rating does not change the government-wide GS raise. This shows half of the next-step amount (${math.money0.format(stepDelta)}) as a planning sensitivity only.` : "Rating does not change the government-wide GS raise. Step 10 has no next-step amount to overlay."
+      };
+    }
+    return {
+      amount: 0,
+      label: "Successful",
+      note: "Rating does not change the government-wide GS base raise. No personal step or quality-step overlay is added for this profile."
+    };
+  }
+
+  function administrationRaiseTable(rows, sortFn) {
+    const grouped = groupAverageRows(rows, (row) => `${row.president} ${row.admin ? `${row.admin.start_year}-${row.admin.end_year}` : ""} (${row.party.slice(0, 3)})`)
+      .filter((row) => row.raise !== null)
+      .sort(sortFn)
+      .slice(0, 6);
+    return miniTable(grouped, "Administration");
+  }
+
+  function renderRaisePanels(input) {
+    if (!els.raiseForecastCard) return;
+    const rows = finiteRaiseRows(input);
+    const forecast = raiseForecast(input);
+    const pctText = (value) => value === null ? "N/A" : `${(value * 100).toFixed(0)}%`;
+    els.raiseForecastCard.innerHTML = `<h3>${forecast.targetYear} raise analog estimate</h3><div class="forecast-grid"><div><span>Weighted median</span><strong>${forecast.median === null ? "N/A" : signedPercent(forecast.median)}</strong></div><div><span>Weighted mean</span><strong>${forecast.mean === null ? "N/A" : signedPercent(forecast.mean)}</strong></div><div><span>Middle band</span><strong>${forecast.low === null || forecast.high === null ? "N/A" : `${signedPercent(forecast.low)} to ${signedPercent(forecast.high)}`}</strong></div><div><span>Input profile</span><strong>${math.escapeHtml(forecast.currentParty)}${forecast.currentConflict ? " + conflict" : ""}</strong></div></div><div class="probability-row"><span>Freeze ${pctText(forecast.freeze)}</span><span>0.5-2% ${pctText(forecast.lowRaise)}</span><span>2-4% ${pctText(forecast.steady)}</span><span>4%+ ${pctText(forecast.highRaise)}</span></div><p class="fine-print">Descriptive historical analog only: party, listed VA conflict era, prior base raise, BLS CPI pressure, and Federal Reserve Z.1 market proxy. This is not an OPM forecast.</p>`;
+    if (els.bestPresidentRaises) els.bestPresidentRaises.innerHTML = administrationRaiseTable(rows, (a, b) => b.raise - a.raise);
+    if (els.worstPresidentRaises) els.worstPresidentRaises.innerHTML = administrationRaiseTable(rows, (a, b) => (a.realRaise ?? 999) - (b.realRaise ?? 999));
+    if (els.partyConflictMatrix) {
+      const matrix = groupAverageRows(rows, (row) => `${row.party} | ${rowHasConflict(row) ? "listed conflict" : "no listed conflict"}`)
+        .sort((a, b) => a.key.localeCompare(b.key));
+      els.partyConflictMatrix.innerHTML = miniTable(matrix, "Profile");
+    }
+    if (els.raiseAnalogYears) {
+      els.raiseAnalogYears.innerHTML = forecast.analogs.map((row, index) => `<div class="rank-row"><span class="rank-index">#${index + 1}</span><span class="rank-main"><span class="rank-title">${row.year} | ${signedPercent(row.raise)} raise</span><span class="rank-meta">${math.escapeHtml(row.president)} | ${math.escapeHtml(row.party)} | CPI ${row.cpi === null ? "N/A" : signedPercent(row.cpi)} | prior ${row.rowPriorRaise === null ? "N/A" : signedPercent(row.rowPriorRaise)} | ${rowHasConflict(row) ? math.escapeHtml(row.conflictLabel) : "no listed conflict"}</span></span><span class="rank-value">${row.weight.toFixed(1)}x</span></div>`).join("");
+    }
+    const rating = ratingOverlay(input);
+    setText(els.ratingOverlayNote, rating.note);
+  }
+
+  function drawCanvasLine(ctx, points, color, lineWidth) {
+    const usable = points.filter((point) => Number.isFinite(point.y));
+    if (usable.length < 2) return;
+    ctx.beginPath();
+    usable.forEach((point, index) => {
+      if (index === 0) ctx.moveTo(point.x, point.y);
+      else ctx.lineTo(point.x, point.y);
+    });
+    ctx.strokeStyle = color;
+    ctx.lineWidth = lineWidth;
+    ctx.lineJoin = "round";
+    ctx.lineCap = "round";
+    ctx.stroke();
+  }
+
+  function pressureColor(realRaise, colors) {
+    if (!Number.isFinite(realRaise)) return rgbaColor(colors.muted, 0.65);
+    if (realRaise >= 1) return rgbaColor(colors.green, 0.88);
+    if (realRaise >= -1) return rgbaColor(colors.teal, 0.86);
+    if (realRaise >= -3) return rgbaColor(colors.orange, 0.88);
+    return rgbaColor(colors.red, 0.88);
+  }
+
   function renderCareerEarnings(input) {
     const canvas = els.paySurfaceCanvas;
     if (!canvas) return;
     const colors = themeColors();
-    const { ctx, width, height } = canvasMetrics(canvas, 360);
+    const { ctx, width, height } = canvasMetrics(canvas, 390);
     clearCanvas(ctx, width, height, colors);
     const years = careerYears(input);
     const scenarios = careerScenarios(input);
@@ -1228,104 +1454,145 @@
       values: years.map((year) => scenarioPay(year, scenario)),
       total: scenarioTotal(years, scenario)
     }));
-    const maxAnnual = Math.max(...series.flatMap((item) => item.values), 1);
-    const maxTotal = Math.max(...series.map((item) => item.total), 1);
     const primary = series.find((item) => item.scenario.primary) || series[series.length - 1];
     const baseline = series.find((item) => item.scenario.key === "base") || series[0];
-    const minTotal = Math.min(...series.map((item) => item.total));
-    const yaw = surfaceView.yaw;
-    const tilt = surfaceView.tilt;
-    const depthMagnitude = (width > 720 ? 16 : 10) + (Math.abs(yaw) / 65) * (width > 720 ? 22 : 14);
-    const depthX = (yaw < 0 ? -1 : 1) * depthMagnitude;
-    const depthY = (width > 720 ? 7 : 5) + (tilt / 62) * (width > 720 ? 15 : 10);
-    const depthFootprint = Math.abs(depthX) * (series.length - 1);
-    const rightPad = (width > 760 ? 178 : 112) + Math.max(0, depthX) * 0.35;
-    const leftPad = (width > 760 ? 70 : 44) + Math.max(0, -depthX) * (series.length - 1);
-    const topPad = 38;
-    const bottom = height - 50;
-    const xSpan = Math.max(1, years.length - 1);
-    const xStep = Math.max(7, (width - leftPad - rightPad - depthFootprint) / xSpan);
-    const yScale = (height - topPad - 105) / maxAnnual;
+    const startYear = years[0] || input.earnStart;
+    const endYear = years[years.length - 1] || input.earnEnd;
+    const cpiBaseYear = cpiComparableYear(startYear);
+    const cpiBase = cpiBaseYear ? cpiForYear(cpiBaseYear) : null;
+    const startPay = primary.values[0] || 0;
+    const cpiTargets = years.map((year) => cpiBase && cpiForYear(year) ? startPay * (cpiForYear(year) / cpiBase) : null);
+    const allValues = primary.values.concat(cpiTargets).filter((value) => Number.isFinite(value));
+    const minValue = Math.min(...allValues, startPay, 0);
+    const maxValue = Math.max(...allValues, 1);
+    const pad = Math.max(800, (maxValue - minValue) * 0.08);
+    const yMin = Math.max(0, minValue - pad);
+    const yMax = maxValue + pad;
+    const margin = { left: width > 720 ? 82 : 54, right: 32, top: 42, bottom: 108 };
+    const innerW = Math.max(1, width - margin.left - margin.right);
+    const innerH = Math.max(1, height - margin.top - margin.bottom);
+    const xFor = (year) => margin.left + ((year - startYear) / Math.max(1, endYear - startYear)) * innerW;
+    const yFor = (value) => margin.top + (1 - (value - yMin) / Math.max(1, yMax - yMin)) * innerH;
 
-    ctx.strokeStyle = rgbaColor(colors.cyan, 0.22);
+    ctx.fillStyle = rgbaColor(colors.panel, 0.9);
+    ctx.strokeStyle = rgbaColor(colors.line, 0.75);
     ctx.lineWidth = 1;
-    for (let i = 0; i < years.length; i += Math.max(1, Math.ceil(years.length / 8))) {
-      const x = leftPad + i * xStep;
+    ctx.beginPath();
+    ctx.roundRect(margin.left - 12, margin.top - 18, innerW + 24, innerH + 34, 8);
+    ctx.fill();
+    ctx.stroke();
+
+    const adminBands = [];
+    years.forEach((year) => {
+      const admin = administrationForYear(year);
+      const key = admin ? `${admin.president}-${admin.party}` : "Unknown";
+      const previous = adminBands[adminBands.length - 1];
+      if (previous && previous.key === key) previous.end = year;
+      else adminBands.push({ key, start: year, end: year, party: admin ? admin.party : "Unknown", president: admin ? admin.president : "Unknown" });
+    });
+    adminBands.forEach((band) => {
+      const x1 = xFor(band.start);
+      const x2 = xFor(Math.min(endYear, band.end + 1));
+      ctx.fillStyle = band.party === "Democratic" ? rgbaColor(colors.blue, 0.13) : rgbaColor(colors.orange, 0.13);
+      ctx.fillRect(x1, margin.top - 18, Math.max(4, x2 - x1), innerH + 34);
+      ctx.fillStyle = rgbaColor(colors.ink, 0.66);
+      ctx.font = "700 11px Segoe UI, system-ui, sans-serif";
+      ctx.textAlign = "left";
+      if (x2 - x1 > 74) ctx.fillText(band.president.split(" ").slice(-1)[0], x1 + 6, margin.top + 2);
+    });
+
+    ctx.strokeStyle = rgbaColor(colors.line, 0.8);
+    ctx.lineWidth = 1;
+    for (let i = 0; i <= 4; i += 1) {
+      const value = yMin + ((yMax - yMin) * i) / 4;
+      const y = yFor(value);
       ctx.beginPath();
-      ctx.moveTo(x, bottom + 8);
-      ctx.lineTo(x + depthX * (series.length - 1), bottom - depthY * (series.length - 1) - 6);
+      ctx.moveTo(margin.left, y);
+      ctx.lineTo(width - margin.right, y);
       ctx.stroke();
-    }
-    for (let level = 0; level <= 4; level += 1) {
-      const value = (maxAnnual * level) / 4;
-      const y = bottom - value * yScale;
-      ctx.beginPath();
-      ctx.moveTo(leftPad - 12, y);
-      ctx.lineTo(width - rightPad + depthX * (series.length - 1), y - depthY * (series.length - 1));
-      ctx.stroke();
-      if (level > 0) {
-        ctx.fillStyle = rgbaColor(colors.ink, 0.82);
-        ctx.font = "700 11px Segoe UI, system-ui, sans-serif";
-        ctx.textAlign = "right";
-        ctx.fillText(math.money0.format(value), leftPad - 16, y + 4);
-      }
+      ctx.fillStyle = rgbaColor(colors.ink, 0.82);
+      ctx.font = "700 11px Segoe UI, system-ui, sans-serif";
+      ctx.textAlign = "right";
+      ctx.fillText(math.money0.format(value), margin.left - 18, y + 4);
     }
 
-    ctx.font = "700 12px Segoe UI, system-ui, sans-serif";
-    for (let j = series.length - 1; j >= 0; j -= 1) {
-      const item = series[j];
-      const depthOffsetX = j * depthX;
-      const depthOffsetY = j * depthY;
-      const base = item.values.map((_value, index) => ({
-        x: leftPad + index * xStep + depthOffsetX,
-        y: bottom - depthOffsetY
-      }));
-      const top = item.values.map((value, index) => ({
-        x: leftPad + index * xStep + depthOffsetX,
-        y: bottom - depthOffsetY - Math.max(2, value * yScale)
-      }));
-      for (let i = 0; i < years.length - 1; i += 1) {
-        const t = item.values[i] / maxAnnual;
-        polygon(ctx, [base[i], base[i + 1], top[i + 1], top[i]], rgbaColor(blendColor(item.scenario.color, colors.panel, 0.18 + t * 0.18), item.scenario.primary ? 0.82 : 0.62), rgbaColor(item.scenario.color, item.scenario.primary ? 0.88 : 0.48), item.scenario.primary ? 1.4 : 0.9);
-      }
+    const payPoints = years.map((year, index) => ({ x: xFor(year), y: yFor(primary.values[index]), value: primary.values[index], year }));
+    const cpiPoints = years.map((year, index) => ({ x: xFor(year), y: cpiTargets[index] === null ? NaN : yFor(cpiTargets[index]), value: cpiTargets[index], year }));
+    if (payPoints.length > 1) {
       ctx.beginPath();
-      top.forEach((point, index) => {
+      payPoints.forEach((point, index) => {
         if (index === 0) ctx.moveTo(point.x, point.y);
         else ctx.lineTo(point.x, point.y);
       });
-      ctx.strokeStyle = item.scenario.color;
-      ctx.lineWidth = item.scenario.primary ? 4 : 2.5;
-      ctx.stroke();
-      const last = top[top.length - 1] || { x: leftPad + depthOffsetX, y: bottom - depthOffsetY };
-      const label = `${item.scenario.shortLabel} ${math.money0.format(item.total)}`;
-      drawCareerLabel(ctx, label, Math.min(width - 8, last.x + 12), Math.max(20, last.y - 2), colors);
+      ctx.lineTo(payPoints[payPoints.length - 1].x, margin.top + innerH);
+      ctx.lineTo(payPoints[0].x, margin.top + innerH);
+      ctx.closePath();
+      ctx.fillStyle = rgbaColor(colors.teal, 0.16);
+      ctx.fill();
     }
+    drawCanvasLine(ctx, cpiPoints, rgbaColor(colors.red, 0.9), 3);
+    drawCanvasLine(ctx, payPoints, rgbaColor(colors.blue, 0.96), 4);
 
-    const firstYear = years[0] || input.earnStart;
-    const lastYear = years[years.length - 1] || input.earnEnd;
+    const raiseRows = contextRows(years, input);
+    const barMid = height - 66;
+    const barScale = 5;
+    raiseRows.forEach((row) => {
+      const x = xFor(row.year);
+      const real = row.realRaise;
+      const h = Number.isFinite(real) ? clamp(Math.abs(real) * barScale, 3, 42) : 3;
+      const y = Number.isFinite(real) && real >= 0 ? barMid - h : barMid;
+      ctx.fillStyle = pressureColor(real, colors);
+      ctx.fillRect(x - 4, y, 8, h);
+      if (rowHasConflict(row)) {
+        ctx.fillStyle = rgbaColor(colors.red, 0.9);
+        ctx.fillRect(x - 3, height - 32, 6, 12);
+      }
+    });
+    ctx.strokeStyle = rgbaColor(colors.ink, 0.5);
+    ctx.beginPath();
+    ctx.moveTo(margin.left, barMid);
+    ctx.lineTo(width - margin.right, barMid);
+    ctx.stroke();
+
+    years.forEach((year) => {
+      if (year === startYear || year === endYear || year % 5 === 0) {
+        ctx.fillStyle = rgbaColor(colors.ink, 0.84);
+        ctx.font = "700 11px Segoe UI, system-ui, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(String(year), xFor(year), height - 14);
+      }
+    });
+    const lastPoint = payPoints[payPoints.length - 1];
+    if (lastPoint) {
+      ctx.fillStyle = colors.blue;
+      ctx.beginPath();
+      ctx.arc(lastPoint.x, lastPoint.y, 6, 0, Math.PI * 2);
+      ctx.fill();
+      drawCareerLabel(ctx, `${endYear} ${math.money0.format(lastPoint.value)}`, Math.min(width - 8, lastPoint.x + 12), Math.max(24, lastPoint.y - 10), colors);
+    }
     ctx.fillStyle = rgbaColor(colors.ink, 0.9);
-    ctx.font = "700 12px Segoe UI, system-ui, sans-serif";
+    ctx.font = "800 12px Segoe UI, system-ui, sans-serif";
     ctx.textAlign = "left";
-    ctx.fillText(String(firstYear), leftPad, bottom + 28);
-    ctx.textAlign = "right";
-    ctx.fillText(String(lastYear), width - rightPad + depthX * (series.length - 1), bottom + 28 - depthY * (series.length - 1));
+    ctx.fillText("Selected annual pay", margin.left, 24);
+    ctx.fillStyle = rgbaColor(colors.red, 0.92);
+    ctx.fillText("BLS CPI target", margin.left + 156, 24);
+    ctx.fillStyle = rgbaColor(colors.ink, 0.78);
+    ctx.fillText("Real raise bars below: green ahead of CPI, red behind; bottom ticks mark VA-listed conflict eras", margin.left, height - 84);
 
-    const raise = primary.values.length > 1 ? primary.values[primary.values.length - 1] - primary.values[primary.values.length - 2] : 0;
-    const previous = primary.values.length > 1 ? primary.values[primary.values.length - 2] : primary.values[0] || 0;
-    const raisePct = previous ? (raise / previous) * 100 : 0;
-    const lastPointX = leftPad + (years.length - 1) * xStep + (series.length - 1) * depthX;
-    const lastPointY = bottom - (series.length - 1) * depthY - Math.max(2, (primary.values[primary.values.length - 1] || 0) * yScale);
-    drawCareerLabel(ctx, `${lastYear} raise ${raise >= 0 ? "+" : "-"}${math.money0.format(Math.abs(raise))} (${raisePct >= 0 ? "+" : ""}${raisePct.toFixed(1)}%)`, Math.min(width - 8, lastPointX + 10), Math.max(20, lastPointY - 28), colors);
-
-    setText(els.surfaceTitle, `${firstYear}-${lastYear} earnings | GS-${input.grade} Step ${input.step}`);
-    setText(els.surfacePeak, math.money0.format(maxTotal));
-    setText(els.surfaceRange, `${years.length} years | ${input.compareMode === "locality" ? "locality/base-only" : input.compareMode === "steps" ? "adjacent steps" : "adjacent grades"}`);
+    const forecast = raiseForecast(input);
+    const rating = ratingOverlay(input);
+    const lastRaise = baseRaiseForYear(input.year);
+    setText(els.surfaceTitle, `${startYear}-${endYear} raise intelligence | GS-${input.grade} Step ${input.step}`);
+    setText(els.surfacePeak, forecast.median === null ? "N/A" : signedPercent(forecast.median));
+    setText(els.surfaceRange, `${forecast.targetYear} analog | ${forecast.low === null || forecast.high === null ? "band N/A" : `${signedPercent(forecast.low)} to ${signedPercent(forecast.high)}`}`);
     setText(els.surfaceSelectedLabel, "Career total");
     setText(els.surfaceSelected, math.money0.format(primary.total));
     setText(els.surfaceSpreadLabel, "Vs base-only");
     setText(els.surfaceSpread, `${primary.total >= baseline.total ? "+" : "-"}${math.money0.format(Math.abs(primary.total - baseline.total))}`);
-    setText(els.surfaceRaise, `${raise >= 0 ? "+" : "-"}${math.money0.format(Math.abs(raise))}`);
-    setText(els.surfaceCompare, math.money0.format(maxTotal - minTotal));
+    setText(els.surfaceRaise, lastRaise === null ? "N/A" : signedPercent(lastRaise));
+    setText(els.surfaceCompareLabel, "Rating overlay");
+    setText(els.surfaceCompare, math.money0.format(rating.amount));
+    renderRaisePanels(input);
   }
 
   function drawExtrudedBar(ctx, x, bottom, width, height, depth, color, colors) {
@@ -1432,9 +1699,115 @@
     }
   }
 
+  function localityPointColor(percent, colors) {
+    const t = clamp((Number(percent) - 17.06) / Math.max(1, 46.34 - 17.06), 0, 1);
+    if (t < 0.5) return blendColor(colors.blue, colors.teal, t * 2);
+    return blendColor(colors.teal, colors.orange, (t - 0.5) * 2);
+  }
+
+  function renderLocalityMap(input) {
+    const canvas = els.localityMapCanvas;
+    if (!canvas) return;
+    const defs = localityDefinitions();
+    const counties = defs.counties;
+    const colors = themeColors();
+    const { ctx, width, height } = canvasMetrics(canvas, 300);
+    clearCanvas(ctx, width, height, colors);
+    if (!counties.length) {
+      setText(els.localityMapMetric, "No data");
+      setText(els.localityMapMeta, "OPM definitions missing");
+      setText(els.localityMapSummary, "No OPM locality definition data is loaded.");
+      setText(els.localityCountyDetail, "No county data loaded.");
+      if (els.localityAreaChips) els.localityAreaChips.innerHTML = "";
+      return;
+    }
+
+    const state = els.localityMapState ? els.localityMapState.value : "";
+    const selectedCounty = selectedLocalityCounty();
+    const focus = els.localityMapFocus ? els.localityMapFocus.value : "selected";
+    const areaByCode = new Map(defs.areas.map((area) => [area.code, area]));
+    const highCodes = new Set(defs.areas.slice().sort((a, b) => Number(b.percentage) - Number(a.percentage)).slice(0, 8).map((area) => area.code));
+    const visible = counties
+      .filter((county) => !state || county.state_abbr === state)
+      .filter((county) => Number.isFinite(Number(county.lat)) && Number.isFinite(Number(county.lon)));
+    const points = visible.length ? visible : counties.filter((county) => Number.isFinite(Number(county.lat)) && Number.isFinite(Number(county.lon)));
+    const selectedCode = input.localityArea ? input.localityArea.code : (selectedCounty ? selectedCounty.locality_code : null);
+    const strongFor = (county) => {
+      if (selectedCounty && county.fips === selectedCounty.fips) return true;
+      if (focus === "all") return true;
+      if (focus === "highest") return highCodes.has(county.locality_code);
+      if (focus === "not-rus") return county.locality_code !== "RUS";
+      return selectedCode ? county.locality_code === selectedCode : county.locality_code !== "RUS";
+    };
+    const lats = points.map((county) => Number(county.lat));
+    const lons = points.map((county) => Number(county.lon));
+    const minLat = Math.min(...lats);
+    const maxLat = Math.max(...lats);
+    const minLon = Math.min(...lons);
+    const maxLon = Math.max(...lons);
+    const pad = width > 720 ? 34 : 22;
+    const xFor = (lon) => pad + ((lon - minLon) / Math.max(0.01, maxLon - minLon)) * (width - pad * 2);
+    const yFor = (lat) => pad + (1 - ((lat - minLat) / Math.max(0.01, maxLat - minLat))) * (height - pad * 2);
+
+    ctx.fillStyle = rgbaColor(colors.panel, 0.9);
+    ctx.strokeStyle = rgbaColor(colors.line, 0.7);
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.roundRect(10, 10, width - 20, height - 20, 8);
+    ctx.fill();
+    ctx.stroke();
+
+    points.slice().sort((a, b) => Number(strongFor(a)) - Number(strongFor(b))).forEach((county) => {
+      const strong = strongFor(county);
+      const selected = selectedCounty && county.fips === selectedCounty.fips;
+      const x = xFor(Number(county.lon));
+      const y = yFor(Number(county.lat));
+      ctx.beginPath();
+      ctx.arc(x, y, selected ? 6 : strong ? 3.2 : 1.7, 0, Math.PI * 2);
+      ctx.fillStyle = rgbaColor(localityPointColor(county.locality_percent, colors), selected ? 0.98 : strong ? 0.82 : 0.2);
+      ctx.fill();
+      if (selected) {
+        ctx.strokeStyle = rgbaColor(colors.red, 0.95);
+        ctx.lineWidth = 2.4;
+        ctx.stroke();
+        ctx.fillStyle = rgbaColor(colors.ink, 0.94);
+        ctx.font = "800 12px Segoe UI, system-ui, sans-serif";
+        ctx.textAlign = x < width * 0.72 ? "left" : "right";
+        const labelX = x < width * 0.72 ? x + 12 : x - 12;
+        ctx.fillText(`${county.name}, ${county.state_abbr} | ${county.locality_code}`, labelX, Math.max(24, y - 12));
+      }
+    });
+
+    const explicit = counties.filter((county) => county.locality_code !== "RUS").length;
+    const selectedArea = selectedCounty ? areaByCode.get(selectedCounty.locality_code) : (selectedCode ? areaByCode.get(selectedCode) : null);
+    setText(els.localityMapTitle, state ? `${state} county locality map` : "U.S. county locality point map");
+    setText(els.localityMapMetric, `${points.length.toLocaleString()} counties`);
+    setText(els.localityMapMeta, selectedArea ? `${selectedArea.code} | ${math.pct(selectedArea.percentage)}` : (state || "all states"));
+    if (selectedCounty) {
+      setText(els.localityCountyDetail, `${selectedCounty.name}, ${selectedCounty.state_abbr} is mapped to ${selectedCounty.locality_code} at ${math.pct(selectedCounty.locality_percent)}. FIPS ${selectedCounty.fips}.`);
+    } else if (selectedArea) {
+      setText(els.localityCountyDetail, `${selectedArea.code} | ${selectedArea.name} is highlighted at ${math.pct(selectedArea.percentage)}. Select a county for exact FIPS detail.`);
+    } else {
+      setText(els.localityCountyDetail, "Select a county for exact FIPS detail, or change the pay-table locality to highlight that area.");
+    }
+    setText(els.localityMapSummary, `${counties.length.toLocaleString()} Census county/county-equivalent points loaded. ${explicit.toLocaleString()} are explicitly assigned to an OPM locality area; remaining counties use Rest of U.S. unless OPM defines otherwise.`);
+    if (els.localityAreaChips) {
+      const counts = new Map();
+      visible.forEach((county) => counts.set(county.locality_code, (counts.get(county.locality_code) || 0) + 1));
+      els.localityAreaChips.innerHTML = Array.from(counts.entries())
+        .map(([code, count]) => ({ code, count, area: areaByCode.get(code) }))
+        .sort((a, b) => b.count - a.count || Number(b.area ? b.area.percentage : 0) - Number(a.area ? a.area.percentage : 0))
+        .slice(0, 12)
+        .map((item) => `<span class="locality-chip${item.code === selectedCode ? " is-selected" : ""}"><b>${math.escapeHtml(item.code)}</b> ${item.count} | ${item.area ? math.pct(item.area.percentage) : "N/A"}</span>`)
+        .join("");
+    }
+  }
   function render3DLab(input) {
     if (els.surfaceMode.value === "career") renderCareerEarnings(input);
-    else renderPaySurface(input);
+    else {
+      renderPaySurface(input);
+      renderRaisePanels(input);
+    }
     renderLocalityLift(input);
     renderCapPressure(input);
   }
@@ -1473,6 +1846,7 @@
     renderSummary(result, compare);
     renderPayPicture(result);
     renderLocalityHighlights(input);
+    renderLocalityMap(input);
     renderTrace(result);
     renderSchedule(input.year, input.grade, input.step);
     renderChart(input.year, input.grade, input.step);
@@ -1518,7 +1892,11 @@
       els.earnStart.value = "2017";
       els.earnEnd.value = "2026";
       els.compareMode.value = "grades";
+      if (els.ratingProfile) els.ratingProfile.value = "successful";
       els.surfaceYearSpan.value = "25";
+      if (els.localityMapState) els.localityMapState.value = "";
+      fillLocalityCountyOptions();
+      if (els.localityMapFocus) els.localityMapFocus.value = "selected";
       if (els.contextStart) els.contextStart.value = "1977";
       if (els.contextEnd) els.contextEnd.value = "2026";
       if (els.contextView) els.contextView.value = "selected";
@@ -1539,8 +1917,15 @@
       renderAll();
     });
     [els.grade, els.step, els.compareYear, els.cap, els.applyCap].forEach((el) => el.addEventListener("change", renderAll));
-    [els.surfaceMode, els.earnStart, els.earnEnd, els.compareMode, els.surfaceYearSpan].forEach((el) => el.addEventListener("change", renderAll));
+    [els.surfaceMode, els.earnStart, els.earnEnd, els.compareMode, els.ratingProfile, els.surfaceYearSpan].filter(Boolean).forEach((el) => el.addEventListener("change", renderAll));
     [els.contextStart, els.contextEnd, els.contextView].filter(Boolean).forEach((el) => el.addEventListener("change", renderAll));
+    if (els.localityMapState) {
+      els.localityMapState.addEventListener("change", () => {
+        fillLocalityCountyOptions();
+        renderAll();
+      });
+    }
+    [els.localityMapCounty, els.localityMapFocus].filter(Boolean).forEach((el) => el.addEventListener("change", renderAll));
     els.scheduleTable.addEventListener("click", (event) => {
       const button = event.target.closest(".cell-button");
       if (!button) return;

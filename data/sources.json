@@ -16,6 +16,18 @@
       "note": "Used for the locality area selector and 2026 locality percentages."
     },
     {
+      "id": "opm-2026-locality-definitions",
+      "title": "OPM 2026 locality pay area definitions",
+      "url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/2026/locality-pay-area-definitions/",
+      "note": "Used for county and FIPS locality-area mapping. Official OPM locality definitions control."
+    },
+    {
+      "id": "census-2025-county-gazetteer",
+      "title": "Census 2025 National Counties Gazetteer",
+      "url": "https://www2.census.gov/geo/docs/maps-data/data/gazetteer/2025_Gazetteer/2025_Gaz_counties_national.zip",
+      "note": "Used for compact county representative latitude and longitude points; these are not boundary polygons or legal duty-station determinations."
+    },
+    {
       "id": "opm-2026-rus",
       "title": "OPM 2026 Rest of U.S. locality schedule",
       "url": "https://www.opm.gov/policy-data-oversight/pay-leave/salaries-wages/2026/locality-pay-area-definitions/",
