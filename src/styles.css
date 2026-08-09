@@ -1987,9 +1987,16 @@ html[data-shell="module"] .layout {
     display: none;
   }
 
-  .brand-title span,
+  .brand-title span:not(.repo-size),
   .top-actions .text-button {
     display: none;
+  }
+
+  .brand-title .repo-size {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .watermark {
