@@ -67,6 +67,7 @@
     agencyPressureChartTitle: $("agencyPressureChartTitle"),
     agencyPressureChartMetric: $("agencyPressureChartMetric"),
     agencyPressureCanvas: $("agencyPressureCanvas"),
+    agencyPressureCodeKey: $("agencyPressureCodeKey"),
     agencyPressureTable: $("agencyPressureTable"),
     agencyPressureNote: $("agencyPressureNote"),
     statePressureSort: $("statePressureSort"),
@@ -812,6 +813,29 @@
     return "Top-level OPM agency record";
   }
 
+  function agencyPressurePlainName(row, level) {
+    if (!row) return "N/A";
+    const name = level === "component" ? row.agency_subelement_name : row.agency_name;
+    return name || "N/A";
+  }
+
+  function agencyPressureCodeKeyRow(row, level) {
+    const parent = agencyPressureParent(row, level);
+    const parentText = level === "component" ? `OPM parent agency: ${parent}` : parent;
+    return `<div class="code-key-row"><span class="code-key-code">${math.escapeHtml(agencyPressureCode(row, level))}</span><span class="code-key-main"><strong>${math.escapeHtml(agencyPressurePlainName(row, level))}</strong><b>${math.escapeHtml(parentText)}</b></span></div>`;
+  }
+
+  function renderAgencyPressureCodeKey(rows, level) {
+    if (!els.agencyPressureCodeKey) return;
+    const chartRows = rows.slice(0, 12);
+    if (!chartRows.length) {
+      els.agencyPressureCodeKey.innerHTML = "";
+      return;
+    }
+    const label = level === "component" ? "component" : "agency";
+    els.agencyPressureCodeKey.innerHTML = `<div class="code-key-note"><strong>OPM</strong> = Office of Personnel Management. <strong>GS</strong> = General Schedule. <strong>SES</strong> = Senior Executive Service. Chart labels are OPM ${label} codes.</div><div class="code-key-grid">${chartRows.map((row) => agencyPressureCodeKeyRow(row, level)).join("")}</div>`;
+  }
+
   function agencyPressureMetricValue(row, sort) {
     if (!row) return 0;
     if (sort === "high-share") return Number(row.high_grade_ses_share) || 0;
@@ -931,6 +955,7 @@
       setText(els.agencyPressureSummary, "No OPM agency aggregate is loaded.");
       els.agencyPressureTable.innerHTML = "";
       if (els.agencyPressureExamples) els.agencyPressureExamples.innerHTML = "";
+      if (els.agencyPressureCodeKey) els.agencyPressureCodeKey.innerHTML = "";
       return;
     }
     const rows = agencyPressureRows(level, sort);
@@ -953,6 +978,7 @@
     if (els.agencyPressureExamples) els.agencyPressureExamples.innerHTML = agencyPressureWatchRows().map(agencyPressureExampleRow).join("");
     setText(els.agencyPressureNote, `OPM FWD employment snapshot ${snapshot.year}-${snapshot.month}, published ${snapshot.published}. ${Number(snapshot.pay_redacted_rows || 0).toLocaleString()} pay records are redacted; dollar totals use only numeric annualized_adjusted_basic_pay records. FBI is component DJ02 under DOJ in OPM agency_subelement fields.`);
     renderAgencyPressureChart(rows, level, sort);
+    renderAgencyPressureCodeKey(rows, level);
     els.agencyPressureTable.innerHTML = `<thead><tr><th>${level === "component" ? "Component / bureau" : "Agency / department"}</th><th>Visible payroll</th><th>Visible records</th><th>Average pay</th><th>GS-13 to GS-15</th><th>SES</th><th>High GS + SES</th><th>High GS + SES payroll</th></tr></thead><tbody>${rows.map((row, index) => agencyPressureTableRow(row, index, level)).join("")}</tbody>`;
   }
 
