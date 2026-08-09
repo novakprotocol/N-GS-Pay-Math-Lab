@@ -458,45 +458,101 @@ main {
 
 .cost-pressure-section {
   background:
-    linear-gradient(180deg, color-mix(in srgb, var(--panel) 90%, var(--cyan)), color-mix(in srgb, var(--panel-soft) 88%, var(--blue))),
-    var(--panel-soft);
+    linear-gradient(180deg, color-mix(in srgb, var(--bg) 96%, var(--cyan)), color-mix(in srgb, var(--bg) 94%, var(--blue))),
+    var(--bg);
 }
 
 .cost-pressure-section .section-inner {
   width: min(1380px, 100%);
 }
 
+.cost-pressure-head {
+  align-items: end;
+  margin-bottom: 8px;
+}
+
 .cost-pressure-form {
+  max-width: 460px;
   margin-bottom: 14px;
 }
 
-.cost-pressure-grid {
+.cost-pressure-kpis {
   display: grid;
-  grid-template-columns: minmax(300px, 0.76fr) minmax(300px, 0.7fr) minmax(520px, 1.22fr);
-  gap: 14px;
-  align-items: stretch;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin: 16px 0 14px;
 }
 
-.savings-readout-card {
-  border-color: color-mix(in srgb, var(--orange) 50%, var(--line));
-}
-
-.pressure-readout-card {
+.cost-kpi-card {
+  min-width: 0;
+  min-height: 128px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  justify-content: space-between;
+  gap: 9px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px;
+  background: color-mix(in srgb, var(--panel) 92%, var(--bg));
+  box-shadow: var(--shadow);
 }
 
-.pressure-stat-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px 16px;
+.cost-kpi-card.is-primary {
+  border-color: color-mix(in srgb, var(--blue) 45%, var(--line));
+}
+
+.cost-kpi-card.is-savings {
+  border-color: color-mix(in srgb, var(--orange) 55%, var(--line));
+}
+
+.cost-kpi-card span {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 850;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.cost-kpi-card strong {
+  color: var(--ink);
+  font-size: clamp(1.55rem, 2.1vw, 2.25rem);
+  line-height: 1;
+}
+
+.cost-kpi-card b {
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.35;
+}
+
+.cost-pressure-wide-chart {
+  margin-top: 0;
 }
 
 .cost-pressure-chart-card canvas {
   display: block;
   width: 100%;
-  height: 390px;
+  height: 480px;
+}
+
+.cost-pressure-explain .dropdown-body {
+  padding: 0;
+}
+
+.cost-pressure-note-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0;
+}
+
+.cost-pressure-note-grid .detail-line {
+  margin: 0;
+  padding: 14px;
+  border-right: 1px solid var(--line);
+}
+
+.cost-pressure-note-grid .detail-line:last-child {
+  border-right: 0;
 }
 
 .cost-pressure-table-wrap {
@@ -511,7 +567,6 @@ main {
   box-shadow: inset 4px 0 0 var(--orange);
   background: color-mix(in srgb, var(--panel-soft) 74%, var(--orange));
 }
-
 
 .data-dropdown {
   margin-top: 14px;
@@ -1760,7 +1815,7 @@ html[data-shell="module"] .layout {
   }
 
   .surface-lab,
-  .cost-pressure-grid,
+  .cost-pressure-kpis,
   .agency-pressure-grid,
   .state-pressure-grid,
   .county-map-grid,
@@ -1773,6 +1828,10 @@ html[data-shell="module"] .layout {
   }
 
   .surface-controls {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .cost-pressure-kpis {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -1839,7 +1898,7 @@ html[data-shell="module"] .layout {
   .context-metrics,
   .context-grid,
   .locality-highlights,
-  .cost-pressure-grid,
+  .cost-pressure-kpis,
   .agency-pressure-grid,
   .state-pressure-grid,
   .pressure-stat-grid,
@@ -1850,6 +1909,19 @@ html[data-shell="module"] .layout {
   .probability-row,
   .columns {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .cost-pressure-note-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .cost-pressure-note-grid .detail-line {
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .cost-pressure-note-grid .detail-line:last-child {
+    border-bottom: 0;
   }
 
   .form-grid,

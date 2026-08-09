@@ -7,7 +7,7 @@
   <meta name="description" content="N-GS Pay Math Lab reconstructs and verifies General Schedule base-pay math from 1977 through 2026.">
   <title>N-GS Pay Math Lab</title>
   <link rel="icon" href="../assets/brand/favicon.png">
-  <link rel="stylesheet" href="../styles.css?v=n-gs-pay-math-lab-v0.01-8ec9c870c022">
+  <link rel="stylesheet" href="../styles.css?v=n-gs-pay-math-lab-v0.01-bada55d55b15">
 </head>
 <body>
   <header class="topbar">
@@ -195,42 +195,59 @@
 
       <section class="section cost-pressure-section" id="cost-pressure">
         <div class="section-inner">
-          <p class="kicker">Federal Cost Pressure</p>
-          <h2>Where visible payroll and high-grade concentration pile up</h2>
-          <p class="section-lede">OPM Federal Workforce Data public records are grouped by locality pay area. Dollar totals use visible annualized adjusted basic pay only; redacted public records stay in the audit count and are not reassigned.</p>
+          <div class="chart-head cost-pressure-head">
+            <div>
+              <p class="kicker">Federal Cost Pressure</p>
+              <h2>Locality payroll pressure, ranked cleanly</h2>
+            </div>
+            <div class="chart-metric"><strong id="costPressureMetric">0 areas</strong><span>OPM visible public records</span></div>
+          </div>
+          <p class="section-lede">OPM Federal Workforce Data public records are grouped by locality pay area. Dollar totals use visible annualized adjusted basic pay only; redacted pay records are counted but not estimated.</p>
+          <div class="source-strip source-strip-three cost-pressure-source-strip" aria-label="Federal cost pressure data source">
+            <span><b>OPM FWD</b> 2026-06 employment snapshot</span>
+            <span><b>Dollar rule</b> visible adjusted basic pay only</span>
+            <span><b>RUS model</b> locality-only scenario, not a staffing plan</span>
+          </div>
           <div class="form-grid cost-pressure-form">
             <div class="field wide-field"><label for="costPressureSort">Rank areas by</label><select id="costPressureSort"><option value="payroll" selected>Total visible payroll</option><option value="rus-savings">Modeled savings at RUS</option><option value="high-share">GS-13+ plus SES percentage</option><option value="ses-share">SES percentage</option><option value="high-payroll">GS-13+ plus SES visible payroll</option><option value="average-pay">Average visible pay</option><option value="employees">Visible public records</option></select></div>
           </div>
-          <div class="cost-pressure-grid">
-            <div class="highlight-card pressure-readout-card">
-              <div class="chart-head">
-                <h3 id="costPressurePayrollArea">Largest visible payroll</h3>
-                <div class="chart-metric"><strong id="costPressurePayrollValue">$0</strong><span>annualized adjusted basic pay</span></div>
-              </div>
-              <p class="detail-line" id="costPressureSummary">OPM FWD cost pressure data will render after the app loads.</p>
-              <div class="pressure-stat-grid">
-                <div class="mini-metric"><span>High GS + SES leader</span><strong id="costPressureHighArea">N/A</strong></div>
-                <div class="mini-metric"><span>High GS + SES share</span><strong id="costPressureHighValue">N/A</strong></div>
-                <div class="mini-metric"><span>SES leader</span><strong id="costPressureSesArea">N/A</strong></div>
-                <div class="mini-metric"><span>SES share</span><strong id="costPressureSesValue">N/A</strong></div>
-              </div>
+          <div class="cost-pressure-kpis" aria-label="Federal cost pressure headline metrics">
+            <div class="cost-kpi-card is-primary">
+              <span>Largest visible payroll</span>
+              <strong id="costPressurePayrollValue">$0</strong>
+              <b id="costPressurePayrollArea">Largest visible payroll</b>
             </div>
-            <div class="highlight-card pressure-readout-card savings-readout-card">
-              <div class="chart-head">
-                <h3>Move-to-RUS scenario</h3>
-                <div class="chart-metric"><strong id="costPressureSavingsValue">$0</strong><span id="costPressureSavingsArea">modeled annual savings</span></div>
-              </div>
-              <p class="detail-line" id="costPressureSavingsSummary">Scenario estimate will render after the app loads.</p>
+            <div class="cost-kpi-card is-savings">
+              <span>Move-to-RUS model</span>
+              <strong id="costPressureSavingsValue">$0</strong>
+              <b id="costPressureSavingsArea">modeled annual savings</b>
             </div>
-            <div class="chart-card cost-pressure-chart-card">
-              <div class="chart-head">
-                <h3 id="costPressureChartTitle">Cost pressure by locality</h3>
-                <div class="chart-metric"><strong id="costPressureMetric">0 areas</strong><span>OPM visible public records</span></div>
-              </div>
-              <canvas id="costPressureCanvas" width="980" height="430" role="img" aria-describedby="costPressureDescription">Your browser does not support Canvas.</canvas>
-              <p id="costPressureDescription" class="fine-print">Bar length follows the selected ranking. Labels include visible payroll and GS-13+ plus SES share.</p>
+            <div class="cost-kpi-card">
+              <span>High GS + SES leader</span>
+              <strong id="costPressureHighArea">N/A</strong>
+              <b id="costPressureHighValue">N/A</b>
+            </div>
+            <div class="cost-kpi-card">
+              <span>SES leader</span>
+              <strong id="costPressureSesArea">N/A</strong>
+              <b id="costPressureSesValue">N/A</b>
             </div>
           </div>
+          <div class="chart-card cost-pressure-chart-card cost-pressure-wide-chart">
+            <div class="chart-head">
+              <h3 id="costPressureChartTitle">Cost pressure by locality</h3>
+              <div class="chart-metric"><strong>Top 10</strong><span>bars include high-grade overlay</span></div>
+            </div>
+            <canvas id="costPressureCanvas" width="1200" height="520" role="img" aria-describedby="costPressureDescription">Your browser does not support Canvas.</canvas>
+            <p id="costPressureDescription" class="fine-print">Bar length follows the selected ranking. The thin orange overlay shows GS-13+ plus SES share for each locality area.</p>
+          </div>
+          <details class="data-dropdown cost-pressure-explain">
+            <summary><span>Open model notes</span><span>Source limits, leaders, and RUS scenario</span></summary>
+            <div class="dropdown-body cost-pressure-note-grid">
+              <p class="detail-line" id="costPressureSummary">OPM FWD cost pressure data will render after the app loads.</p>
+              <p class="detail-line" id="costPressureSavingsSummary">Scenario estimate will render after the app loads.</p>
+            </div>
+          </details>
           <details class="data-dropdown">
             <summary><span>Open locality pressure table</span><span>Ranked OPM locality records</span></summary>
             <div class="table-wrap cost-pressure-table-wrap">
@@ -673,17 +690,17 @@
           <h2>Source notes and limitations</h2>
           <p class="section-lede">Official and reconstructed values are visibly distinguished. Reconstructed values are never described as official published tables.</p>
           <ol class="source-list" id="sourceList"></ol>
-          <p class="fine-print" id="buildMeta">Build n-gs-pay-math-lab-v0.01 | commit 8ec9c870c022332550da3f14ff3d11e7911d7a03</p>
+          <p class="fine-print" id="buildMeta">Build n-gs-pay-math-lab-v0.01 | commit bada55d55b15c49e48f1c01c21a919597721a3f4</p>
         </div>
       </section>
 
     </main>
   </div>
 
-  <script src="../data/pay-data.js?v=n-gs-pay-math-lab-v0.01-8ec9c870c022"></script>
-  <script src="../evidence/size-comparison.js?v=n-gs-pay-math-lab-v0.01-8ec9c870c022"></script>
-  <script src="../data-loader.js?v=n-gs-pay-math-lab-v0.01-8ec9c870c022"></script>
-  <script src="../formulas.js?v=n-gs-pay-math-lab-v0.01-8ec9c870c022"></script>
-  <script src="../app.js?v=n-gs-pay-math-lab-v0.01-8ec9c870c022"></script>
+  <script src="../data/pay-data.js?v=n-gs-pay-math-lab-v0.01-bada55d55b15"></script>
+  <script src="../evidence/size-comparison.js?v=n-gs-pay-math-lab-v0.01-bada55d55b15"></script>
+  <script src="../data-loader.js?v=n-gs-pay-math-lab-v0.01-bada55d55b15"></script>
+  <script src="../formulas.js?v=n-gs-pay-math-lab-v0.01-bada55d55b15"></script>
+  <script src="../app.js?v=n-gs-pay-math-lab-v0.01-bada55d55b15"></script>
 </body>
 </html>
