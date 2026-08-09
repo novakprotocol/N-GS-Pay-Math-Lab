@@ -417,6 +417,32 @@ main {
   gap: 14px;
 }
 
+.locality-highlights .data-dropdown {
+  margin-top: 0;
+}
+
+.highlight-dropdown summary strong {
+  color: var(--ink);
+  font-size: 1rem;
+}
+
+.highlight-dropdown summary b {
+  display: block;
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.dropdown-body {
+  padding: 12px 14px 14px;
+  border-top: 1px solid var(--line);
+}
+
+.dropdown-body .fine-print {
+  margin: 12px 0 0;
+}
+
 .highlight-card {
   min-width: 0;
   border: 1px solid var(--line);
@@ -446,9 +472,13 @@ main {
 
 .cost-pressure-grid {
   display: grid;
-  grid-template-columns: minmax(320px, 0.82fr) minmax(520px, 1.18fr);
+  grid-template-columns: minmax(300px, 0.76fr) minmax(300px, 0.7fr) minmax(520px, 1.22fr);
   gap: 14px;
   align-items: stretch;
+}
+
+.savings-readout-card {
+  border-color: color-mix(in srgb, var(--orange) 50%, var(--line));
 }
 
 .pressure-readout-card {

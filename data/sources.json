@@ -97,7 +97,7 @@
       "id": "opm-fwd-employment-2026-06",
       "title": "OPM Federal Workforce Data June 2026 employment raw data",
       "url": "https://data.opm.gov/explore-data/data/data-downloads",
-      "note": "Used to aggregate visible Department of Veterans Affairs duty-station employee rows by location and all-agency locality and agency/component cost pressure using annualized_adjusted_basic_pay, pay_plan_code, grade, locality_pay_area, agency, and agency_subelement fields. OPM notes the employment files are EHRI Status snapshots and some fields are redacted under the data release policy."
+      "note": "Used to aggregate visible Department of Veterans Affairs duty-station employee records by location and all-agency locality and agency/component cost pressure using annualized_adjusted_basic_pay, pay_plan_code, grade, locality_pay_area, agency, and agency_subelement fields. OPM notes the employment files are EHRI Status snapshots and some fields are redacted under the data release policy."
     },
     {
       "id": "opm-fwd-duty-stations",
@@ -121,13 +121,13 @@
       "id": "va-manila-clinic",
       "title": "VA Manila VA Clinic",
       "url": "https://www.va.gov/manila-health-care/locations/manila-va-clinic/",
-      "note": "Used to identify the Manila VA Clinic as a VA facility in the Philippines. OPM FWD public employment rows do not expose a Manila/Pasay/Philippines VA duty-station count in the June 2026 release."
+      "note": "Used to identify the Manila VA Clinic as a VA facility in the Philippines. OPM FWD public employment records do not expose a Manila/Pasay/Philippines VA duty-station count in the June 2026 release."
     },
     {
       "id": "va-saint-croix-clinic",
       "title": "VA Saint Croix VA Clinic",
       "url": "https://www.va.gov/caribbean-health-care/locations/saint-croix-va-clinic/",
-      "note": "Used to identify the Saint Croix VA Clinic location; employee counts are from OPM FWD duty-station rows, not from the VA facility page."
+      "note": "Used to identify the Saint Croix VA Clinic location; employee counts are from OPM FWD duty-station records, not from the VA facility page."
     },
     {
       "id": "census-2025-state-gazetteer",
@@ -151,7 +151,7 @@
       "id": "va-unique-patients-by-procedure-fy2025",
       "title": "VA FY2025 UniquePatientsByProcedure",
       "url": "https://www.data.va.gov/dataset/UniquePatientsByProcedure_FY25/9fni-rrk3",
-      "note": "Used for administrative parent facility-by-procedure unique-patient counts. The file is not summed into total facility patients because VA states national totals do not equal summed locations and the rows are procedure-level."
+      "note": "Used for administrative parent facility-by-procedure unique-patient counts. The file is not summed into total facility patients because VA states national totals do not equal summed locations and the records are procedure-level."
     },
     {
       "id": "va-vetdata-glossary-unique-patients",
@@ -164,6 +164,30 @@
       "title": "Federal Reserve Z.1 Financial Accounts CSV package",
       "url": "https://www.federalreserve.gov/releases/z1/default.htm",
       "note": "Used for the federal market proxy: household and nonprofit corporate equities from series LM153064105.Q. Dow Jones index data is not loaded under the federal-.gov-only source rule."
+    },
+    {
+      "id": "census-2025-state-population-estimates",
+      "title": "Census Vintage 2025 state resident population estimates",
+      "url": "https://www.census.gov/data/datasets/time-series/demo/popest/2020s-state-total.html",
+      "note": "Used for resident-population denominators in state pressure metrics."
+    },
+    {
+      "id": "census-2025-state-population-csv",
+      "title": "Census NST-EST2025-ALLDATA state population CSV",
+      "url": "https://www2.census.gov/programs-surveys/popest/datasets/2020-2025/state/totals/NST-EST2025-ALLDATA.csv",
+      "note": "Used to load July 1, 2025 resident population by state and District of Columbia."
+    },
+    {
+      "id": "va-vetpop-fy2026-state",
+      "title": "VA VetPop2023 Veteran Population by State FY2026",
+      "url": "https://www.data.va.gov/dataset/Veteran-Population-by-State-FY2026/w6fb-7dn4",
+      "note": "Used for projected Veteran-population denominators by state."
+    },
+    {
+      "id": "va-facilities-aggregated-fy2024",
+      "title": "VA Facilities Aggregated and Order FY2024",
+      "url": "https://www.data.va.gov/dataset/VA-Facilities-Aggregated-and-Order-FY2024/unhx-5tdv",
+      "note": "Used for VA facility/site counts by state and facility type."
     }
   ]
 }

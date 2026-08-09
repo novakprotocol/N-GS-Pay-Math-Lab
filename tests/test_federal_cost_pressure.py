@@ -32,6 +32,18 @@ class FederalCostPressureTests(unittest.TestCase):
         self.assertEqual(dc["ses_count"], 3_674)
         self.assertGreater(dc["high_grade_ses_visible_payroll"], 17_000_000_000)
 
+
+    def test_rus_relocation_scenario_is_available(self) -> None:
+        snapshot = DATA["snapshot"]
+        self.assertAlmostEqual(snapshot["rus_locality_percent_2026"], 17.06, places=2)
+        self.assertGreater(snapshot["modeled_rus_relocation_savings"], 8_000_000_000)
+        self.assertEqual(snapshot["modeled_rus_top_savings_area"]["salary_table_code"], "DCB")
+        dcb = next(area for area in DATA["areas"] if area["salary_table_code"] == "DCB")
+        rus = next(area for area in DATA["areas"] if area["salary_table_code"] == "RUS")
+        self.assertEqual(dcb["modeled_rus_savings_rank"], 1)
+        self.assertGreater(dcb["modeled_rus_savings"], 3_000_000_000)
+        self.assertEqual(rus["modeled_rus_savings"], 0)
+
     def test_area_rows_have_salary_table_mapping(self) -> None:
         missing = [area["opm_fwd_locality_code"] for area in DATA["areas"] if not area["salary_table_code"] and area["opm_fwd_locality_code"] != "ZZ"]
         self.assertEqual(missing, [])

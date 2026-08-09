@@ -7,7 +7,7 @@
   <meta name="description" content="N-GS Pay Math Lab reconstructs and verifies General Schedule base-pay math from 1977 through 2026.">
   <title>N-GS Pay Math Lab</title>
   <link rel="icon" href="../assets/brand/favicon.png">
-  <link rel="stylesheet" href="../styles.css?v=n-gs-pay-math-lab-v0.01-ec4f6865e8f5">
+  <link rel="stylesheet" href="../styles.css?v=n-gs-pay-math-lab-v0.01-0b4f434c37e0">
 </head>
 <body>
   <header class="topbar">
@@ -123,29 +123,26 @@
             <p class="table-note">Base pay only. Locality schedules, special rates, LEO schedules, title 38 schedules, and agency payroll determinations are outside this calculator.</p>
           </div>
           <div class="locality-highlights" id="locality-highlights" aria-label="Locality pay, Census income-tax, and BEA price-level highlights">
-            <div class="highlight-card">
-              <div class="chart-head">
-                <h3>Highest pay areas</h3>
-                <div class="chart-metric"><strong id="highestAreaPay">$0</strong><span id="highestAreaName"></span></div>
+            <details class="data-dropdown highlight-dropdown">
+              <summary><span>Highest pay areas</span><span><strong id="highestAreaPay">$0</strong> <b id="highestAreaName"></b></span></summary>
+              <div class="dropdown-body">
+                <div class="rank-list" id="highestPayList"></div>
               </div>
-              <div class="rank-list" id="highestPayList"></div>
-            </div>
-            <div class="highlight-card tax-card">
-              <div class="chart-head">
-                <h3>No Census T40 income-tax collections</h3>
-                <div class="chart-metric"><strong id="noTaxAreaPay">$0</strong><span id="noTaxAreaName"></span></div>
+            </details>
+            <details class="data-dropdown highlight-dropdown tax-card">
+              <summary><span>No Census T40 income-tax collections</span><span><strong id="noTaxAreaPay">$0</strong> <b id="noTaxAreaName"></b></span></summary>
+              <div class="dropdown-body">
+                <div class="rank-list" id="noTaxAreaList"></div>
+                <p class="fine-print" id="taxHighlightNote"></p>
               </div>
-              <div class="rank-list" id="noTaxAreaList"></div>
-              <p class="fine-print" id="taxHighlightNote"></p>
-            </div>
-            <div class="highlight-card cost-card">
-              <div class="chart-head">
-                <h3>BEA price level vs locality</h3>
-                <div class="chart-metric"><strong id="costAreaGap">0 pts</strong><span id="costAreaName"></span></div>
+            </details>
+            <details class="data-dropdown highlight-dropdown cost-card">
+              <summary><span>BEA price level vs locality</span><span><strong id="costAreaGap">0 pts</strong> <b id="costAreaName"></b></span></summary>
+              <div class="dropdown-body">
+                <div class="rank-list" id="costAreaList"></div>
+                <p class="fine-print" id="costHighlightNote"></p>
               </div>
-              <div class="rank-list" id="costAreaList"></div>
-              <p class="fine-print" id="costHighlightNote"></p>
-            </div>
+            </details>
           </div>
         </div>
       </section>
@@ -157,9 +154,9 @@
         <div class="section-inner">
           <p class="kicker">Federal Cost Pressure</p>
           <h2>Where visible payroll and high-grade concentration pile up</h2>
-          <p class="section-lede">OPM Federal Workforce Data rows are grouped by locality pay area. Dollar totals use visible annualized adjusted basic pay only; redacted rows stay in the audit count and are not reassigned.</p>
+          <p class="section-lede">OPM Federal Workforce Data public records are grouped by locality pay area. Dollar totals use visible annualized adjusted basic pay only; redacted public records stay in the audit count and are not reassigned.</p>
           <div class="form-grid cost-pressure-form">
-            <div class="field wide-field"><label for="costPressureSort">Rank areas by</label><select id="costPressureSort"><option value="payroll" selected>Total visible payroll</option><option value="high-share">GS-13+ plus SES percentage</option><option value="ses-share">SES percentage</option><option value="high-payroll">GS-13+ plus SES visible payroll</option><option value="average-pay">Average visible pay</option><option value="employees">Visible employee rows</option></select></div>
+            <div class="field wide-field"><label for="costPressureSort">Rank areas by</label><select id="costPressureSort"><option value="payroll" selected>Total visible payroll</option><option value="rus-savings">Modeled savings at RUS</option><option value="high-share">GS-13+ plus SES percentage</option><option value="ses-share">SES percentage</option><option value="high-payroll">GS-13+ plus SES visible payroll</option><option value="average-pay">Average visible pay</option><option value="employees">Visible public records</option></select></div>
           </div>
           <div class="cost-pressure-grid">
             <div class="highlight-card pressure-readout-card">
@@ -175,34 +172,41 @@
                 <div class="mini-metric"><span>SES share</span><strong id="costPressureSesValue">N/A</strong></div>
               </div>
             </div>
+            <div class="highlight-card pressure-readout-card savings-readout-card">
+              <div class="chart-head">
+                <h3>Move-to-RUS scenario</h3>
+                <div class="chart-metric"><strong id="costPressureSavingsValue">$0</strong><span id="costPressureSavingsArea">modeled annual savings</span></div>
+              </div>
+              <p class="detail-line" id="costPressureSavingsSummary">Scenario estimate will render after the app loads.</p>
+            </div>
             <div class="chart-card cost-pressure-chart-card">
               <div class="chart-head">
                 <h3 id="costPressureChartTitle">Cost pressure by locality</h3>
-                <div class="chart-metric"><strong id="costPressureMetric">0 areas</strong><span>OPM visible rows</span></div>
+                <div class="chart-metric"><strong id="costPressureMetric">0 areas</strong><span>OPM visible public records</span></div>
               </div>
               <canvas id="costPressureCanvas" width="980" height="430" role="img" aria-describedby="costPressureDescription">Your browser does not support Canvas.</canvas>
               <p id="costPressureDescription" class="fine-print">Bar length follows the selected ranking. Labels include visible payroll and GS-13+ plus SES share.</p>
             </div>
           </div>
           <details class="data-dropdown">
-            <summary><span>Open locality pressure table</span><span>Ranked OPM locality rows</span></summary>
+            <summary><span>Open locality pressure table</span><span>Ranked OPM locality records</span></summary>
             <div class="table-wrap cost-pressure-table-wrap">
               <table id="costPressureTable"></table>
             </div>
           </details>
-          <p class="fine-print" id="costPressureNote">OPM redacted locality/pay rows are excluded from area dollar totals and shown in the audit text.</p>
+          <p class="fine-print" id="costPressureNote">OPM redacted locality/pay records are excluded from area dollar totals and shown in the audit text.</p>
           <div class="agency-pressure-block" id="agency-pressure">
             <div class="chart-head">
               <div>
                 <p class="kicker table-kicker">Agency Breakdown</p>
                 <h3>Which agencies and components carry the high-grade load</h3>
               </div>
-              <div class="chart-metric"><strong id="agencyPressureMetric">0 groups</strong><span>OPM visible rows</span></div>
+              <div class="chart-metric"><strong id="agencyPressureMetric">0 groups</strong><span>OPM visible public records</span></div>
             </div>
-            <p class="section-lede">Switch between top-level OPM agency rows and agency subelements/components. FBI is a DOJ subelement in OPM data; VA and DOL are top-level agency rows.</p>
+            <p class="section-lede">Switch between top-level OPM agency records and agency subelements/components. FBI is a DOJ subelement in OPM data; VA and DOL are top-level agency records.</p>
             <div class="form-grid agency-pressure-form">
               <div class="field"><label for="agencyPressureLevel">Group by</label><select id="agencyPressureLevel"><option value="agency" selected>Agency / department</option><option value="component">Component / bureau</option></select></div>
-              <div class="field wide-field"><label for="agencyPressureSort">Rank agencies by</label><select id="agencyPressureSort"><option value="payroll" selected>Total visible payroll</option><option value="high-share">GS-13+ plus SES percentage</option><option value="ses-share">SES percentage</option><option value="high-payroll">GS-13+ plus SES visible payroll</option><option value="average-pay">Average visible pay</option><option value="employees">Visible employee rows</option></select></div>
+              <div class="field wide-field"><label for="agencyPressureSort">Rank agencies by</label><select id="agencyPressureSort"><option value="payroll" selected>Total visible payroll</option><option value="high-share">GS-13+ plus SES percentage</option><option value="ses-share">SES percentage</option><option value="high-payroll">GS-13+ plus SES visible payroll</option><option value="average-pay">Average visible pay</option><option value="employees">Visible public records</option></select></div>
             </div>
             <div class="agency-pressure-grid">
               <div class="highlight-card pressure-readout-card">
@@ -216,19 +220,19 @@
               <div class="chart-card agency-pressure-chart-card">
                 <div class="chart-head">
                   <h3 id="agencyPressureChartTitle">Agency pressure</h3>
-                  <div class="chart-metric"><strong id="agencyPressureChartMetric">0 rows</strong><span>OPM agency fields</span></div>
+                  <div class="chart-metric"><strong id="agencyPressureChartMetric">0 records</strong><span>OPM agency fields</span></div>
                 </div>
                 <canvas id="agencyPressureCanvas" width="980" height="430" role="img" aria-describedby="agencyPressureDescription">Your browser does not support Canvas.</canvas>
                 <p id="agencyPressureDescription" class="fine-print">Bar length follows the selected ranking. Orange underline shows GS-13+ plus SES share.</p>
               </div>
             </div>
             <details class="data-dropdown">
-              <summary><span>Open all agency/component rows</span><span>Full OPM agency breakdown</span></summary>
+              <summary><span>Open all agency/component records</span><span>Full OPM agency breakdown</span></summary>
               <div class="table-wrap agency-pressure-table-wrap">
                 <table id="agencyPressureTable"></table>
               </div>
             </details>
-            <p class="fine-print" id="agencyPressureNote">OPM redacted pay rows are excluded from group dollar totals.</p>
+            <p class="fine-print" id="agencyPressureNote">OPM redacted pay records are excluded from group dollar totals.</p>
           </div>
 
         </div>
@@ -275,7 +279,7 @@
         <div class="section-inner">
           <p class="kicker">VA Remote Posts</p>
           <h2>Philippines, St. Croix, territories, and nonforeign VA duty stations</h2>
-          <p class="section-lede">Selected grade, step, year, locality rules, and cap drive the pay chart. Visible VA employee counts come from OPM Federal Workforce Data June 2026 duty-station rows; redacted or missing public rows are called out instead of guessed.</p>
+          <p class="section-lede">Selected grade, step, year, locality rules, and cap drive the pay chart. Visible VA employee counts come from OPM Federal Workforce Data June 2026 duty-station public records; redacted or missing public records are called out instead of guessed.</p>
           <div class="form-grid remote-duty-form">
             <div class="field wide-field"><label for="remoteDutyLocation">Location</label><select id="remoteDutyLocation"></select></div>
             <div class="field"><label for="remoteDutySort">Sort table by</label><select id="remoteDutySort"><option value="pay" selected>Selected pay</option><option value="count">Visible VA count</option><option value="locality">Locality/COLA</option></select></div>
@@ -288,8 +292,8 @@
               </div>
               <div class="remote-duty-metrics">
                 <div class="mini-metric"><span>OPM locality</span><strong id="remoteDutyLocality">N/A</strong></div>
-                <div class="mini-metric"><span>Visible VA rows</span><strong id="remoteDutyEmployees">N/A</strong></div>
-                <div class="mini-metric"><span>Visible GS rows</span><strong id="remoteDutyGsRows">N/A</strong></div>
+                <div class="mini-metric"><span>Visible VA records</span><strong id="remoteDutyEmployees">N/A</strong></div>
+                <div class="mini-metric"><span>Visible GS records</span><strong id="remoteDutyGsRows">N/A</strong></div>
                 <div class="mini-metric"><span>Nonforeign COLA</span><strong id="remoteDutyCola">N/A</strong></div>
               </div>
               <p class="detail-line" id="remoteDutyNote">OPM duty-station data will render after the app loads.</p>
@@ -300,13 +304,13 @@
                 <div class="chart-metric"><strong id="remoteDutyChartMetric">0 posts</strong><span>OPM/federal sources only</span></div>
               </div>
               <canvas id="remoteDutyCanvas" width="980" height="430" role="img" aria-describedby="remoteDutyChartDescription">Your browser does not support Canvas.</canvas>
-              <p id="remoteDutyChartDescription" class="fine-print">Foreign rows use GS base pay only; territories use OPM Rest of U.S. locality unless Alaska or Hawaii has its own locality schedule.</p>
+              <p id="remoteDutyChartDescription" class="fine-print">Foreign duty records use GS base pay only; territories use OPM Rest of U.S. locality unless Alaska or Hawaii has its own locality schedule.</p>
             </div>
           </div>
           <div class="table-wrap remote-duty-table-wrap">
             <table id="remoteDutyTable"></table>
           </div>
-          <p class="fine-print" id="remoteDutySourceNote">Counts are OPM FWD visible VA employment rows, not official VA facility staffing rosters.</p>
+          <p class="fine-print" id="remoteDutySourceNote">Counts are OPM FWD visible VA employment records, not official VA facility staffing rosters.</p>
         </div>
       </section>
 
@@ -320,10 +324,10 @@
               </div>
               <div class="chart-metric"><strong id="statePressureMetric">0 states</strong><span>OPM + Census + VA</span></div>
             </div>
-            <p class="section-lede">State rows combine OPM visible payroll and employment, Census land area, Census income-tax collection flags, and VA FY2024 GDX medical-care expenditure geography. Flags are screening indicators for review, not accusations.</p>
+            <p class="section-lede">State records combine OPM visible payroll and employment, Census land area and resident population, VA projected Veteran population, VA FY2024 facility counts, Census income-tax collection flags, and VA FY2024 GDX expenditure geography. Flags are screening indicators for review, not accusations.</p>
             <div class="form-grid state-pressure-form">
-              <div class="field wide-field"><label for="statePressureSort">Rank states by</label><select id="statePressureSort"><option value="payroll" selected>Total visible payroll</option><option value="payroll-density">Visible payroll per sq. mile</option><option value="employees">Federal employee rows</option><option value="employee-density">Employees per sq. mile</option><option value="agencies">Agency count</option><option value="components">Component count</option><option value="high-share">GS-13+ plus SES percentage</option><option value="ses-share">SES percentage</option><option value="va-medical">VA FY24 medical care</option><option value="va-medical-density">VA medical care per sq. mile</option><option value="flag-count">Audit flag count</option></select></div>
-              <div class="field wide-field"><label for="statePressureFocus">Focus</label><select id="statePressureFocus"><option value="all" selected>All states</option><option value="watch">Watch/audit flags only</option><option value="no-tax">No Census T40 income-tax collection</option><option value="va-medical">Top VA medical-care states</option><option value="dense-high-grade">Dense high-grade overlap</option></select></div>
+              <div class="field wide-field"><label for="statePressureSort">Rank states by</label><select id="statePressureSort"><option value="outlier-score" selected>Multi-denominator pressure</option><option value="payroll">Total visible payroll</option><option value="payroll-per-resident">Visible payroll per resident</option><option value="payroll-vs-pop">Payroll share vs population share</option><option value="employees">Federal public records</option><option value="employees-per-100k">Federal records per 100k residents</option><option value="payroll-density">Visible payroll per sq. mile</option><option value="employee-density">Employees per sq. mile</option><option value="agencies">Agency count</option><option value="components">Component count</option><option value="high-share">GS-13+ plus SES percentage</option><option value="ses-share">SES percentage</option><option value="va-medical">VA FY24 medical care</option><option value="va-medical-per-veteran">VA medical care per Veteran</option><option value="va-total-per-veteran">VA total expenditure per Veteran</option><option value="va-medical-vs-vets">VA medical share vs Veteran share</option><option value="va-facilities">VA facility/site count</option><option value="facilities-per-veteran">VA facilities per 100k Veterans</option><option value="veterans-per-facility">Veterans per VA facility/site</option><option value="medical-per-facility">VA medical care per facility/site</option><option value="va-medical-density">VA medical care per sq. mile</option><option value="flag-count">Audit flag count</option></select></div>
+              <div class="field wide-field"><label for="statePressureFocus">Focus</label><select id="statePressureFocus"><option value="all" selected>All states</option><option value="watch">Watch/audit flags only</option><option value="no-tax">No Census T40 income-tax collection</option><option value="va-medical">Top VA medical-care states</option><option value="va-vet-gap">VA dollars exceed Veteran share</option><option value="pop-gap">Federal payroll exceeds population share</option><option value="facility-pressure">Facility footprint/coverage pressure</option><option value="dense-high-grade">Dense high-grade overlap</option></select></div>
             </div>
             <div class="state-pressure-grid">
               <div class="highlight-card pressure-readout-card">
@@ -337,19 +341,19 @@
               <div class="chart-card state-pressure-chart-card">
                 <div class="chart-head">
                   <h3 id="statePressureChartTitle">State pressure</h3>
-                  <div class="chart-metric"><strong id="statePressureChartMetric">0 rows</strong><span>visible OPM rows</span></div>
+                  <div class="chart-metric"><strong id="statePressureChartMetric">0 records</strong><span>visible OPM public records</span></div>
                 </div>
                 <canvas id="statePressureCanvas" width="980" height="430" role="img" aria-describedby="statePressureDescription">Your browser does not support Canvas.</canvas>
                 <p id="statePressureDescription" class="fine-print">Bar length follows the selected ranking. Thin markers show high GS+SES share and VA medical-care density context.</p>
               </div>
             </div>
             <details class="data-dropdown">
-              <summary><span>Open state audit rows</span><span>All states, densities, flags</span></summary>
+              <summary><span>Open state audit records</span><span>All states, denominators, flags</span></summary>
               <div class="table-wrap state-pressure-table-wrap">
                 <table id="statePressureTable"></table>
               </div>
             </details>
-            <p class="fine-print" id="statePressureNote">OPM redacted pay rows are excluded from dollar totals. Audit flags are outlier/context markers, not legal findings.</p>
+            <p class="fine-print" id="statePressureNote">OPM redacted pay records are excluded from dollar totals. Audit flags are outlier/context markers, not legal findings.</p>
             <div class="va-facility-block" id="va-facility-utilization">
               <div class="chart-head">
                 <div>
@@ -358,19 +362,19 @@
                 </div>
                 <div class="chart-metric"><strong id="vaFacilityMetric">0 facilities</strong><span>FY25 procedure file</span></div>
               </div>
-              <p class="section-lede">VA publishes unique patient counts by CPT/HCPCS procedure and administrative parent facility. This table shows facility-level signals from those procedure rows and keeps the non-additive limitation visible.</p>
+              <p class="section-lede">VA publishes unique patient counts by CPT/HCPCS procedure and administrative parent facility. This table shows facility-level signals from those procedure records and keeps the non-additive limitation visible.</p>
               <div class="form-grid va-facility-form">
                 <div class="field wide-field"><label for="vaFacilitySort">Rank facilities by</label><select id="vaFacilitySort"><option value="largest-procedure" selected>Largest single-procedure count</option><option value="office-99214">Office/outpatient visit 99214</option><option value="procedure-sum">Procedure-count sum (not unique)</option><option value="numeric-rows">Numeric procedure rows</option></select></div>
                 <div class="field"><label for="vaFacilityState">State</label><select id="vaFacilityState"><option value="" selected>All states</option></select></div>
               </div>
               <p class="detail-line" id="vaFacilitySummary">VA facility utilization data will render after the app loads.</p>
               <details class="data-dropdown">
-                <summary><span>Open VA facility procedure rows</span><span>FY25 facility-by-procedure counts</span></summary>
+                <summary><span>Open VA facility procedure records</span><span>FY25 facility-by-procedure counts</span></summary>
                 <div class="table-wrap va-facility-table-wrap">
                   <table id="vaFacilityTable"></table>
                 </div>
               </details>
-              <p class="fine-print" id="vaFacilityNote">Facility procedure rows are not total veterans served; summing rows would double count patients.</p>
+              <p class="fine-print" id="vaFacilityNote">Facility procedure records are not total veterans served; summing records would double count patients.</p>
             </div>
           </div>
         </div>
@@ -519,7 +523,7 @@
         <div class="section-inner">
           <p class="kicker">Fifty-Year Ledger</p>
           <h2 id="ledgerTitle">Fifty-year ledger</h2>
-          <p class="section-lede">Each row is recalculated for the selected grade and step, with official and reconstructed statuses kept separate.</p>
+          <p class="section-lede">Each record is recalculated for the selected grade and step, with official and reconstructed statuses kept separate.</p>
           <div class="chart-card">
             <div class="chart-head">
               <h3 id="chartTitle">GS-12 Step 10 | 1977-2026</h3>
@@ -543,7 +547,7 @@
             <div class="proof-box"><span class="tag">Official table</span><p>Complete annual fixture table used only when the source provides every cell.</p></div>
             <div class="proof-box"><span class="tag">Official checkpoint</span><p>Published anchor used to reconstruct surrounding years.</p></div>
             <div class="proof-box"><span class="tag">Formula reconstruction</span><p>Generated from the nearest anchor and annual adjustment chain.</p></div>
-            <div class="proof-box"><span class="tag">Reverse calculation</span><p>Explicitly labeled when low-grade rows are derived instead of asserted as official tables.</p></div>
+            <div class="proof-box"><span class="tag">Reverse calculation</span><p>Explicitly labeled when low-grade records are derived instead of asserted as official tables.</p></div>
           </div>
           <ul class="trace-list" id="traceList"></ul>
           <pre class="sr-output" id="tracePlain"></pre>
@@ -602,17 +606,17 @@
           <h2>Source notes and limitations</h2>
           <p class="section-lede">Official and reconstructed values are visibly distinguished. Reconstructed values are never described as official published tables.</p>
           <ol class="source-list" id="sourceList"></ol>
-          <p class="fine-print" id="buildMeta">Build n-gs-pay-math-lab-v0.01 | commit ec4f6865e8f5b79747a15c1cbbd15442085330b4</p>
+          <p class="fine-print" id="buildMeta">Build n-gs-pay-math-lab-v0.01 | commit 0b4f434c37e0c29fbb69b99a998cc612edee22f1</p>
         </div>
       </section>
 
     </main>
   </div>
 
-  <script src="../data/pay-data.js?v=n-gs-pay-math-lab-v0.01-ec4f6865e8f5"></script>
-  <script src="../evidence/size-comparison.js?v=n-gs-pay-math-lab-v0.01-ec4f6865e8f5"></script>
-  <script src="../data-loader.js?v=n-gs-pay-math-lab-v0.01-ec4f6865e8f5"></script>
-  <script src="../formulas.js?v=n-gs-pay-math-lab-v0.01-ec4f6865e8f5"></script>
-  <script src="../app.js?v=n-gs-pay-math-lab-v0.01-ec4f6865e8f5"></script>
+  <script src="../data/pay-data.js?v=n-gs-pay-math-lab-v0.01-0b4f434c37e0"></script>
+  <script src="../evidence/size-comparison.js?v=n-gs-pay-math-lab-v0.01-0b4f434c37e0"></script>
+  <script src="../data-loader.js?v=n-gs-pay-math-lab-v0.01-0b4f434c37e0"></script>
+  <script src="../formulas.js?v=n-gs-pay-math-lab-v0.01-0b4f434c37e0"></script>
+  <script src="../app.js?v=n-gs-pay-math-lab-v0.01-0b4f434c37e0"></script>
 </body>
 </html>

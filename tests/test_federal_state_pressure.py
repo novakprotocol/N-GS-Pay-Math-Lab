@@ -34,6 +34,9 @@ class FederalStatePressureTests(unittest.TestCase):
         self.assertEqual(snapshot["state_count"], 51)
         self.assertEqual(snapshot["va_gdx_fy24_state_rows_joined"], 51)
         self.assertEqual(snapshot["va_facility_columns_fy25"], 140)
+        self.assertEqual(snapshot["resident_population_states_joined"], 51)
+        self.assertEqual(snapshot["veteran_population_states_joined"], 50)
+        self.assertEqual(snapshot["va_facility_state_rows_joined"], 51)
         self.assertEqual(snapshot["state_assigned_pay_redacted_rows"], 6_419)
         self.assertEqual(snapshot["opm_all_pay_redacted_rows"], 890_827)
 
@@ -55,6 +58,26 @@ class FederalStatePressureTests(unittest.TestCase):
         self.assertGreater(tx["va_gdx_fy24"]["total_va_expenditure"], 30_000_000_000)
         self.assertEqual(fl["va_medical_care_rank"], 3)
         self.assertIn("top_va_medical_care", {flag["code"] for flag in fl["audit_flags"]})
+
+
+    def test_population_veteran_and_facility_denominators_are_loaded(self) -> None:
+        ca = next(row for row in DATA["states"] if row["state_abbr"] == "CA")
+        tx = next(row for row in DATA["states"] if row["state_abbr"] == "TX")
+        fl = next(row for row in DATA["states"] if row["state_abbr"] == "FL")
+        self.assertGreater(ca["resident_population_2025"], 39_000_000)
+        self.assertGreater(tx["veteran_population_fy2026"], 1_500_000)
+        self.assertGreater(fl["va_facilities_fy2024"]["total_facilities"], 100)
+        self.assertGreater(fl["va_gdx_fy24"]["medical_care_per_veteran"], 7_000)
+        self.assertGreater(tx["va_facilities_fy2024"]["veterans_per_facility"], 10_000)
+
+    def test_denominator_pressure_flags_are_review_screens(self) -> None:
+        dc = next(row for row in DATA["states"] if row["state_abbr"] == "DC")
+        wy = next(row for row in DATA["states"] if row["state_abbr"] == "WY")
+        codes = {flag["code"] for flag in dc["audit_flags"]}
+        self.assertIn("payroll_outpaces_population", codes)
+        self.assertIn("multi_denominator_pressure", codes)
+        self.assertEqual(dc["outlier_pressure_score_rank"], 1)
+        self.assertIn("facility_concentration", {flag["code"] for flag in wy["audit_flags"]})
 
     def test_facility_patient_data_is_non_additive_and_complete(self) -> None:
         facility_data = DATA["va_facility_patient_data"]

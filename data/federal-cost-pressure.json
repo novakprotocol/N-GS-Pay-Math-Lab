@@ -18,14 +18,23 @@
     "pay_redacted_rows": 890827,
     "visible_annualized_adjusted_basic_pay": 124669796405,
     "visible_area_count": 59,
-    "count_field_note": "The OPM count field is 1 on every row in this employment release, so row count equals visible employee count for these aggregates."
+    "count_field_note": "The OPM count field is 1 on every row in this employment release, so row count equals visible employee count for these aggregates.",
+    "rus_locality_percent_2026": 17.06,
+    "modeled_rus_relocation_savings": 8900110046,
+    "modeled_rus_high_grade_ses_savings": 3510874789,
+    "modeled_rus_top_savings_area": {
+      "salary_table_code": "DCB",
+      "name": "WASHINGTON-BALTIMORE-ARLINGTON, DC-MD-VA-WV-PA",
+      "savings": 3776868703
+    }
   },
   "definitions": {
     "cost_metric": "Sum of numeric annualized_adjusted_basic_pay for visible OPM rows in the locality pay area. Redacted pay rows are excluded from dollar totals.",
     "high_gs_definition": "GS pay_plan_code rows with numeric grades 13, 14, or 15.",
     "ses_definition": "SES is pay_plan_code ES. A separate senior_pay_plan_count also includes ES, SL, and ST rows.",
     "share_denominator": "Percentages use all visible OPM rows in the locality area, including rows whose pay amount is redacted.",
-    "minimum_share_rank_employee_count": 5000
+    "minimum_share_rank_employee_count": 5000,
+    "rus_relocation_scenario": "Scenario estimate only: for visible OPM annualized adjusted basic pay in 2026 locality areas above Rest of U.S., divide by the current locality factor and reapply the 2026 Rest of U.S. locality factor. It does not decide telework eligibility, mission need, special rates, pay caps, bargaining, real estate, travel, or hiring costs."
   },
   "areas": [
     {
@@ -50,7 +59,12 @@
       "high_grade_ses_count": 36758,
       "high_grade_ses_share": 0.112551,
       "high_grade_ses_visible_payroll": 5166280738,
-      "high_grade_ses_payroll_share": 0.162392
+      "high_grade_ses_payroll_share": 0.162392,
+      "modeled_rus_adjusted_basic_pay": 31813560482,
+      "modeled_rus_savings": 0,
+      "modeled_rus_savings_share": 0.0,
+      "modeled_rus_high_grade_ses_savings": 0,
+      "modeled_rus_savings_rank": 58
     },
     {
       "opm_fwd_locality_code": "WA",
@@ -74,7 +88,12 @@
       "high_grade_ses_count": 107596,
       "high_grade_ses_share": 0.533261,
       "high_grade_ses_visible_payroll": 17822487859,
-      "high_grade_ses_payroll_share": 0.594701
+      "high_grade_ses_payroll_share": 0.594701,
+      "modeled_rus_adjusted_basic_pay": 26191957958,
+      "modeled_rus_savings": 3776868703,
+      "modeled_rus_savings_share": 0.126027,
+      "modeled_rus_high_grade_ses_savings": 2246107175,
+      "modeled_rus_savings_rank": 1
     },
     {
       "opm_fwd_locality_code": "NY",
@@ -98,7 +117,12 @@
       "high_grade_ses_count": 5900,
       "high_grade_ses_share": 0.168885,
       "high_grade_ses_visible_payroll": 955145422,
-      "high_grade_ses_payroll_share": 0.220374
+      "high_grade_ses_payroll_share": 0.220374,
+      "modeled_rus_adjusted_basic_pay": 3677868889,
+      "modeled_rus_savings": 656335905,
+      "modeled_rus_savings_share": 0.151432,
+      "modeled_rus_high_grade_ses_savings": 144639274,
+      "modeled_rus_savings_rank": 2
     },
     {
       "opm_fwd_locality_code": "AT",
@@ -122,7 +146,12 @@
       "high_grade_ses_count": 9640,
       "high_grade_ses_share": 0.312045,
       "high_grade_ses_visible_payroll": 1424801891,
-      "high_grade_ses_payroll_share": 0.392824
+      "high_grade_ses_payroll_share": 0.392824,
+      "modeled_rus_adjusted_basic_pay": 3429882915,
+      "modeled_rus_savings": 197190432,
+      "modeled_rus_savings_share": 0.054366,
+      "modeled_rus_high_grade_ses_savings": 77461158,
+      "modeled_rus_savings_rank": 11
     },
     {
       "opm_fwd_locality_code": "LA",
@@ -146,7 +175,12 @@
       "high_grade_ses_count": 3949,
       "high_grade_ses_share": 0.139882,
       "high_grade_ses_visible_payroll": 647729480,
-      "high_grade_ses_payroll_share": 0.182475
+      "high_grade_ses_payroll_share": 0.182475,
+      "modeled_rus_adjusted_basic_pay": 3044813721,
+      "modeled_rus_savings": 504867882,
+      "modeled_rus_savings_share": 0.142229,
+      "modeled_rus_high_grade_ses_savings": 92125956,
+      "modeled_rus_savings_rank": 4
     },
     {
       "opm_fwd_locality_code": "SJ",
@@ -170,7 +204,12 @@
       "high_grade_ses_count": 4597,
       "high_grade_ses_share": 0.203903,
       "high_grade_ses_visible_payroll": 813907137,
-      "high_grade_ses_payroll_share": 0.251043
+      "high_grade_ses_payroll_share": 0.251043,
+      "modeled_rus_adjusted_basic_pay": 2593420432,
+      "modeled_rus_savings": 648687428,
+      "modeled_rus_savings_share": 0.200082,
+      "modeled_rus_high_grade_ses_savings": 162848168,
+      "modeled_rus_savings_rank": 3
     },
     {
       "opm_fwd_locality_code": "BO",
@@ -194,7 +233,12 @@
       "high_grade_ses_count": 4243,
       "high_grade_ses_share": 0.183077,
       "high_grade_ses_visible_payroll": 666702003,
-      "high_grade_ses_payroll_share": 0.236013
+      "high_grade_ses_payroll_share": 0.236013,
+      "modeled_rus_adjusted_basic_pay": 2494176606,
+      "modeled_rus_savings": 330681881,
+      "modeled_rus_savings_share": 0.117061,
+      "modeled_rus_high_grade_ses_savings": 78045068,
+      "modeled_rus_savings_rank": 5
     },
     {
       "opm_fwd_locality_code": "CH",
@@ -218,7 +262,12 @@
       "high_grade_ses_count": 4300,
       "high_grade_ses_share": 0.195739,
       "high_grade_ses_visible_payroll": 674852633,
-      "high_grade_ses_payroll_share": 0.245449
+      "high_grade_ses_payroll_share": 0.245449,
+      "modeled_rus_adjusted_basic_pay": 2459516538,
+      "modeled_rus_savings": 289948131,
+      "modeled_rus_savings_share": 0.105456,
+      "modeled_rus_high_grade_ses_savings": 71167403,
+      "modeled_rus_savings_rank": 6
     },
     {
       "opm_fwd_locality_code": "DA",
@@ -242,7 +291,12 @@
       "high_grade_ses_count": 4230,
       "high_grade_ses_share": 0.187616,
       "high_grade_ses_visible_payroll": 640620543,
-      "high_grade_ses_payroll_share": 0.23947
+      "high_grade_ses_payroll_share": 0.23947,
+      "modeled_rus_adjusted_basic_pay": 2460739126,
+      "modeled_rus_savings": 214416018,
+      "modeled_rus_savings_share": 0.080151,
+      "modeled_rus_high_grade_ses_savings": 51346295,
+      "modeled_rus_savings_rank": 10
     },
     {
       "opm_fwd_locality_code": "PH",
@@ -266,7 +320,12 @@
       "high_grade_ses_count": 4087,
       "high_grade_ses_share": 0.181604,
       "high_grade_ses_visible_payroll": 619899723,
-      "high_grade_ses_payroll_share": 0.248445
+      "high_grade_ses_payroll_share": 0.248445,
+      "modeled_rus_adjusted_basic_pay": 2264347857,
+      "modeled_rus_savings": 230767725,
+      "modeled_rus_savings_share": 0.092488,
+      "modeled_rus_high_grade_ses_savings": 57333155,
+      "modeled_rus_savings_rank": 9
     },
     {
       "opm_fwd_locality_code": "DN",
@@ -290,7 +349,12 @@
       "high_grade_ses_count": 5968,
       "high_grade_ses_share": 0.323644,
       "high_grade_ses_visible_payroll": 923155041,
-      "high_grade_ses_payroll_share": 0.393644
+      "high_grade_ses_payroll_share": 0.393644,
+      "modeled_rus_adjusted_basic_pay": 2103306568,
+      "modeled_rus_savings": 241846117,
+      "modeled_rus_savings_share": 0.103126,
+      "modeled_rus_high_grade_ses_savings": 95201248,
+      "modeled_rus_savings_rank": 8
     },
     {
       "opm_fwd_locality_code": "HO",
@@ -314,7 +378,12 @@
       "high_grade_ses_count": 4249,
       "high_grade_ses_share": 0.267519,
       "high_grade_ses_visible_payroll": 699609857,
-      "high_grade_ses_payroll_share": 0.34057
+      "high_grade_ses_payroll_share": 0.34057,
+      "modeled_rus_adjusted_basic_pay": 1781245341,
+      "modeled_rus_savings": 272984294,
+      "modeled_rus_savings_share": 0.132889,
+      "modeled_rus_high_grade_ses_savings": 92970377,
+      "modeled_rus_savings_rank": 7
     },
     {
       "opm_fwd_locality_code": "ST",
@@ -338,7 +407,12 @@
       "high_grade_ses_count": 2557,
       "high_grade_ses_share": 0.183376,
       "high_grade_ses_visible_payroll": 392907152,
-      "high_grade_ses_payroll_share": 0.230397
+      "high_grade_ses_payroll_share": 0.230397,
+      "modeled_rus_adjusted_basic_pay": 1517276983,
+      "modeled_rus_savings": 188071835,
+      "modeled_rus_savings_share": 0.110283,
+      "modeled_rus_high_grade_ses_savings": 43331176,
+      "modeled_rus_savings_rank": 12
     },
     {
       "opm_fwd_locality_code": "KC",
@@ -362,7 +436,12 @@
       "high_grade_ses_count": 3335,
       "high_grade_ses_share": 0.193479,
       "high_grade_ses_visible_payroll": 468578407,
-      "high_grade_ses_payroll_share": 0.275826
+      "high_grade_ses_payroll_share": 0.275826,
+      "modeled_rus_adjusted_basic_pay": 1671548167,
+      "modeled_rus_savings": 27273680,
+      "modeled_rus_savings_share": 0.016054,
+      "modeled_rus_high_grade_ses_savings": 7522777,
+      "modeled_rus_savings_rank": 28
     },
     {
       "opm_fwd_locality_code": "MI",
@@ -386,7 +465,12 @@
       "high_grade_ses_count": 1810,
       "high_grade_ses_share": 0.141894,
       "high_grade_ses_visible_payroll": 272824131,
-      "high_grade_ses_payroll_share": 0.183623
+      "high_grade_ses_payroll_share": 0.183623,
+      "modeled_rus_adjusted_basic_pay": 1395090405,
+      "modeled_rus_savings": 90693986,
+      "modeled_rus_savings_share": 0.061041,
+      "modeled_rus_high_grade_ses_savings": 16653498,
+      "modeled_rus_savings_rank": 17
     },
     {
       "opm_fwd_locality_code": "RA",
@@ -410,7 +494,12 @@
       "high_grade_ses_count": 2694,
       "high_grade_ses_share": 0.22008,
       "high_grade_ses_visible_payroll": 398817625,
-      "high_grade_ses_payroll_share": 0.273002
+      "high_grade_ses_payroll_share": 0.273002,
+      "modeled_rus_adjusted_basic_pay": 1398956237,
+      "modeled_rus_savings": 61904949,
+      "modeled_rus_savings_share": 0.042376,
+      "modeled_rus_high_grade_ses_savings": 16900158,
+      "modeled_rus_savings_rank": 20
     },
     {
       "opm_fwd_locality_code": "CL",
@@ -434,7 +523,12 @@
       "high_grade_ses_count": 2349,
       "high_grade_ses_share": 0.194277,
       "high_grade_ses_visible_payroll": 353932897,
-      "high_grade_ses_payroll_share": 0.252383
+      "high_grade_ses_payroll_share": 0.252383,
+      "modeled_rus_adjusted_basic_pay": 1343048459,
+      "modeled_rus_savings": 59316253,
+      "modeled_rus_savings_share": 0.042297,
+      "modeled_rus_high_grade_ses_savings": 14970409,
+      "modeled_rus_savings_rank": 21
     },
     {
       "opm_fwd_locality_code": "PO",
@@ -458,7 +552,12 @@
       "high_grade_ses_count": 3032,
       "high_grade_ses_share": 0.266479,
       "high_grade_ses_visible_payroll": 451111465,
-      "high_grade_ses_payroll_share": 0.329892
+      "high_grade_ses_payroll_share": 0.329892,
+      "modeled_rus_adjusted_basic_pay": 1269118114,
+      "modeled_rus_savings": 98333344,
+      "modeled_rus_savings_share": 0.07191,
+      "modeled_rus_high_grade_ses_savings": 32439396,
+      "modeled_rus_savings_rank": 16
     },
     {
       "opm_fwd_locality_code": "MN",
@@ -482,7 +581,12 @@
       "high_grade_ses_count": 1749,
       "high_grade_ses_share": 0.149054,
       "high_grade_ses_visible_payroll": 261457468,
-      "high_grade_ses_payroll_share": 0.191901
+      "high_grade_ses_payroll_share": 0.191901,
+      "modeled_rus_adjusted_basic_pay": 1249723110,
+      "modeled_rus_savings": 112737707,
+      "modeled_rus_savings_share": 0.082746,
+      "modeled_rus_high_grade_ses_savings": 21634468,
+      "modeled_rus_savings_rank": 15
     },
     {
       "opm_fwd_locality_code": "DT",
@@ -506,7 +610,12 @@
       "high_grade_ses_count": 1846,
       "high_grade_ses_share": 0.163565,
       "high_grade_ses_visible_payroll": 285507085,
-      "high_grade_ses_payroll_share": 0.214418
+      "high_grade_ses_payroll_share": 0.214418,
+      "modeled_rus_adjusted_basic_pay": 1207175980,
+      "modeled_rus_savings": 124368207,
+      "modeled_rus_savings_share": 0.093401,
+      "modeled_rus_high_grade_ses_savings": 26666786,
+      "modeled_rus_savings_rank": 14
     },
     {
       "opm_fwd_locality_code": "PX",
@@ -530,7 +639,12 @@
       "high_grade_ses_count": 1458,
       "high_grade_ses_share": 0.144399,
       "high_grade_ses_visible_payroll": 217906414,
-      "high_grade_ses_payroll_share": 0.187008
+      "high_grade_ses_payroll_share": 0.187008,
+      "modeled_rus_adjusted_basic_pay": 1113932449,
+      "modeled_rus_savings": 51290756,
+      "modeled_rus_savings_share": 0.044018,
+      "modeled_rus_high_grade_ses_savings": 9591797,
+      "modeled_rus_savings_rank": 22
     },
     {
       "opm_fwd_locality_code": "SD",
@@ -554,7 +668,12 @@
       "high_grade_ses_count": 1152,
       "high_grade_ses_share": 0.141523,
       "high_grade_ses_visible_payroll": 187689593,
-      "high_grade_ses_payroll_share": 0.17369
+      "high_grade_ses_payroll_share": 0.17369,
+      "modeled_rus_adjusted_basic_pay": 945972269,
+      "modeled_rus_savings": 134630941,
+      "modeled_rus_savings_share": 0.124589,
+      "modeled_rus_high_grade_ses_savings": 23384001,
+      "modeled_rus_savings_rank": 13
     },
     {
       "opm_fwd_locality_code": "AQ",
@@ -578,7 +697,12 @@
       "high_grade_ses_count": 1245,
       "high_grade_ses_share": 0.116508,
       "high_grade_ses_visible_payroll": 176479318,
-      "high_grade_ses_payroll_share": 0.177501
+      "high_grade_ses_payroll_share": 0.177501,
+      "modeled_rus_adjusted_basic_pay": 983573040,
+      "modeled_rus_savings": 10670919,
+      "modeled_rus_savings_share": 0.010733,
+      "modeled_rus_high_grade_ses_savings": 1894099,
+      "modeled_rus_savings_rank": 41
     },
     {
       "opm_fwd_locality_code": "PI",
@@ -602,7 +726,12 @@
       "high_grade_ses_count": 1493,
       "high_grade_ses_share": 0.169006,
       "high_grade_ses_visible_payroll": 221009499,
-      "high_grade_ses_payroll_share": 0.230145
+      "high_grade_ses_payroll_share": 0.230145,
+      "modeled_rus_adjusted_basic_pay": 928806936,
+      "modeled_rus_savings": 31499774,
+      "modeled_rus_savings_share": 0.032802,
+      "modeled_rus_high_grade_ses_savings": 7249506,
+      "modeled_rus_savings_rank": 24
     },
     {
       "opm_fwd_locality_code": "SO",
@@ -626,7 +755,12 @@
       "high_grade_ses_count": 1145,
       "high_grade_ses_share": 0.137257,
       "high_grade_ses_visible_payroll": 165250274,
-      "high_grade_ses_payroll_share": 0.177593
+      "high_grade_ses_payroll_share": 0.177593,
+      "modeled_rus_adjusted_basic_pay": 917025788,
+      "modeled_rus_savings": 13474153,
+      "modeled_rus_savings_share": 0.014481,
+      "modeled_rus_high_grade_ses_savings": 2392915,
+      "modeled_rus_savings_rank": 37
     },
     {
       "opm_fwd_locality_code": "SA",
@@ -650,7 +784,12 @@
       "high_grade_ses_count": 1173,
       "high_grade_ses_share": 0.153213,
       "high_grade_ses_visible_payroll": 183680096,
-      "high_grade_ses_payroll_share": 0.200935
+      "high_grade_ses_payroll_share": 0.200935,
+      "modeled_rus_adjusted_basic_pay": 824657649,
+      "modeled_rus_savings": 89468240,
+      "modeled_rus_savings_share": 0.097873,
+      "modeled_rus_high_grade_ses_savings": 17977321,
+      "modeled_rus_savings_rank": 18
     },
     {
       "opm_fwd_locality_code": "VB",
@@ -674,7 +813,12 @@
       "high_grade_ses_count": 2371,
       "high_grade_ses_share": 0.291135,
       "high_grade_ses_visible_payroll": 345889352,
-      "high_grade_ses_payroll_share": 0.387527
+      "high_grade_ses_payroll_share": 0.387527,
+      "modeled_rus_adjusted_basic_pay": 879481701,
+      "modeled_rus_savings": 13072767,
+      "modeled_rus_savings_share": 0.014646,
+      "modeled_rus_high_grade_ses_savings": 5066056,
+      "modeled_rus_savings_rank": 38
     },
     {
       "opm_fwd_locality_code": "SL",
@@ -698,7 +842,12 @@
       "high_grade_ses_count": 1152,
       "high_grade_ses_share": 0.134958,
       "high_grade_ses_visible_payroll": 163020814,
-      "high_grade_ses_payroll_share": 0.186101
+      "high_grade_ses_payroll_share": 0.186101,
+      "modeled_rus_adjusted_basic_pay": 854307282,
+      "modeled_rus_savings": 21675146,
+      "modeled_rus_savings_share": 0.024744,
+      "modeled_rus_high_grade_ses_savings": 4033757,
+      "modeled_rus_savings_rank": 31
     },
     {
       "opm_fwd_locality_code": "BH",
@@ -722,7 +871,12 @@
       "high_grade_ses_count": 834,
       "high_grade_ses_share": 0.106147,
       "high_grade_ses_visible_payroll": 119082130,
-      "high_grade_ses_payroll_share": 0.153268
+      "high_grade_ses_payroll_share": 0.153268,
+      "modeled_rus_adjusted_basic_pay": 769201740,
+      "modeled_rus_savings": 7753785,
+      "modeled_rus_savings_share": 0.00998,
+      "modeled_rus_high_grade_ses_savings": 1188404,
+      "modeled_rus_savings_rank": 43
     },
     {
       "opm_fwd_locality_code": "IN",
@@ -746,7 +900,12 @@
       "high_grade_ses_count": 873,
       "high_grade_ses_share": 0.121368,
       "high_grade_ses_visible_payroll": 124339644,
-      "high_grade_ses_payroll_share": 0.163191
+      "high_grade_ses_payroll_share": 0.163191,
+      "modeled_rus_adjusted_basic_pay": 754899523,
+      "modeled_rus_savings": 7029220,
+      "modeled_rus_savings_share": 0.009226,
+      "modeled_rus_high_grade_ses_savings": 1147103,
+      "modeled_rus_savings_rank": 44
     },
     {
       "opm_fwd_locality_code": "CI",
@@ -770,7 +929,12 @@
       "high_grade_ses_count": 1300,
       "high_grade_ses_share": 0.181691,
       "high_grade_ses_visible_payroll": 191041124,
-      "high_grade_ses_payroll_share": 0.252278
+      "high_grade_ses_payroll_share": 0.252278,
+      "modeled_rus_adjusted_basic_pay": 727019726,
+      "modeled_rus_savings": 30245909,
+      "modeled_rus_savings_share": 0.039941,
+      "modeled_rus_high_grade_ses_savings": 7630364,
+      "modeled_rus_savings_rank": 26
     },
     {
       "opm_fwd_locality_code": "RI",
@@ -794,7 +958,12 @@
       "high_grade_ses_count": 958,
       "high_grade_ses_share": 0.158138,
       "high_grade_ses_visible_payroll": 144572444,
-      "high_grade_ses_payroll_share": 0.199018
+      "high_grade_ses_payroll_share": 0.199018,
+      "modeled_rus_adjusted_basic_pay": 695419623,
+      "modeled_rus_savings": 31010511,
+      "modeled_rus_savings_share": 0.042689,
+      "modeled_rus_high_grade_ses_savings": 6171640,
+      "modeled_rus_savings_rank": 25
     },
     {
       "opm_fwd_locality_code": "LV",
@@ -818,7 +987,12 @@
       "high_grade_ses_count": 711,
       "high_grade_ses_share": 0.105131,
       "high_grade_ses_visible_payroll": 103292541,
-      "high_grade_ses_payroll_share": 0.1435
+      "high_grade_ses_payroll_share": 0.1435,
+      "modeled_rus_adjusted_basic_pay": 704699536,
+      "modeled_rus_savings": 15110164,
+      "modeled_rus_savings_share": 0.020992,
+      "modeled_rus_high_grade_ses_savings": 2168305,
+      "modeled_rus_savings_rank": 35
     },
     {
       "opm_fwd_locality_code": "AU",
@@ -842,7 +1016,12 @@
       "high_grade_ses_count": 1382,
       "high_grade_ses_share": 0.1714,
       "high_grade_ses_visible_payroll": 200580600,
-      "high_grade_ses_payroll_share": 0.291906
+      "high_grade_ses_payroll_share": 0.291906,
+      "modeled_rus_adjusted_basic_pay": 668356482,
+      "modeled_rus_savings": 18784323,
+      "modeled_rus_savings_share": 0.027337,
+      "modeled_rus_high_grade_ses_savings": 5483259,
+      "modeled_rus_savings_rank": 32
     },
     {
       "opm_fwd_locality_code": "ML",
@@ -866,7 +1045,12 @@
       "high_grade_ses_count": 671,
       "high_grade_ses_share": 0.1183,
       "high_grade_ses_visible_payroll": 96693260,
-      "high_grade_ses_payroll_share": 0.149943
+      "high_grade_ses_payroll_share": 0.149943,
+      "modeled_rus_adjusted_basic_pay": 616631002,
+      "modeled_rus_savings": 28234599,
+      "modeled_rus_savings_share": 0.043784,
+      "modeled_rus_high_grade_ses_savings": 4233588,
+      "modeled_rus_savings_rank": 27
     },
     {
       "opm_fwd_locality_code": "FN",
@@ -890,7 +1074,12 @@
       "high_grade_ses_count": 411,
       "high_grade_ses_share": 0.051581,
       "high_grade_ses_visible_payroll": 57706373,
-      "high_grade_ses_payroll_share": 0.091705
+      "high_grade_ses_payroll_share": 0.091705,
+      "modeled_rus_adjusted_basic_pay": 626106703,
+      "modeled_rus_savings": 3155672,
+      "modeled_rus_savings_share": 0.005015,
+      "modeled_rus_high_grade_ses_savings": 289390,
+      "modeled_rus_savings_rank": 47
     },
     {
       "opm_fwd_locality_code": "AK",
@@ -914,7 +1103,12 @@
       "high_grade_ses_count": 779,
       "high_grade_ses_share": 0.134822,
       "high_grade_ses_visible_payroll": 118300349,
-      "high_grade_ses_payroll_share": 0.188324
+      "high_grade_ses_payroll_share": 0.188324,
+      "modeled_rus_adjusted_basic_pay": 555560398,
+      "modeled_rus_savings": 72612968,
+      "modeled_rus_savings_share": 0.115594,
+      "modeled_rus_high_grade_ses_savings": 13674791,
+      "modeled_rus_savings_rank": 19
     },
     {
       "opm_fwd_locality_code": "CT",
@@ -938,7 +1132,12 @@
       "high_grade_ses_count": 672,
       "high_grade_ses_share": 0.123416,
       "high_grade_ses_visible_payroll": 100945095,
-      "high_grade_ses_payroll_share": 0.162962
+      "high_grade_ses_payroll_share": 0.162962,
+      "modeled_rus_adjusted_basic_pay": 605928669,
+      "modeled_rus_savings": 13509942,
+      "modeled_rus_savings_share": 0.02181,
+      "modeled_rus_high_grade_ses_savings": 2201610,
+      "modeled_rus_savings_rank": 36
     },
     {
       "opm_fwd_locality_code": "TU",
@@ -962,7 +1161,12 @@
       "high_grade_ses_count": 520,
       "high_grade_ses_share": 0.096744,
       "high_grade_ses_visible_payroll": 76176824,
-      "high_grade_ses_payroll_share": 0.131854
+      "high_grade_ses_payroll_share": 0.131854,
+      "modeled_rus_adjusted_basic_pay": 566982279,
+      "modeled_rus_savings": 10752611,
+      "modeled_rus_savings_share": 0.018612,
+      "modeled_rus_high_grade_ses_savings": 1417778,
+      "modeled_rus_savings_rank": 40
     },
     {
       "opm_fwd_locality_code": "CO",
@@ -986,7 +1190,12 @@
       "high_grade_ses_count": 707,
       "high_grade_ses_share": 0.144463,
       "high_grade_ses_visible_payroll": 104443981,
-      "high_grade_ses_payroll_share": 0.193404
+      "high_grade_ses_payroll_share": 0.193404,
+      "modeled_rus_adjusted_basic_pay": 517527582,
+      "modeled_rus_savings": 22503121,
+      "modeled_rus_savings_share": 0.04167,
+      "modeled_rus_high_grade_ses_savings": 4352189,
+      "modeled_rus_savings_rank": 29
     },
     {
       "opm_fwd_locality_code": "HI",
@@ -1010,7 +1219,12 @@
       "high_grade_ses_count": 606,
       "high_grade_ses_share": 0.126778,
       "high_grade_ses_visible_payroll": 90488967,
-      "high_grade_ses_payroll_share": 0.173869
+      "high_grade_ses_payroll_share": 0.173869,
+      "modeled_rus_adjusted_basic_pay": 498511987,
+      "modeled_rus_savings": 21931802,
+      "modeled_rus_savings_share": 0.042141,
+      "modeled_rus_high_grade_ses_savings": 3813257,
+      "modeled_rus_savings_rank": 30
     },
     {
       "opm_fwd_locality_code": "BU",
@@ -1034,7 +1248,12 @@
       "high_grade_ses_count": 549,
       "high_grade_ses_share": 0.131529,
       "high_grade_ses_visible_payroll": 78680943,
-      "high_grade_ses_payroll_share": 0.184752
+      "high_grade_ses_payroll_share": 0.184752,
+      "modeled_rus_adjusted_basic_pay": 407260201,
+      "modeled_rus_savings": 18613037,
+      "modeled_rus_savings_share": 0.043706,
+      "modeled_rus_high_grade_ses_savings": 3438796,
+      "modeled_rus_savings_rank": 33
     },
     {
       "opm_fwd_locality_code": "HU",
@@ -1058,7 +1277,12 @@
       "high_grade_ses_count": 1890,
       "high_grade_ses_share": 0.615836,
       "high_grade_ses_visible_payroll": 287970917,
-      "high_grade_ses_payroll_share": 0.720194
+      "high_grade_ses_payroll_share": 0.720194,
+      "modeled_rus_adjusted_basic_pay": 383944613,
+      "modeled_rus_savings": 15907495,
+      "modeled_rus_savings_share": 0.039783,
+      "modeled_rus_high_grade_ses_savings": 11456476,
+      "modeled_rus_savings_rank": 34
     },
     {
       "opm_fwd_locality_code": "PB",
@@ -1082,7 +1306,12 @@
       "high_grade_ses_count": 1786,
       "high_grade_ses_share": 0.577433,
       "high_grade_ses_visible_payroll": 264466627,
-      "high_grade_ses_payroll_share": 0.665275
+      "high_grade_ses_payroll_share": 0.665275,
+      "modeled_rus_adjusted_basic_pay": 394597230,
+      "modeled_rus_savings": 2932681,
+      "modeled_rus_savings_share": 0.007377,
+      "modeled_rus_high_grade_ses_savings": 1951038,
+      "modeled_rus_savings_rank": 49
     },
     {
       "opm_fwd_locality_code": "DG",
@@ -1106,7 +1335,12 @@
       "high_grade_ses_count": 314,
       "high_grade_ses_share": 0.094379,
       "high_grade_ses_visible_payroll": 45353762,
-      "high_grade_ses_payroll_share": 0.127176
+      "high_grade_ses_payroll_share": 0.127176,
+      "modeled_rus_adjusted_basic_pay": 343816488,
+      "modeled_rus_savings": 12805740,
+      "modeled_rus_savings_share": 0.035908,
+      "modeled_rus_high_grade_ses_savings": 1628582,
+      "modeled_rus_savings_rank": 39
     },
     {
       "opm_fwd_locality_code": "HB",
@@ -1130,7 +1364,12 @@
       "high_grade_ses_count": 385,
       "high_grade_ses_share": 0.116349,
       "high_grade_ses_visible_payroll": 55109242,
-      "high_grade_ses_payroll_share": 0.16113
+      "high_grade_ses_payroll_share": 0.16113,
+      "modeled_rus_adjusted_basic_pay": 335229448,
+      "modeled_rus_savings": 6787065,
+      "modeled_rus_savings_share": 0.019844,
+      "modeled_rus_high_grade_ses_savings": 1093602,
+      "modeled_rus_savings_rank": 45
     },
     {
       "opm_fwd_locality_code": "HA",
@@ -1154,7 +1393,12 @@
       "high_grade_ses_count": 563,
       "high_grade_ses_share": 0.186486,
       "high_grade_ses_visible_payroll": 87226198,
-      "high_grade_ses_payroll_share": 0.258716
+      "high_grade_ses_payroll_share": 0.258716,
+      "modeled_rus_adjusted_basic_pay": 298809466,
+      "modeled_rus_savings": 38340323,
+      "modeled_rus_savings_share": 0.113719,
+      "modeled_rus_high_grade_ses_savings": 9919272,
+      "modeled_rus_savings_rank": 23
     },
     {
       "opm_fwd_locality_code": "DM",
@@ -1178,7 +1422,12 @@
       "high_grade_ses_count": 528,
       "high_grade_ses_share": 0.163975,
       "high_grade_ses_visible_payroll": 74587357,
-      "high_grade_ses_payroll_share": 0.228551
+      "high_grade_ses_payroll_share": 0.228551,
+      "modeled_rus_adjusted_basic_pay": 323722157,
+      "modeled_rus_savings": 2627166,
+      "modeled_rus_savings_share": 0.00805,
+      "modeled_rus_high_grade_ses_savings": 600441,
+      "modeled_rus_savings_rank": 50
     },
     {
       "opm_fwd_locality_code": "OM",
@@ -1202,7 +1451,12 @@
       "high_grade_ses_count": 341,
       "high_grade_ses_share": 0.11894,
       "high_grade_ses_visible_payroll": 48789530,
-      "high_grade_ses_payroll_share": 0.15657
+      "high_grade_ses_payroll_share": 0.15657,
+      "modeled_rus_adjusted_basic_pay": 308531565,
+      "modeled_rus_savings": 3083734,
+      "modeled_rus_savings_share": 0.009896,
+      "modeled_rus_high_grade_ses_savings": 482820,
+      "modeled_rus_savings_rank": 48
     },
     {
       "opm_fwd_locality_code": "SN",
@@ -1226,7 +1480,12 @@
       "high_grade_ses_count": 332,
       "high_grade_ses_share": 0.111111,
       "high_grade_ses_visible_payroll": 46001936,
-      "high_grade_ses_payroll_share": 0.151441
+      "high_grade_ses_payroll_share": 0.151441,
+      "modeled_rus_adjusted_basic_pay": 302187090,
+      "modeled_rus_savings": 1574698,
+      "modeled_rus_savings_share": 0.005184,
+      "modeled_rus_high_grade_ses_savings": 238474,
+      "modeled_rus_savings_rank": 52
     },
     {
       "opm_fwd_locality_code": "RN",
@@ -1250,7 +1509,12 @@
       "high_grade_ses_count": 305,
       "high_grade_ses_share": 0.116724,
       "high_grade_ses_visible_payroll": 45366864,
-      "high_grade_ses_payroll_share": 0.150764
+      "high_grade_ses_payroll_share": 0.150764,
+      "modeled_rus_adjusted_basic_pay": 299734428,
+      "modeled_rus_savings": 1177839,
+      "modeled_rus_savings_share": 0.003914,
+      "modeled_rus_high_grade_ses_savings": 177576,
+      "modeled_rus_savings_rank": 54
     },
     {
       "opm_fwd_locality_code": "AL",
@@ -1274,7 +1538,12 @@
       "high_grade_ses_count": 387,
       "high_grade_ses_share": 0.15668,
       "high_grade_ses_visible_payroll": 55740491,
-      "high_grade_ses_payroll_share": 0.210065
+      "high_grade_ses_payroll_share": 0.210065,
+      "modeled_rus_adjusted_basic_pay": 257197275,
+      "modeled_rus_savings": 8151391,
+      "modeled_rus_savings_share": 0.03072,
+      "modeled_rus_high_grade_ses_savings": 1712323,
+      "modeled_rus_savings_rank": 42
     },
     {
       "opm_fwd_locality_code": "CS",
@@ -1298,7 +1567,12 @@
       "high_grade_ses_count": 363,
       "high_grade_ses_share": 0.157757,
       "high_grade_ses_visible_payroll": 49733945,
-      "high_grade_ses_payroll_share": 0.212765
+      "high_grade_ses_payroll_share": 0.212765,
+      "modeled_rus_adjusted_basic_pay": 227739344,
+      "modeled_rus_savings": 6011572,
+      "modeled_rus_savings_share": 0.025718,
+      "modeled_rus_high_grade_ses_savings": 1279050,
+      "modeled_rus_savings_rank": 46
     },
     {
       "opm_fwd_locality_code": "RT",
@@ -1322,7 +1596,12 @@
       "high_grade_ses_count": 260,
       "high_grade_ses_share": 0.120987,
       "high_grade_ses_visible_payroll": 36261010,
-      "high_grade_ses_payroll_share": 0.181681
+      "high_grade_ses_payroll_share": 0.181681,
+      "modeled_rus_adjusted_basic_pay": 198197932,
+      "modeled_rus_savings": 1388368,
+      "modeled_rus_savings_share": 0.006956,
+      "modeled_rus_high_grade_ses_savings": 252240,
+      "modeled_rus_savings_rank": 53
     },
     {
       "opm_fwd_locality_code": "ZZ",
@@ -1346,7 +1625,12 @@
       "high_grade_ses_count": 501,
       "high_grade_ses_share": 0.372491,
       "high_grade_ses_visible_payroll": 70963787,
-      "high_grade_ses_payroll_share": 0.366376
+      "high_grade_ses_payroll_share": 0.366376,
+      "modeled_rus_adjusted_basic_pay": 193691387,
+      "modeled_rus_savings": 0,
+      "modeled_rus_savings_share": 0.0,
+      "modeled_rus_high_grade_ses_savings": 0,
+      "modeled_rus_savings_rank": 58
     },
     {
       "opm_fwd_locality_code": "BN",
@@ -1370,7 +1654,12 @@
       "high_grade_ses_count": 535,
       "high_grade_ses_share": 0.481548,
       "high_grade_ses_visible_payroll": 73920228,
-      "high_grade_ses_payroll_share": 0.585651
+      "high_grade_ses_payroll_share": 0.585651,
+      "modeled_rus_adjusted_basic_pay": 123693471,
+      "modeled_rus_savings": 2525435,
+      "modeled_rus_savings_share": 0.020008,
+      "modeled_rus_high_grade_ses_savings": 1479023,
+      "modeled_rus_savings_rank": 51
     },
     {
       "opm_fwd_locality_code": "CC",
@@ -1394,7 +1683,12 @@
       "high_grade_ses_count": 85,
       "high_grade_ses_share": 0.088634,
       "high_grade_ses_visible_payroll": 11654170,
-      "high_grade_ses_payroll_share": 0.13188
+      "high_grade_ses_payroll_share": 0.13188,
+      "modeled_rus_adjusted_basic_pay": 87941439,
+      "modeled_rus_savings": 428213,
+      "modeled_rus_savings_share": 0.004846,
+      "modeled_rus_high_grade_ses_savings": 56473,
+      "modeled_rus_savings_rank": 57
     },
     {
       "opm_fwd_locality_code": "DV",
@@ -1418,7 +1712,12 @@
       "high_grade_ses_count": 115,
       "high_grade_ses_share": 0.154362,
       "high_grade_ses_visible_payroll": 15304385,
-      "high_grade_ses_payroll_share": 0.215198
+      "high_grade_ses_payroll_share": 0.215198,
+      "modeled_rus_adjusted_basic_pay": 69999455,
+      "modeled_rus_savings": 1118221,
+      "modeled_rus_savings_share": 0.015724,
+      "modeled_rus_high_grade_ses_savings": 240639,
+      "modeled_rus_savings_rank": 55
     },
     {
       "opm_fwd_locality_code": "LR",
@@ -1442,7 +1741,12 @@
       "high_grade_ses_count": 29,
       "high_grade_ses_share": 0.114173,
       "high_grade_ses_visible_payroll": 3835303,
-      "high_grade_ses_payroll_share": 0.15443
+      "high_grade_ses_payroll_share": 0.15443,
+      "modeled_rus_adjusted_basic_pay": 23909895,
+      "modeled_rus_savings": 925268,
+      "modeled_rus_savings_share": 0.037256,
+      "modeled_rus_high_grade_ses_savings": 142889,
+      "modeled_rus_savings_rank": 56
     }
   ]
 }
