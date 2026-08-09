@@ -35,8 +35,8 @@
       <nav class="nav-list" aria-label="Mobile">
         <a href="#calculator">Pay Table</a>
         <a href="#locality-highlights">Locality Picks</a>
-        <a href="#remote-duty">VA Remote Posts</a>
         <a href="#locality-map">County Map</a>
+        <a href="#remote-duty">VA Remote Posts</a>
         <a href="#pay-surface">Raise Lab</a>
         <a href="#inflation">Inflation Check</a>
         <a href="#context-lab">History Lab</a>
@@ -55,8 +55,8 @@
       <nav class="nav-list">
         <a href="#calculator">Pay Table</a>
         <a href="#locality-highlights">Locality Picks</a>
-        <a href="#remote-duty">VA Remote Posts</a>
         <a href="#locality-map">County Map</a>
+        <a href="#remote-duty">VA Remote Posts</a>
         <a href="#pay-surface">Raise Lab</a>
         <a href="#inflation">Inflation Check</a>
         <a href="#context-lab">History Lab</a>
@@ -148,6 +148,44 @@
 
 
 
+      <section class="section county-map-section" id="locality-map">
+        <div class="section-inner">
+          <p class="kicker">County Map</p>
+          <h2>OPM locality lookup by county</h2>
+          <p class="section-lede">OPM locality definitions are joined to Census generalized county boundary polygons for a compact county-level map and lookup. Official OPM locality definitions still control.</p>
+          <div class="form-grid map-form">
+            <div class="field"><label for="localityMapState">State</label><select id="localityMapState"></select></div>
+            <div class="field wide-field"><label for="localityMapCounty">County</label><select id="localityMapCounty"></select></div>
+            <div class="field wide-field"><label for="localityMapFocus">Highlight</label><select id="localityMapFocus"><option value="selected" selected>Selected pay-table locality</option><option value="highest">Highest locality areas</option><option value="not-rus">Non-RUS counties</option><option value="all">All county points</option></select></div>
+          </div>
+          <div class="county-map-grid">
+            <div class="chart-card county-map-card">
+              <div class="chart-head">
+                <h3 id="localityMapTitle">County locality boundary map</h3>
+                <div class="chart-metric"><strong id="localityMapMetric">0 counties</strong><span id="localityMapMeta"></span></div>
+              </div>
+              <canvas id="localityMapCanvas" width="1100" height="470" role="img" aria-describedby="localityMapDescription">Your browser does not support Canvas.</canvas>
+              <p id="localityMapDescription" class="fine-print">Census cartographic county boundaries are generalized for display; this is not a legal duty-station determination.</p>
+            </div>
+            <aside class="county-map-side" aria-label="County locality details">
+              <div class="highlight-card">
+                <h3>Selected county</h3>
+                <p class="detail-line" id="localityCountyDetail">Choose a state or county.</p>
+              </div>
+              <div class="highlight-card">
+                <h3>Map summary</h3>
+                <p class="detail-line" id="localityMapSummary">County data will render after the app loads.</p>
+              </div>
+              <div class="highlight-card">
+                <h3>Visible locality mix</h3>
+                <div class="chip-list" id="localityAreaChips"></div>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+
       <section class="section remote-duty-section" id="remote-duty">
         <div class="section-inner">
           <p class="kicker">VA Remote Posts</p>
@@ -186,44 +224,6 @@
           <p class="fine-print" id="remoteDutySourceNote">Counts are OPM FWD visible VA employment rows, not official VA facility staffing rosters.</p>
         </div>
       </section>
-
-      <section class="section county-map-section" id="locality-map">
-        <div class="section-inner">
-          <p class="kicker">County Map</p>
-          <h2>OPM locality lookup by county</h2>
-          <p class="section-lede">OPM locality definitions are joined to Census generalized county boundary polygons for a compact county-level map and lookup. Official OPM locality definitions still control.</p>
-          <div class="form-grid map-form">
-            <div class="field"><label for="localityMapState">State</label><select id="localityMapState"></select></div>
-            <div class="field wide-field"><label for="localityMapCounty">County</label><select id="localityMapCounty"></select></div>
-            <div class="field wide-field"><label for="localityMapFocus">Highlight</label><select id="localityMapFocus"><option value="selected" selected>Selected pay-table locality</option><option value="highest">Highest locality areas</option><option value="not-rus">Non-RUS counties</option><option value="all">All county points</option></select></div>
-          </div>
-          <div class="county-map-grid">
-            <div class="chart-card county-map-card">
-              <div class="chart-head">
-                <h3 id="localityMapTitle">County locality boundary map</h3>
-                <div class="chart-metric"><strong id="localityMapMetric">0 counties</strong><span id="localityMapMeta"></span></div>
-              </div>
-              <canvas id="localityMapCanvas" width="1100" height="470" role="img" aria-describedby="localityMapDescription">Your browser does not support Canvas.</canvas>
-              <p id="localityMapDescription" class="fine-print">Census cartographic county boundaries are generalized for display; this is not a legal duty-station determination.</p>
-            </div>
-            <aside class="county-map-side" aria-label="County locality details">
-              <div class="highlight-card">
-                <h3>Selected county</h3>
-                <p class="detail-line" id="localityCountyDetail">Choose a state or county.</p>
-              </div>
-              <div class="highlight-card">
-                <h3>Map summary</h3>
-                <p class="detail-line" id="localityMapSummary">County data will render after the app loads.</p>
-              </div>
-              <div class="highlight-card">
-                <h3>Visible locality mix</h3>
-                <div class="chip-list" id="localityAreaChips"></div>
-              </div>
-            </aside>
-          </div>
-        </div>
-      </section>
-
 
       <section class="section surface-section" id="pay-surface">
         <div class="section-inner surface-inner">

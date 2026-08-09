@@ -2012,11 +2012,13 @@
   }
 
   function regionBoxes(width, height) {
+    const insetX = width * 0.79;
+    const insetW = Math.max(128, width - insetX - 18);
     return {
-      CONUS: { x: 18, y: 22, w: width * 0.72, h: height - 54, label: "Lower 48 + DC" },
-      AK: { x: width * 0.73, y: height * 0.54, w: width * 0.24, h: height * 0.34, label: "Alaska" },
-      HI: { x: width * 0.73, y: height * 0.27, w: width * 0.11, h: height * 0.18, label: "Hawaii" },
-      PR: { x: width * 0.86, y: height * 0.27, w: width * 0.11, h: height * 0.18, label: "Puerto Rico" }
+      CONUS: { x: 18, y: 30, w: Math.max(320, insetX - 32), h: height - 64, label: "Lower 48 + DC" },
+      HI: { x: insetX, y: 58, w: insetW, h: height * 0.17, label: "Hawaii" },
+      PR: { x: insetX, y: height * 0.29, w: insetW, h: height * 0.16, label: "Puerto Rico" },
+      AK: { x: insetX, y: height * 0.5, w: insetW, h: height * 0.36, label: "Alaska" }
     };
   }
 

@@ -1060,23 +1060,7 @@ thead th {
   border-color: color-mix(in srgb, var(--orange) 58%, var(--line));
 }
 .surface-section {
-  --bg: #eaf1f6;
-  --panel: #ffffff;
-  --panel-soft: #f6f9fb;
-  --ink: #17324d;
-  --muted: #617487;
-  --line: #d5e1ea;
-  --line-strong: #aabccb;
-  --blue: #0067a8;
-  --cyan: #0a8daa;
-  --teal: #16847d;
-  --red: #c22a3b;
-  --orange: #d86f22;
-  --green: #2f7d45;
-  --magenta: #7256a5;
-}
-.surface-section {
-  background: linear-gradient(180deg, var(--panel), var(--panel-soft));
+  background: linear-gradient(180deg, var(--panel-soft), var(--bg));
   color: var(--ink);
 }
 
@@ -1271,13 +1255,17 @@ thead th {
   background: linear-gradient(180deg, var(--panel-soft), var(--bg));
 }
 
+.county-map-section .section-inner {
+  width: min(1480px, 100%);
+}
+
 .map-form {
   margin-top: 16px;
 }
 
 .county-map-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(280px, 360px);
+  grid-template-columns: minmax(0, 1fr);
   gap: 16px;
   align-items: start;
   margin-top: 16px;
@@ -1285,7 +1273,7 @@ thead th {
 
 .county-map-card canvas {
   width: 100%;
-  height: clamp(330px, 40vw, 540px);
+  height: clamp(460px, 44vw, 640px);
   display: block;
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -1295,6 +1283,7 @@ thead th {
 
 .county-map-side {
   display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
 }
 
@@ -1466,6 +1455,10 @@ html[data-shell="module"] .layout {
   .surface-lab,
   .county-map-grid,
   .remote-duty-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .county-map-side {
     grid-template-columns: minmax(0, 1fr);
   }
 
@@ -1664,8 +1657,8 @@ html[data-shell="module"] .layout {
       <nav class="nav-list" aria-label="Mobile">
         <a href="#calculator">Pay Table</a>
         <a href="#locality-highlights">Locality Picks</a>
-        <a href="#remote-duty">VA Remote Posts</a>
         <a href="#locality-map">County Map</a>
+        <a href="#remote-duty">VA Remote Posts</a>
         <a href="#pay-surface">Raise Lab</a>
         <a href="#inflation">Inflation Check</a>
         <a href="#context-lab">History Lab</a>
@@ -1684,8 +1677,8 @@ html[data-shell="module"] .layout {
       <nav class="nav-list">
         <a href="#calculator">Pay Table</a>
         <a href="#locality-highlights">Locality Picks</a>
-        <a href="#remote-duty">VA Remote Posts</a>
         <a href="#locality-map">County Map</a>
+        <a href="#remote-duty">VA Remote Posts</a>
         <a href="#pay-surface">Raise Lab</a>
         <a href="#inflation">Inflation Check</a>
         <a href="#context-lab">History Lab</a>
@@ -1777,6 +1770,44 @@ html[data-shell="module"] .layout {
 
 
 
+      <section class="section county-map-section" id="locality-map">
+        <div class="section-inner">
+          <p class="kicker">County Map</p>
+          <h2>OPM locality lookup by county</h2>
+          <p class="section-lede">OPM locality definitions are joined to Census generalized county boundary polygons for a compact county-level map and lookup. Official OPM locality definitions still control.</p>
+          <div class="form-grid map-form">
+            <div class="field"><label for="localityMapState">State</label><select id="localityMapState"></select></div>
+            <div class="field wide-field"><label for="localityMapCounty">County</label><select id="localityMapCounty"></select></div>
+            <div class="field wide-field"><label for="localityMapFocus">Highlight</label><select id="localityMapFocus"><option value="selected" selected>Selected pay-table locality</option><option value="highest">Highest locality areas</option><option value="not-rus">Non-RUS counties</option><option value="all">All county points</option></select></div>
+          </div>
+          <div class="county-map-grid">
+            <div class="chart-card county-map-card">
+              <div class="chart-head">
+                <h3 id="localityMapTitle">County locality boundary map</h3>
+                <div class="chart-metric"><strong id="localityMapMetric">0 counties</strong><span id="localityMapMeta"></span></div>
+              </div>
+              <canvas id="localityMapCanvas" width="1100" height="470" role="img" aria-describedby="localityMapDescription">Your browser does not support Canvas.</canvas>
+              <p id="localityMapDescription" class="fine-print">Census cartographic county boundaries are generalized for display; this is not a legal duty-station determination.</p>
+            </div>
+            <aside class="county-map-side" aria-label="County locality details">
+              <div class="highlight-card">
+                <h3>Selected county</h3>
+                <p class="detail-line" id="localityCountyDetail">Choose a state or county.</p>
+              </div>
+              <div class="highlight-card">
+                <h3>Map summary</h3>
+                <p class="detail-line" id="localityMapSummary">County data will render after the app loads.</p>
+              </div>
+              <div class="highlight-card">
+                <h3>Visible locality mix</h3>
+                <div class="chip-list" id="localityAreaChips"></div>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+
       <section class="section remote-duty-section" id="remote-duty">
         <div class="section-inner">
           <p class="kicker">VA Remote Posts</p>
@@ -1815,44 +1846,6 @@ html[data-shell="module"] .layout {
           <p class="fine-print" id="remoteDutySourceNote">Counts are OPM FWD visible VA employment rows, not official VA facility staffing rosters.</p>
         </div>
       </section>
-
-      <section class="section county-map-section" id="locality-map">
-        <div class="section-inner">
-          <p class="kicker">County Map</p>
-          <h2>OPM locality lookup by county</h2>
-          <p class="section-lede">OPM locality definitions are joined to Census generalized county boundary polygons for a compact county-level map and lookup. Official OPM locality definitions still control.</p>
-          <div class="form-grid map-form">
-            <div class="field"><label for="localityMapState">State</label><select id="localityMapState"></select></div>
-            <div class="field wide-field"><label for="localityMapCounty">County</label><select id="localityMapCounty"></select></div>
-            <div class="field wide-field"><label for="localityMapFocus">Highlight</label><select id="localityMapFocus"><option value="selected" selected>Selected pay-table locality</option><option value="highest">Highest locality areas</option><option value="not-rus">Non-RUS counties</option><option value="all">All county points</option></select></div>
-          </div>
-          <div class="county-map-grid">
-            <div class="chart-card county-map-card">
-              <div class="chart-head">
-                <h3 id="localityMapTitle">County locality boundary map</h3>
-                <div class="chart-metric"><strong id="localityMapMetric">0 counties</strong><span id="localityMapMeta"></span></div>
-              </div>
-              <canvas id="localityMapCanvas" width="1100" height="470" role="img" aria-describedby="localityMapDescription">Your browser does not support Canvas.</canvas>
-              <p id="localityMapDescription" class="fine-print">Census cartographic county boundaries are generalized for display; this is not a legal duty-station determination.</p>
-            </div>
-            <aside class="county-map-side" aria-label="County locality details">
-              <div class="highlight-card">
-                <h3>Selected county</h3>
-                <p class="detail-line" id="localityCountyDetail">Choose a state or county.</p>
-              </div>
-              <div class="highlight-card">
-                <h3>Map summary</h3>
-                <p class="detail-line" id="localityMapSummary">County data will render after the app loads.</p>
-              </div>
-              <div class="highlight-card">
-                <h3>Visible locality mix</h3>
-                <div class="chip-list" id="localityAreaChips"></div>
-              </div>
-            </aside>
-          </div>
-        </div>
-      </section>
-
 
       <section class="section surface-section" id="pay-surface">
         <div class="section-inner surface-inner">
@@ -2080,7 +2073,7 @@ html[data-shell="module"] .layout {
           <h2>Source notes and limitations</h2>
           <p class="section-lede">Official and reconstructed values are visibly distinguished. Reconstructed values are never described as official published tables.</p>
           <ol class="source-list" id="sourceList"></ol>
-          <p class="fine-print" id="buildMeta">Build n-gs-pay-math-lab-v0.01 | commit 480720d18a05ce4c995fdd530569da0978a1c355</p>
+          <p class="fine-print" id="buildMeta">Build n-gs-pay-math-lab-v0.01 | commit 507d4c1fe3ee3cd11aba8dcce8c931da4afb20a4</p>
         </div>
       </section>
 
@@ -4424,11 +4417,13 @@ window.NGSPaySizeReceipt = {"calculation_package_without_brand_imagery":4796873,
   }
 
   function regionBoxes(width, height) {
+    const insetX = width * 0.79;
+    const insetW = Math.max(128, width - insetX - 18);
     return {
-      CONUS: { x: 18, y: 22, w: width * 0.72, h: height - 54, label: "Lower 48 + DC" },
-      AK: { x: width * 0.73, y: height * 0.54, w: width * 0.24, h: height * 0.34, label: "Alaska" },
-      HI: { x: width * 0.73, y: height * 0.27, w: width * 0.11, h: height * 0.18, label: "Hawaii" },
-      PR: { x: width * 0.86, y: height * 0.27, w: width * 0.11, h: height * 0.18, label: "Puerto Rico" }
+      CONUS: { x: 18, y: 30, w: Math.max(320, insetX - 32), h: height - 64, label: "Lower 48 + DC" },
+      HI: { x: insetX, y: 58, w: insetW, h: height * 0.17, label: "Hawaii" },
+      PR: { x: insetX, y: height * 0.29, w: insetW, h: height * 0.16, label: "Puerto Rico" },
+      AK: { x: insetX, y: height * 0.5, w: insetW, h: height * 0.36, label: "Alaska" }
     };
   }
 

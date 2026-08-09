@@ -1050,23 +1050,7 @@ thead th {
   border-color: color-mix(in srgb, var(--orange) 58%, var(--line));
 }
 .surface-section {
-  --bg: #eaf1f6;
-  --panel: #ffffff;
-  --panel-soft: #f6f9fb;
-  --ink: #17324d;
-  --muted: #617487;
-  --line: #d5e1ea;
-  --line-strong: #aabccb;
-  --blue: #0067a8;
-  --cyan: #0a8daa;
-  --teal: #16847d;
-  --red: #c22a3b;
-  --orange: #d86f22;
-  --green: #2f7d45;
-  --magenta: #7256a5;
-}
-.surface-section {
-  background: linear-gradient(180deg, var(--panel), var(--panel-soft));
+  background: linear-gradient(180deg, var(--panel-soft), var(--bg));
   color: var(--ink);
 }
 
@@ -1261,13 +1245,17 @@ thead th {
   background: linear-gradient(180deg, var(--panel-soft), var(--bg));
 }
 
+.county-map-section .section-inner {
+  width: min(1480px, 100%);
+}
+
 .map-form {
   margin-top: 16px;
 }
 
 .county-map-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(280px, 360px);
+  grid-template-columns: minmax(0, 1fr);
   gap: 16px;
   align-items: start;
   margin-top: 16px;
@@ -1275,7 +1263,7 @@ thead th {
 
 .county-map-card canvas {
   width: 100%;
-  height: clamp(330px, 40vw, 540px);
+  height: clamp(460px, 44vw, 640px);
   display: block;
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -1285,6 +1273,7 @@ thead th {
 
 .county-map-side {
   display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
 }
 
@@ -1456,6 +1445,10 @@ html[data-shell="module"] .layout {
   .surface-lab,
   .county-map-grid,
   .remote-duty-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .county-map-side {
     grid-template-columns: minmax(0, 1fr);
   }
 
