@@ -35,6 +35,7 @@
       <nav class="nav-list" aria-label="Mobile">
         <a href="#calculator">Pay Table</a>
         <a href="#locality-highlights">Locality Picks</a>
+        <a href="#cost-pressure">Cost Pressure</a>
         <a href="#locality-map">County Map</a>
         <a href="#remote-duty">VA Remote Posts</a>
         <a href="#pay-surface">Raise Lab</a>
@@ -55,6 +56,7 @@
       <nav class="nav-list">
         <a href="#calculator">Pay Table</a>
         <a href="#locality-highlights">Locality Picks</a>
+        <a href="#cost-pressure">Cost Pressure</a>
         <a href="#locality-map">County Map</a>
         <a href="#remote-duty">VA Remote Posts</a>
         <a href="#pay-surface">Raise Lab</a>
@@ -148,6 +150,44 @@
 
 
 
+
+      <section class="section cost-pressure-section" id="cost-pressure">
+        <div class="section-inner">
+          <p class="kicker">Federal Cost Pressure</p>
+          <h2>Where visible payroll and high-grade concentration pile up</h2>
+          <p class="section-lede">OPM Federal Workforce Data rows are grouped by locality pay area. Dollar totals use visible annualized adjusted basic pay only; redacted rows stay in the audit count and are not reassigned.</p>
+          <div class="form-grid cost-pressure-form">
+            <div class="field wide-field"><label for="costPressureSort">Rank areas by</label><select id="costPressureSort"><option value="payroll" selected>Total visible payroll</option><option value="high-share">GS-13+ plus SES percentage</option><option value="ses-share">SES percentage</option><option value="high-payroll">GS-13+ plus SES visible payroll</option><option value="average-pay">Average visible pay</option><option value="employees">Visible employee rows</option></select></div>
+          </div>
+          <div class="cost-pressure-grid">
+            <div class="highlight-card pressure-readout-card">
+              <div class="chart-head">
+                <h3 id="costPressurePayrollArea">Largest visible payroll</h3>
+                <div class="chart-metric"><strong id="costPressurePayrollValue">$0</strong><span>annualized adjusted basic pay</span></div>
+              </div>
+              <p class="detail-line" id="costPressureSummary">OPM FWD cost pressure data will render after the app loads.</p>
+              <div class="pressure-stat-grid">
+                <div class="mini-metric"><span>High GS + SES leader</span><strong id="costPressureHighArea">N/A</strong></div>
+                <div class="mini-metric"><span>High GS + SES share</span><strong id="costPressureHighValue">N/A</strong></div>
+                <div class="mini-metric"><span>SES leader</span><strong id="costPressureSesArea">N/A</strong></div>
+                <div class="mini-metric"><span>SES share</span><strong id="costPressureSesValue">N/A</strong></div>
+              </div>
+            </div>
+            <div class="chart-card cost-pressure-chart-card">
+              <div class="chart-head">
+                <h3 id="costPressureChartTitle">Cost pressure by locality</h3>
+                <div class="chart-metric"><strong id="costPressureMetric">0 areas</strong><span>OPM visible rows</span></div>
+              </div>
+              <canvas id="costPressureCanvas" width="980" height="430" role="img" aria-describedby="costPressureDescription">Your browser does not support Canvas.</canvas>
+              <p id="costPressureDescription" class="fine-print">Bar length follows the selected ranking. Labels include visible payroll and GS-13+ plus SES share.</p>
+            </div>
+          </div>
+          <div class="table-wrap cost-pressure-table-wrap">
+            <table id="costPressureTable"></table>
+          </div>
+          <p class="fine-print" id="costPressureNote">OPM redacted locality/pay rows are excluded from area dollar totals and shown in the audit text.</p>
+        </div>
+      </section>
       <section class="section county-map-section" id="locality-map">
         <div class="section-inner">
           <p class="kicker">County Map</p>

@@ -61,6 +61,7 @@ def combined_pay_data() -> dict[str, Any]:
         "regionalPriceParities": read_json(ROOT / "data" / "regional-price-parities.json"),
         "federalContext": read_json(ROOT / "data" / "federal-context.json"),
         "vaDutyStations": read_json(ROOT / "data" / "va-duty-stations.json"),
+        "federalCostPressure": read_json(ROOT / "data" / "federal-cost-pressure.json"),
         "sources": read_json(ROOT / "data" / "sources.json"),
     }
 

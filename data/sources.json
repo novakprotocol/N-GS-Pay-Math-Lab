@@ -97,7 +97,7 @@
       "id": "opm-fwd-employment-2026-06",
       "title": "OPM Federal Workforce Data June 2026 employment raw data",
       "url": "https://data.opm.gov/explore-data/data/data-downloads",
-      "note": "Used to aggregate visible Department of Veterans Affairs duty-station employee rows by location. OPM notes the employment files are EHRI Status snapshots and some fields are redacted under the data release policy."
+      "note": "Used to aggregate visible Department of Veterans Affairs duty-station employee rows by location and all-agency locality cost pressure using annualized_adjusted_basic_pay, pay_plan_code, grade, and locality_pay_area fields. OPM notes the employment files are EHRI Status snapshots and some fields are redacted under the data release policy."
     },
     {
       "id": "opm-fwd-duty-stations",

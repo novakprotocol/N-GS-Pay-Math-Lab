@@ -40,6 +40,19 @@
     costAreaName: $("costAreaName"),
     costAreaList: $("costAreaList"),
     costHighlightNote: $("costHighlightNote"),
+    costPressureSort: $("costPressureSort"),
+    costPressurePayrollArea: $("costPressurePayrollArea"),
+    costPressurePayrollValue: $("costPressurePayrollValue"),
+    costPressureSummary: $("costPressureSummary"),
+    costPressureHighArea: $("costPressureHighArea"),
+    costPressureHighValue: $("costPressureHighValue"),
+    costPressureSesArea: $("costPressureSesArea"),
+    costPressureSesValue: $("costPressureSesValue"),
+    costPressureChartTitle: $("costPressureChartTitle"),
+    costPressureMetric: $("costPressureMetric"),
+    costPressureCanvas: $("costPressureCanvas"),
+    costPressureTable: $("costPressureTable"),
+    costPressureNote: $("costPressureNote"),
     remoteDutyLocation: $("remoteDutyLocation"),
     remoteDutySort: $("remoteDutySort"),
     remoteDutyName: $("remoteDutyName"),
@@ -529,6 +542,175 @@
     setText(els.costHighlightNote, "BEA 2024 RPP compares local price levels with the U.S. average. Difference shown is OPM locality percent minus BEA all-items price premium; it is not an OPM COLA calculation.");
   }
 
+
+  function federalCostPressureData() {
+    return math.DATA.federalCostPressure || {};
+  }
+
+  function federalCostPressureAreas() {
+    const areas = federalCostPressureData().areas;
+    return Array.isArray(areas) ? areas : [];
+  }
+
+  function compactMoney(value) {
+    const numeric = Number(value);
+    if (!Number.isFinite(numeric)) return "N/A";
+    const abs = Math.abs(numeric);
+    if (abs >= 1_000_000_000) return `$${(numeric / 1_000_000_000).toFixed(abs >= 10_000_000_000 ? 1 : 2)}B`;
+    if (abs >= 1_000_000) return `$${(numeric / 1_000_000).toFixed(abs >= 10_000_000 ? 1 : 2)}M`;
+    return math.money0.format(numeric);
+  }
+
+  function sharePercent(value, digits = 1) {
+    const numeric = Number(value);
+    if (!Number.isFinite(numeric)) return "N/A";
+    return `${(numeric * 100).toFixed(digits)}%`;
+  }
+
+  function costPressureLabel(row) {
+    return row ? (row.salary_table_code || row.opm_fwd_locality_code || "N/A") : "N/A";
+  }
+
+  function costPressureName(row) {
+    return row ? `${costPressureLabel(row)} | ${row.name}` : "N/A";
+  }
+
+  function costPressureSortLabel(sort) {
+    return {
+      payroll: "total visible payroll",
+      "high-share": "GS-13+ plus SES percentage",
+      "ses-share": "SES percentage",
+      "high-payroll": "GS-13+ plus SES visible payroll",
+      "average-pay": "average visible pay",
+      employees: "visible employee rows"
+    }[sort] || "total visible payroll";
+  }
+
+  function costPressureMetricValue(row, sort) {
+    if (!row) return 0;
+    if (sort === "high-share") return Number(row.high_grade_ses_share) || 0;
+    if (sort === "ses-share") return Number(row.ses_share) || 0;
+    if (sort === "high-payroll") return Number(row.high_grade_ses_visible_payroll) || 0;
+    if (sort === "average-pay") return Number(row.average_visible_adjusted_basic_pay) || 0;
+    if (sort === "employees") return Number(row.employee_count) || 0;
+    return Number(row.total_visible_adjusted_basic_pay) || 0;
+  }
+
+  function costPressureMetricText(row, sort) {
+    const value = costPressureMetricValue(row, sort);
+    if (sort === "high-share" || sort === "ses-share") return sharePercent(value);
+    if (sort === "employees") return value.toLocaleString();
+    return compactMoney(value);
+  }
+
+  function costPressureRows(sort) {
+    const data = federalCostPressureData();
+    const minimum = Number(data.definitions && data.definitions.minimum_share_rank_employee_count) || 5000;
+    return federalCostPressureAreas()
+      .filter((row) => !(sort === "high-share" || sort === "ses-share" || sort === "average-pay") || Number(row.employee_count) >= minimum)
+      .slice()
+      .sort((a, b) => costPressureMetricValue(b, sort) - costPressureMetricValue(a, sort) || Number(b.total_visible_adjusted_basic_pay) - Number(a.total_visible_adjusted_basic_pay) || String(a.name).localeCompare(String(b.name)));
+  }
+
+  function selectedCostPressureCode(input) {
+    return input.localityArea ? input.localityArea.code : null;
+  }
+
+  function costPressureTableRow(row, index, selectedCode) {
+    const isSelected = selectedCode && row.salary_table_code === selectedCode;
+    const locality = Number.isFinite(Number(row.locality_percent_2026)) ? `${math.pct(row.locality_percent_2026)} locality` : "No locality table match";
+    return `<tr class="${isSelected ? "is-selected" : ""}"><th scope="row">#${index + 1} ${math.escapeHtml(costPressureName(row))}<span>OPM FWD ${math.escapeHtml(row.opm_fwd_locality_code)} | ${locality} | pay visible ${sharePercent(row.pay_visible_share)}</span></th><td>${compactMoney(row.total_visible_adjusted_basic_pay)}</td><td>${Number(row.employee_count).toLocaleString()}</td><td>${compactMoney(row.average_visible_adjusted_basic_pay)}</td><td>${Number(row.gs13_15_count).toLocaleString()} | ${sharePercent(row.gs13_15_share)}</td><td>${Number(row.ses_count).toLocaleString()} | ${sharePercent(row.ses_share, 2)}</td><td>${sharePercent(row.high_grade_ses_share)}</td><td>${compactMoney(row.high_grade_ses_visible_payroll)}</td></tr>`;
+  }
+
+  function renderCostPressureChart(rows, selectedCode, sort) {
+    const canvas = els.costPressureCanvas;
+    if (!canvas) return;
+    const colors = themeColors(canvas);
+    const { ctx, width, height } = canvasMetrics(canvas, 390);
+    clearCanvas(ctx, width, height, colors);
+    const top = rows.slice(0, 10);
+    if (!top.length) return;
+    const left = Math.min(245, Math.max(128, width * 0.3));
+    const right = 28;
+    const topPad = 28;
+    const rowH = Math.max(30, (height - topPad - 26) / top.length);
+    const chartW = Math.max(80, width - left - right);
+    const maxValue = Math.max(...top.map((row) => costPressureMetricValue(row, sort)), 1);
+    ctx.fillStyle = rgbaColor(colors.panel, 0.78);
+    ctx.strokeStyle = rgbaColor(colors.line, 0.72);
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.roundRect(8, 8, width - 16, height - 16, 8);
+    ctx.fill();
+    ctx.stroke();
+    ctx.font = "800 12px Segoe UI, system-ui, sans-serif";
+    ctx.textBaseline = "middle";
+    top.forEach((row, index) => {
+      const y = topPad + index * rowH + rowH / 2;
+      const selected = selectedCode && row.salary_table_code === selectedCode;
+      const isDc = row.salary_table_code === "DCB";
+      const barW = Math.max(3, (costPressureMetricValue(row, sort) / maxValue) * chartW);
+      ctx.fillStyle = selected ? colors.orange : isDc ? colors.red : colors.blue;
+      ctx.globalAlpha = selected || isDc ? 0.92 : 0.74;
+      ctx.beginPath();
+      ctx.roundRect(left, y - rowH * 0.27, barW, rowH * 0.36, 5);
+      ctx.fill();
+      ctx.globalAlpha = 1;
+      const highW = Math.max(2, Math.min(chartW, (Number(row.high_grade_ses_share) || 0) * chartW));
+      ctx.fillStyle = rgbaColor(colors.orange, 0.44);
+      ctx.beginPath();
+      ctx.roundRect(left, y + rowH * 0.12, highW, Math.max(4, rowH * 0.13), 4);
+      ctx.fill();
+      ctx.fillStyle = colors.ink;
+      ctx.textAlign = "right";
+      ctx.fillText(costPressureLabel(row), left - 10, y - 2);
+      ctx.fillStyle = colors.muted;
+      ctx.font = "700 10px Segoe UI, system-ui, sans-serif";
+      ctx.fillText(`${Number(row.employee_count).toLocaleString()} rows`, left - 10, y + 12);
+      ctx.font = "800 12px Segoe UI, system-ui, sans-serif";
+      ctx.textAlign = "left";
+      ctx.fillStyle = colors.ink;
+      ctx.fillText(costPressureMetricText(row, sort), Math.min(width - 120, left + barW + 8), y - 4);
+      ctx.fillStyle = colors.muted;
+      ctx.font = "700 10px Segoe UI, system-ui, sans-serif";
+      ctx.fillText(`${compactMoney(row.total_visible_adjusted_basic_pay)} | high ${sharePercent(row.high_grade_ses_share)}`, Math.min(width - 180, left + barW + 8), y + 12);
+      ctx.font = "800 12px Segoe UI, system-ui, sans-serif";
+    });
+  }
+
+  function renderFederalCostPressure(input) {
+    if (!els.costPressureTable) return;
+    const data = federalCostPressureData();
+    const areas = federalCostPressureAreas();
+    if (!areas.length) {
+      setText(els.costPressureMetric, "No OPM data");
+      setText(els.costPressureSummary, "No federal cost-pressure aggregate is loaded.");
+      els.costPressureTable.innerHTML = "";
+      return;
+    }
+    const selectedCode = selectedCostPressureCode(input);
+    const sort = els.costPressureSort ? els.costPressureSort.value : "payroll";
+    const rows = costPressureRows(sort);
+    const minimum = Number(data.definitions && data.definitions.minimum_share_rank_employee_count) || 5000;
+    const payrollLeader = costPressureRows("payroll")[0];
+    const highLeader = costPressureRows("high-share")[0];
+    const sesLeader = costPressureRows("ses-share")[0];
+    const highPayrollLeader = costPressureRows("high-payroll")[0];
+    const snapshot = data.snapshot || {};
+    setText(els.costPressurePayrollArea, payrollLeader ? `${costPressureLabel(payrollLeader)} largest visible payroll` : "Largest visible payroll");
+    setText(els.costPressurePayrollValue, payrollLeader ? compactMoney(payrollLeader.total_visible_adjusted_basic_pay) : "N/A");
+    setText(els.costPressureHighArea, highLeader ? costPressureLabel(highLeader) : "N/A");
+    setText(els.costPressureHighValue, highLeader ? sharePercent(highLeader.high_grade_ses_share) : "N/A");
+    setText(els.costPressureSesArea, sesLeader ? costPressureLabel(sesLeader) : "N/A");
+    setText(els.costPressureSesValue, sesLeader ? `${sharePercent(sesLeader.ses_share, 2)} | ${Number(sesLeader.ses_count).toLocaleString()} SES` : "N/A");
+    setText(els.costPressureChartTitle, `Ranked by ${costPressureSortLabel(sort)}`);
+    setText(els.costPressureMetric, `${areas.length} areas | ${compactMoney(snapshot.visible_annualized_adjusted_basic_pay)} visible`);
+    const highPayrollText = highPayrollLeader ? ` ${costPressureLabel(highPayrollLeader)} also carries the largest GS-13+ plus SES visible payroll at ${compactMoney(highPayrollLeader.high_grade_ses_visible_payroll)}.` : "";
+    setText(els.costPressureSummary, `${costPressureName(payrollLeader)} is the largest visible payroll area. ${costPressureName(highLeader)} has the highest GS-13+ plus SES concentration among areas with at least ${minimum.toLocaleString()} visible rows.${highPayrollText}`);
+    setText(els.costPressureNote, `OPM FWD employment snapshot ${snapshot.year}-${snapshot.month}, published ${snapshot.published}. ${Number(snapshot.redacted_locality_rows || 0).toLocaleString()} locality rows and ${Number(snapshot.pay_redacted_rows || 0).toLocaleString()} pay rows are redacted; dollar totals use only numeric annualized_adjusted_basic_pay rows.`);
+    renderCostPressureChart(rows, selectedCode, sort);
+    els.costPressureTable.innerHTML = `<thead><tr><th>Locality area</th><th>Visible payroll</th><th>Visible rows</th><th>Average pay</th><th>GS-13 to GS-15</th><th>SES</th><th>High GS + SES</th><th>High GS + SES payroll</th></tr></thead><tbody>${rows.slice(0, 20).map((row, index) => costPressureTableRow(row, index, selectedCode)).join("")}</tbody>`;
+  }
   function vaDutyStationData() {
     const data = math.DATA.vaDutyStations || {};
     return {
@@ -2175,6 +2357,7 @@
     renderSummary(result, compare);
     renderPayPicture(result);
     renderLocalityHighlights(input);
+    renderFederalCostPressure(input);
     renderRemoteDutyStations(input);
     renderLocalityMap(input);
     renderTrace(result);
@@ -2229,6 +2412,7 @@
       if (els.localityMapFocus) els.localityMapFocus.value = "selected";
       if (els.remoteDutyLocation) els.remoteDutyLocation.value = "vi-saint-croix";
       if (els.remoteDutySort) els.remoteDutySort.value = "pay";
+      if (els.costPressureSort) els.costPressureSort.value = "payroll";
       if (els.contextStart) els.contextStart.value = "1977";
       if (els.contextEnd) els.contextEnd.value = "2026";
       if (els.contextView) els.contextView.value = "selected";
@@ -2257,7 +2441,7 @@
         renderAll();
       });
     }
-    [els.localityMapCounty, els.localityMapFocus, els.remoteDutyLocation, els.remoteDutySort].filter(Boolean).forEach((el) => el.addEventListener("change", renderAll));
+    [els.localityMapCounty, els.localityMapFocus, els.remoteDutyLocation, els.remoteDutySort, els.costPressureSort].filter(Boolean).forEach((el) => el.addEventListener("change", renderAll));
     if (els.localityMapCanvas) {
       els.localityMapCanvas.addEventListener("click", (event) => {
         if (!localityMapTargets.length) return;

@@ -429,6 +429,58 @@ main {
 .highlight-card h3 {
   margin: 0;
 }
+
+.cost-pressure-section {
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--panel) 90%, var(--cyan)), color-mix(in srgb, var(--panel-soft) 88%, var(--blue))),
+    var(--panel-soft);
+}
+
+.cost-pressure-section .section-inner {
+  width: min(1380px, 100%);
+}
+
+.cost-pressure-form {
+  margin-bottom: 14px;
+}
+
+.cost-pressure-grid {
+  display: grid;
+  grid-template-columns: minmax(320px, 0.82fr) minmax(520px, 1.18fr);
+  gap: 14px;
+  align-items: stretch;
+}
+
+.pressure-readout-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pressure-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 16px;
+}
+
+.cost-pressure-chart-card canvas {
+  display: block;
+  width: 100%;
+  height: 390px;
+}
+
+.cost-pressure-table-wrap {
+  margin-top: 14px;
+}
+
+.cost-pressure-table-wrap table th {
+  min-width: 220px;
+}
+
+.cost-pressure-table-wrap tbody tr.is-selected {
+  box-shadow: inset 4px 0 0 var(--orange);
+  background: color-mix(in srgb, var(--panel-soft) 74%, var(--orange));
+}
 .remote-duty-section {
   background:
     linear-gradient(135deg, color-mix(in srgb, var(--panel-soft) 92%, var(--blue)), color-mix(in srgb, var(--panel) 90%, var(--teal))),
@@ -469,6 +521,7 @@ main {
 }
 
 .mini-metric span,
+.cost-pressure-table-wrap th span,
 .remote-duty-table-wrap th span {
   display: block;
   color: var(--muted);
@@ -1443,6 +1496,7 @@ html[data-shell="module"] .layout {
   }
 
   .surface-lab,
+  .cost-pressure-grid,
   .county-map-grid,
   .remote-duty-grid {
     grid-template-columns: minmax(0, 1fr);
@@ -1519,6 +1573,8 @@ html[data-shell="module"] .layout {
   .context-metrics,
   .context-grid,
   .locality-highlights,
+  .cost-pressure-grid,
+  .pressure-stat-grid,
   .remote-duty-grid,
   .remote-duty-metrics,
   .raise-panel-grid,
