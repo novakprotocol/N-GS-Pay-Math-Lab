@@ -60,6 +60,7 @@ def combined_pay_data() -> dict[str, Any]:
         "stateTaxFlags": read_json(ROOT / "data" / "state-tax-flags.json"),
         "regionalPriceParities": read_json(ROOT / "data" / "regional-price-parities.json"),
         "federalContext": read_json(ROOT / "data" / "federal-context.json"),
+        "vaDutyStations": read_json(ROOT / "data" / "va-duty-stations.json"),
         "sources": read_json(ROOT / "data" / "sources.json"),
     }
 

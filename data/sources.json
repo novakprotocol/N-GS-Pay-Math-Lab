@@ -94,6 +94,42 @@
       "note": "Used for operation date context including Iraq-era operation names."
     },
     {
+      "id": "opm-fwd-employment-2026-06",
+      "title": "OPM Federal Workforce Data June 2026 employment raw data",
+      "url": "https://data.opm.gov/explore-data/data/data-downloads",
+      "note": "Used to aggregate visible Department of Veterans Affairs duty-station employee rows by location. OPM notes the employment files are EHRI Status snapshots and some fields are redacted under the data release policy."
+    },
+    {
+      "id": "opm-fwd-duty-stations",
+      "title": "OPM Federal Workforce Data duty-station standard",
+      "url": "https://data.opm.gov/data-standards/duty-stations",
+      "note": "Used for duty-station meaning, locality pay area fields, and the caution that duty-station reporting supports OPM workforce reporting and benefits/allowance administration."
+    },
+    {
+      "id": "opm-gs-pay-system",
+      "title": "OPM General Schedule pay system overview",
+      "url": "https://www.opm.gov/policy-data-oversight/pay-leave/pay-systems/general-schedule/",
+      "note": "Used for the rule that U.S. territories and possessions are in Rest of U.S. locality while GS employees in foreign areas are not eligible for locality pay."
+    },
+    {
+      "id": "opm-nonforeign-areas-2026",
+      "title": "OPM 2026 nonforeign area COLA and locality rates",
+      "url": "https://www.opm.gov/policy-data-oversight/pay-leave/pay-systems/nonforeign-areas/",
+      "note": "Used for Puerto Rico, U.S. Virgin Islands, Guam/CNMI, other possessions, Alaska, and Hawaii locality/COLA context. COLA is shown separately from locality pay."
+    },
+    {
+      "id": "va-manila-clinic",
+      "title": "VA Manila VA Clinic",
+      "url": "https://www.va.gov/manila-health-care/locations/manila-va-clinic/",
+      "note": "Used to identify the Manila VA Clinic as a VA facility in the Philippines. OPM FWD public employment rows do not expose a Manila/Pasay/Philippines VA duty-station count in the June 2026 release."
+    },
+    {
+      "id": "va-saint-croix-clinic",
+      "title": "VA Saint Croix VA Clinic",
+      "url": "https://www.va.gov/caribbean-health-care/locations/saint-croix-va-clinic/",
+      "note": "Used to identify the Saint Croix VA Clinic location; employee counts are from OPM FWD duty-station rows, not from the VA facility page."
+    },
+    {
       "id": "federal-reserve-z1",
       "title": "Federal Reserve Z.1 Financial Accounts CSV package",
       "url": "https://www.federalreserve.gov/releases/z1/default.htm",

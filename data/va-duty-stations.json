@@ -1,0 +1,198 @@
+{
+  "source_policy": "Only OPM and federal .gov sources are used. Counts are public OPM Federal Workforce Data employment rows, not VA facility staffing rosters.",
+  "snapshot": {
+    "dataset": "OPM Federal Employment Raw Data",
+    "year": 2026,
+    "month": "06",
+    "version": 1,
+    "captured_through": "2026-06-30",
+    "published": "2026-08-03",
+    "source_url": "https://data.opm.gov/explore-data/data/data-downloads",
+    "api_download_url": "https://data.opm.gov/api/v1/files/employment/2026/06/1/download",
+    "row_count": 1953300,
+    "va_department_code": "VA",
+    "va_employee_rows": 445351,
+    "count_field_note": "In this VA extract, OPM's count field is 1 on every VA row, so visible row count equals visible public-duty-station employee count.",
+    "redacted_va_rows": 5834,
+    "redacted_va_gs_rows": 5831,
+    "named_foreign_va_rows": 19,
+    "named_foreign_va_gs_rows": 17
+  },
+  "pay_rules": {
+    "foreign_base": {
+      "locality_code": "ZZ",
+      "label": "Foreign area - no GS locality pay",
+      "locality_percent_2026": 0,
+      "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/pay-systems/general-schedule/",
+      "note": "OPM states GS employees in foreign areas are not eligible for locality pay. This lab does not calculate foreign allowances, post differentials, danger pay, special rates, Title 38 rates, or agency payroll determinations."
+    },
+    "rus_territory": {
+      "locality_code": "RUS",
+      "opm_fwd_locality_code": "ZX",
+      "label": "Rest of U.S. and territories",
+      "locality_percent_2026": 17.06,
+      "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/pay-systems/nonforeign-areas/",
+      "note": "OPM lists Puerto Rico, U.S. Virgin Islands, Guam and CNMI, and Other Possessions with 17.06 percent locality in 2026, while separate nonforeign COLA percentages may also apply."
+    },
+    "alaska": {
+      "locality_code": "AK",
+      "label": "Alaska",
+      "locality_percent_2026": 32.36,
+      "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/pay-systems/nonforeign-areas/",
+      "note": "OPM lists Alaska at 32.36 percent locality in 2026 with separate nonforeign COLA rows and GS-15 cap caveats."
+    },
+    "hawaii": {
+      "locality_code": "HI",
+      "label": "Hawaii",
+      "locality_percent_2026": 22.21,
+      "source_url": "https://www.opm.gov/policy-data-oversight/pay-leave/pay-systems/nonforeign-areas/",
+      "note": "OPM lists Hawaii at 22.21 percent locality in 2026 with separate nonforeign COLA rows and GS-15 cap caveats."
+    }
+  },
+  "locations": [
+    {
+      "id": "ph-manila-va-clinic",
+      "name": "Manila VA Clinic",
+      "display_location": "Pasay City, Philippines",
+      "category": "Foreign VA facility",
+      "pay_model": "foreign_base",
+      "facility_source_url": "https://www.va.gov/manila-health-care/locations/manila-va-clinic/",
+      "opm_visible_employee_count": null,
+      "opm_visible_gs_count": null,
+      "nonforeign_cola_percent_2026": null,
+      "count_note": "VA.gov identifies Manila as a VA clinic in the Philippines, but the public OPM June 2026 VA employment file has no visible Manila, Pasay, Philippines, or Philippine duty-station rows. The count is therefore not asserted here; OPM redacts 5,834 VA duty-station rows in this release."
+    },
+    {
+      "id": "foreign-named-visible",
+      "name": "Named foreign VA rows",
+      "display_location": "Foreign duty stations visible by country",
+      "category": "Foreign visible aggregate",
+      "pay_model": "foreign_base",
+      "opm_visible_employee_count": 19,
+      "opm_visible_gs_count": 17,
+      "nonforeign_cola_percent_2026": null,
+      "count_note": "Visible named foreign VA rows in the OPM public file exclude redacted rows and do not include a visible Manila/Pasay/Philippines row."
+    },
+    {
+      "id": "pr-visible",
+      "name": "Puerto Rico visible VA duty stations",
+      "display_location": "Puerto Rico",
+      "category": "Territory aggregate",
+      "pay_model": "rus_territory",
+      "opm_visible_employee_count": 4552,
+      "opm_visible_gs_count": 2581,
+      "nonforeign_cola_percent_2026": 2.49,
+      "count_note": "Public OPM FWD rows coded as United States, NDR state, and RUS territory locality, grouped by Puerto Rico city names.",
+      "city_rows": [
+        { "city": "San Juan", "opm_visible_employee_count": 3973, "opm_visible_gs_count": 2188 },
+        { "city": "Ponce", "opm_visible_employee_count": 171, "opm_visible_gs_count": 114 },
+        { "city": "Mayaguez", "opm_visible_employee_count": 160, "opm_visible_gs_count": 106 },
+        { "city": "Arecibo", "opm_visible_employee_count": 60, "opm_visible_gs_count": 38 },
+        { "city": "Ceiba", "opm_visible_employee_count": 40, "opm_visible_gs_count": 22 },
+        { "city": "Bayamon", "opm_visible_employee_count": 35, "opm_visible_gs_count": 17 }
+      ]
+    },
+    {
+      "id": "pr-san-juan",
+      "name": "San Juan VA duty station",
+      "display_location": "San Juan, Puerto Rico",
+      "category": "Territory city",
+      "pay_model": "rus_territory",
+      "opm_visible_employee_count": 3973,
+      "opm_visible_gs_count": 2188,
+      "nonforeign_cola_percent_2026": 2.49,
+      "count_note": "OPM FWD city row: San Juan, United States, NDR state, RUS territory locality."
+    },
+    {
+      "id": "vi-visible",
+      "name": "U.S. Virgin Islands visible VA duty stations",
+      "display_location": "U.S. Virgin Islands",
+      "category": "Territory aggregate",
+      "pay_model": "rus_territory",
+      "opm_visible_employee_count": 15,
+      "opm_visible_gs_count": 11,
+      "nonforeign_cola_percent_2026": 11.88,
+      "count_note": "Public OPM FWD rows coded as United States, NDR state, and RUS territory locality, grouped by USVI city names.",
+      "city_rows": [
+        { "city": "Saint Thomas", "opm_visible_employee_count": 7, "opm_visible_gs_count": 6 },
+        { "city": "Saint Croix", "opm_visible_employee_count": 6, "opm_visible_gs_count": 4 },
+        { "city": "Christiansted", "opm_visible_employee_count": 1, "opm_visible_gs_count": 1 },
+        { "city": "Saint John Island", "opm_visible_employee_count": 1, "opm_visible_gs_count": 0 }
+      ]
+    },
+    {
+      "id": "vi-saint-croix",
+      "name": "Saint Croix VA Clinic area",
+      "display_location": "St. Croix, U.S. Virgin Islands",
+      "category": "Territory city",
+      "pay_model": "rus_territory",
+      "facility_source_url": "https://www.va.gov/caribbean-health-care/locations/saint-croix-va-clinic/",
+      "opm_visible_employee_count": 6,
+      "opm_visible_gs_count": 4,
+      "nonforeign_cola_percent_2026": 11.88,
+      "count_note": "OPM FWD city row: Saint Croix, United States, NDR state, RUS territory locality. VA.gov identifies the Saint Croix VA Clinic at St. Croix, VI."
+    },
+    {
+      "id": "gu-visible",
+      "name": "Guam visible VA duty stations",
+      "display_location": "Guam",
+      "category": "Territory aggregate",
+      "pay_model": "rus_territory",
+      "opm_visible_employee_count": 99,
+      "opm_visible_gs_count": 67,
+      "nonforeign_cola_percent_2026": 11.88,
+      "count_note": "Public OPM FWD rows coded as United States, NDR state, and RUS territory locality, grouped by Guam city names.",
+      "city_rows": [
+        { "city": "Agana", "opm_visible_employee_count": 89, "opm_visible_gs_count": 58 },
+        { "city": "Barrigada", "opm_visible_employee_count": 6, "opm_visible_gs_count": 6 },
+        { "city": "Dededo", "opm_visible_employee_count": 2, "opm_visible_gs_count": 2 },
+        { "city": "Agat", "opm_visible_employee_count": 1, "opm_visible_gs_count": 1 },
+        { "city": "Mangilao", "opm_visible_employee_count": 1, "opm_visible_gs_count": 0 }
+      ]
+    },
+    {
+      "id": "as-pago-pago",
+      "name": "Pago Pago VA duty station",
+      "display_location": "Pago Pago, American Samoa",
+      "category": "Other possession city",
+      "pay_model": "rus_territory",
+      "opm_visible_employee_count": 38,
+      "opm_visible_gs_count": 28,
+      "nonforeign_cola_percent_2026": 0,
+      "count_note": "OPM FWD city row: Pago Pago, United States, NDR state, RUS territory locality. OPM 2026 nonforeign table lists Other Possessions with 0 percent COLA and 17.06 percent locality."
+    },
+    {
+      "id": "mp-saipan",
+      "name": "Saipan VA duty station",
+      "display_location": "Saipan, Northern Mariana Islands",
+      "category": "Territory city",
+      "pay_model": "rus_territory",
+      "opm_visible_employee_count": 4,
+      "opm_visible_gs_count": 2,
+      "nonforeign_cola_percent_2026": 11.88,
+      "count_note": "OPM FWD city row: Saipan, Mariana Isl, United States, NDR state, RUS territory locality."
+    },
+    {
+      "id": "hi-honolulu",
+      "name": "Honolulu VA duty station",
+      "display_location": "Honolulu, Hawaii",
+      "category": "Nonforeign state city",
+      "pay_model": "hawaii",
+      "opm_visible_employee_count": 1480,
+      "opm_visible_gs_count": 974,
+      "nonforeign_cola_percent_2026": 8.64,
+      "count_note": "OPM FWD city row: Honolulu, Hawaii locality. OPM nonforeign table lists City and County of Honolulu COLA separately from locality pay."
+    },
+    {
+      "id": "ak-anchorage",
+      "name": "Anchorage VA duty station",
+      "display_location": "Anchorage, Alaska",
+      "category": "Nonforeign state city",
+      "pay_model": "alaska",
+      "opm_visible_employee_count": 686,
+      "opm_visible_gs_count": 525,
+      "nonforeign_cola_percent_2026": 1.49,
+      "count_note": "OPM FWD city row: Anchorage, Alaska locality. OPM nonforeign table lists Anchorage COLA separately from locality pay."
+    }
+  ]
+}

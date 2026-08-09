@@ -40,6 +40,21 @@
     costAreaName: $("costAreaName"),
     costAreaList: $("costAreaList"),
     costHighlightNote: $("costHighlightNote"),
+    remoteDutyLocation: $("remoteDutyLocation"),
+    remoteDutySort: $("remoteDutySort"),
+    remoteDutyName: $("remoteDutyName"),
+    remoteDutyPay: $("remoteDutyPay"),
+    remoteDutyMeta: $("remoteDutyMeta"),
+    remoteDutyLocality: $("remoteDutyLocality"),
+    remoteDutyEmployees: $("remoteDutyEmployees"),
+    remoteDutyGsRows: $("remoteDutyGsRows"),
+    remoteDutyCola: $("remoteDutyCola"),
+    remoteDutyNote: $("remoteDutyNote"),
+    remoteDutyCanvas: $("remoteDutyCanvas"),
+    remoteDutyChartTitle: $("remoteDutyChartTitle"),
+    remoteDutyChartMetric: $("remoteDutyChartMetric"),
+    remoteDutyTable: $("remoteDutyTable"),
+    remoteDutySourceNote: $("remoteDutySourceNote"),
     traceList: $("traceList"),
     tracePlain: $("tracePlain"),
     scheduleTitle: $("scheduleTitle"),
@@ -278,6 +293,7 @@
     syncLocalityFromArea();
     fillLocalityMapStates();
     fillLocalityCountyOptions();
+    fillRemoteDutyOptions("vi-saint-croix");
   }
 
   function knownCap(year) {
@@ -513,6 +529,200 @@
     setText(els.costHighlightNote, "BEA 2024 RPP compares local price levels with the U.S. average. Difference shown is OPM locality percent minus BEA all-items price premium; it is not an OPM COLA calculation.");
   }
 
+  function vaDutyStationData() {
+    const data = math.DATA.vaDutyStations || {};
+    return {
+      snapshot: data.snapshot || {},
+      payRules: data.pay_rules || {},
+      locations: Array.isArray(data.locations) ? data.locations : []
+    };
+  }
+
+  function remoteDutyLocations() {
+    return vaDutyStationData().locations;
+  }
+
+  function remoteDutyRule(location) {
+    const rules = vaDutyStationData().payRules;
+    return rules[location.pay_model] || { locality_code: "RUS", label: "Rest of U.S.", locality_percent_2026: 17.06 };
+  }
+
+  function fillRemoteDutyOptions(preferredId) {
+    if (!els.remoteDutyLocation) return;
+    const current = preferredId || els.remoteDutyLocation.value;
+    const locations = remoteDutyLocations();
+    els.remoteDutyLocation.innerHTML = "";
+    locations.forEach((location) => {
+      const count = Number(location.opm_visible_employee_count);
+      const countLabel = Number.isFinite(count) ? `${count.toLocaleString()} visible` : "count redacted";
+      els.remoteDutyLocation.appendChild(option(`${location.name} (${countLabel})`, location.id));
+    });
+    const fallback = locations.some((location) => location.id === current) ? current : (locations[0] ? locations[0].id : "");
+    els.remoteDutyLocation.value = fallback;
+  }
+
+  function selectedRemoteDutyLocation() {
+    const locations = remoteDutyLocations();
+    if (!locations.length) return null;
+    return locations.find((location) => location.id === (els.remoteDutyLocation && els.remoteDutyLocation.value)) || locations[0];
+  }
+
+  function formatOptionalCount(value) {
+    const numeric = Number(value);
+    return Number.isFinite(numeric) ? numeric.toLocaleString() : "Redacted";
+  }
+
+  function formatOptionalPercent(value) {
+    const numeric = Number(value);
+    return Number.isFinite(numeric) ? math.pct(numeric) : "N/A";
+  }
+
+  function remoteDutyLocalityPercent(location) {
+    const rule = remoteDutyRule(location);
+    if (location.pay_model === "foreign_base") return 0;
+    const area = localityAreaByCode(Number(vaDutyStationData().snapshot.year) || 2026, rule.locality_code);
+    if (area) return area.percentage;
+    const fallback = Number(rule.locality_percent_2026);
+    return Number.isFinite(fallback) ? fallback : 0;
+  }
+
+  function remoteDutyRow(input, location) {
+    const rule = remoteDutyRule(location);
+    const localityPct = remoteDutyLocalityPercent(location);
+    const result = math.computePay(input.year, input.grade, input.step, localityPct, input.capValue, input.applyCap);
+    const baseOnly = math.computePay(input.year, input.grade, input.step, 0, NaN, false);
+    const employeeCount = Number(location.opm_visible_employee_count);
+    const gsCount = Number(location.opm_visible_gs_count);
+    return {
+      location,
+      rule,
+      localityPct,
+      result,
+      baseOnly,
+      employeeCount: Number.isFinite(employeeCount) ? employeeCount : null,
+      gsCount: Number.isFinite(gsCount) ? gsCount : null,
+      localityLift: Math.max(0, result.annual - baseOnly.annual),
+      cola: Number(location.nonforeign_cola_percent_2026)
+    };
+  }
+
+  function remoteDutyRows(input) {
+    const rows = remoteDutyLocations().map((location) => remoteDutyRow(input, location));
+    const sort = els.remoteDutySort ? els.remoteDutySort.value : "pay";
+    return rows.sort((a, b) => {
+      if (sort === "count") return (b.employeeCount ?? -1) - (a.employeeCount ?? -1) || b.result.annual - a.result.annual;
+      if (sort === "locality") return b.localityPct - a.localityPct || (b.cola || -1) - (a.cola || -1) || b.result.annual - a.result.annual;
+      return b.result.annual - a.result.annual || (b.employeeCount ?? -1) - (a.employeeCount ?? -1);
+    });
+  }
+
+  function remoteDutyPayModelLabel(row) {
+    if (row.location.pay_model === "foreign_base") return "Foreign base only";
+    if (row.rule.locality_code === "AK" || row.rule.locality_code === "HI") return row.rule.label;
+    return "RUS territory";
+  }
+
+  function remoteDutyTableRow(row, selectedId) {
+    const location = row.location;
+    const selected = selectedId === location.id;
+    const facilityLink = location.facility_source_url ? ` <a href="${location.facility_source_url}" rel="noreferrer">VA page</a>` : "";
+    const localityText = `${row.rule.locality_code || "ZZ"} | ${math.pct(row.localityPct)}`;
+    const colaText = Number.isFinite(row.cola) ? math.pct(row.cola) : "N/A";
+    return `<tr class="${selected ? "is-selected" : ""}"><th scope="row">${math.escapeHtml(location.name)}<span>${math.escapeHtml(location.display_location)}${facilityLink}</span></th><td>${math.escapeHtml(remoteDutyPayModelLabel(row))}</td><td>${math.escapeHtml(localityText)}</td><td>${colaText}</td><td>${math.money0.format(row.result.annual)}</td><td>${math.money0.format(row.localityLift)}</td><td>${formatOptionalCount(row.employeeCount)}</td><td>${formatOptionalCount(row.gsCount)}</td></tr>`;
+  }
+
+  function remoteDutyBarColor(row, colors) {
+    if (row.location.pay_model === "foreign_base") return colors.orange;
+    if (row.rule.locality_code === "AK") return colors.blue;
+    if (row.rule.locality_code === "HI") return colors.green;
+    return colors.teal;
+  }
+
+  function renderRemoteDutyChart(input, rows, selectedId) {
+    const canvas = els.remoteDutyCanvas;
+    if (!canvas) return;
+    const colors = themeColors(canvas);
+    const { ctx, width, height } = canvasMetrics(canvas, 390);
+    clearCanvas(ctx, width, height, colors);
+    const chartRows = rows.slice(0, 10);
+    if (!chartRows.length) {
+      setText(els.remoteDutyChartMetric, "No posts");
+      return;
+    }
+    const left = Math.min(230, Math.max(150, width * 0.28));
+    const right = 114;
+    const top = 44;
+    const bottom = height - 34;
+    const plotW = Math.max(160, width - left - right);
+    const rowH = Math.max(28, Math.min(38, (bottom - top) / chartRows.length));
+    const maxPay = Math.max(...chartRows.map((row) => row.result.annual), 1);
+    const maxCount = Math.max(...chartRows.map((row) => row.employeeCount || 0), 1);
+    ctx.fillStyle = rgbaColor(colors.ink, 0.92);
+    ctx.font = "800 13px Segoe UI, system-ui, sans-serif";
+    ctx.textAlign = "left";
+    ctx.fillText(`GS-${input.grade} Step ${input.step} | ${input.year} base with 2026 location rule`, 18, 24);
+    chartRows.forEach((row, index) => {
+      const y = top + index * rowH + rowH * 0.52;
+      const barW = Math.max(4, (row.result.annual / maxPay) * plotW);
+      const countW = row.employeeCount ? Math.max(3, (row.employeeCount / maxCount) * Math.min(82, right - 26)) : 0;
+      const isSelected = row.location.id === selectedId;
+      ctx.fillStyle = rgbaColor(colors.ink, isSelected ? 0.98 : 0.78);
+      ctx.font = `${isSelected ? "800" : "700"} 12px Segoe UI, system-ui, sans-serif`;
+      ctx.textAlign = "right";
+      const label = row.location.display_location.length > 28 ? row.location.display_location.slice(0, 25) + "..." : row.location.display_location;
+      ctx.fillText(label, left - 10, y + 4);
+      ctx.fillStyle = rgbaColor(remoteDutyBarColor(row, colors), isSelected ? 0.9 : 0.68);
+      ctx.fillRect(left, y - 9, barW, 18);
+      ctx.strokeStyle = isSelected ? colors.orange : rgbaColor(colors.line, 0.62);
+      ctx.lineWidth = isSelected ? 2 : 1;
+      ctx.strokeRect(left, y - 9, barW, 18);
+      ctx.fillStyle = rgbaColor(colors.ink, 0.95);
+      ctx.font = "800 12px Segoe UI, system-ui, sans-serif";
+      ctx.textAlign = "left";
+      ctx.fillText(math.money0.format(row.result.annual), left + barW + 8, y + 4);
+      ctx.fillStyle = row.employeeCount === null ? rgbaColor(colors.orange, 0.85) : rgbaColor(colors.blue, 0.62);
+      ctx.fillRect(width - right + 20, y - 5, countW || 24, 10);
+      ctx.fillStyle = rgbaColor(colors.ink, 0.86);
+      ctx.font = "700 11px Segoe UI, system-ui, sans-serif";
+      ctx.fillText(formatOptionalCount(row.employeeCount), width - right + 20, y - 11);
+    });
+    ctx.strokeStyle = rgbaColor(colors.line, 0.75);
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(left, bottom + 2);
+    ctx.lineTo(left + plotW, bottom + 2);
+    ctx.stroke();
+    ctx.fillStyle = rgbaColor(colors.muted, 0.92);
+    ctx.font = "700 11px Segoe UI, system-ui, sans-serif";
+    ctx.textAlign = "left";
+    ctx.fillText("Annual pay bars; small right bars show visible VA employee rows", 18, height - 12);
+  }
+
+  function renderRemoteDutyStations(input) {
+    if (!els.remoteDutyTable || !els.remoteDutyLocation) return;
+    if (!remoteDutyLocations().length) {
+      setText(els.remoteDutyName, "No OPM duty-station data loaded");
+      return;
+    }
+    if (!els.remoteDutyLocation.options.length) fillRemoteDutyOptions("vi-saint-croix");
+    const selected = selectedRemoteDutyLocation();
+    const selectedId = selected ? selected.id : "";
+    const rows = remoteDutyRows(input);
+    const selectedRow = rows.find((row) => row.location.id === selectedId) || rows[0];
+    setText(els.remoteDutyName, selectedRow.location.name);
+    setText(els.remoteDutyPay, math.money0.format(selectedRow.result.annual));
+    setText(els.remoteDutyMeta, `${selectedRow.location.display_location} | ${remoteDutyPayModelLabel(selectedRow)}`);
+    setText(els.remoteDutyLocality, `${selectedRow.rule.locality_code || "ZZ"} | ${math.pct(selectedRow.localityPct)}`);
+    setText(els.remoteDutyEmployees, formatOptionalCount(selectedRow.employeeCount));
+    setText(els.remoteDutyGsRows, formatOptionalCount(selectedRow.gsCount));
+    setText(els.remoteDutyCola, formatOptionalPercent(selectedRow.location.nonforeign_cola_percent_2026));
+    setText(els.remoteDutyNote, selectedRow.location.count_note || selectedRow.rule.note || "Counts are visible OPM FWD VA employment rows.");
+    setText(els.remoteDutyChartTitle, `Selected pay by post | GS-${input.grade} Step ${input.step}`);
+    setText(els.remoteDutyChartMetric, `${rows.length} posts`);
+    setText(els.remoteDutySourceNote, `OPM FWD employment snapshot ${vaDutyStationData().snapshot.year}-${vaDutyStationData().snapshot.month}, published ${vaDutyStationData().snapshot.published}. Counts are duty-station rows from department_code VA; redacted public rows are not reassigned to any location.`);
+    els.remoteDutyTable.innerHTML = `<thead><tr><th>Location</th><th>Pay model</th><th>2026 OPM locality</th><th>2026 COLA</th><th>Selected annual</th><th>Locality lift</th><th>Visible VA rows</th><th>Visible GS rows</th></tr></thead><tbody>${rows.map((row) => remoteDutyTableRow(row, selectedId)).join("")}</tbody>`;
+    renderRemoteDutyChart(input, rows, selectedId);
+  }
   function renderTrace(result) {
     const lines = math.traceFor(result);
     els.traceList.innerHTML = lines.map((line, index) => `<li><span>${String(index + 1).padStart(2, "0")}</span><p>${line}</p></li>`).join("");
@@ -1963,6 +2173,7 @@
     renderSummary(result, compare);
     renderPayPicture(result);
     renderLocalityHighlights(input);
+    renderRemoteDutyStations(input);
     renderLocalityMap(input);
     renderTrace(result);
     renderSchedule(input.year, input.grade, input.step);
@@ -2014,6 +2225,8 @@
       if (els.localityMapState) els.localityMapState.value = "";
       fillLocalityCountyOptions();
       if (els.localityMapFocus) els.localityMapFocus.value = "selected";
+      if (els.remoteDutyLocation) els.remoteDutyLocation.value = "vi-saint-croix";
+      if (els.remoteDutySort) els.remoteDutySort.value = "pay";
       if (els.contextStart) els.contextStart.value = "1977";
       if (els.contextEnd) els.contextEnd.value = "2026";
       if (els.contextView) els.contextView.value = "selected";
@@ -2042,7 +2255,7 @@
         renderAll();
       });
     }
-    [els.localityMapCounty, els.localityMapFocus].filter(Boolean).forEach((el) => el.addEventListener("change", renderAll));
+    [els.localityMapCounty, els.localityMapFocus, els.remoteDutyLocation, els.remoteDutySort].filter(Boolean).forEach((el) => el.addEventListener("change", renderAll));
     if (els.localityMapCanvas) {
       els.localityMapCanvas.addEventListener("click", (event) => {
         if (!localityMapTargets.length) return;

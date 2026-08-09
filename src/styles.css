@@ -429,6 +429,78 @@ main {
 .highlight-card h3 {
   margin: 0;
 }
+.remote-duty-section {
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--panel-soft) 92%, var(--blue)), color-mix(in srgb, var(--panel) 90%, var(--teal))),
+    var(--panel-soft);
+}
+
+.remote-duty-section .section-inner {
+  width: min(1380px, 100%);
+}
+
+.remote-duty-form {
+  margin-bottom: 14px;
+}
+
+.remote-duty-grid {
+  display: grid;
+  grid-template-columns: minmax(320px, 0.82fr) minmax(520px, 1.18fr);
+  gap: 14px;
+  align-items: stretch;
+}
+
+.remote-duty-focus {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.remote-duty-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 16px;
+}
+
+.mini-metric {
+  min-width: 0;
+  border-left: 3px solid var(--cyan);
+  padding-left: 10px;
+}
+
+.mini-metric span,
+.remote-duty-table-wrap th span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 750;
+}
+
+.mini-metric strong {
+  display: block;
+  color: var(--ink);
+  font-size: 1.18rem;
+  margin-top: 2px;
+}
+
+.remote-duty-chart-card canvas {
+  display: block;
+  width: 100%;
+  height: 390px;
+}
+
+.remote-duty-table-wrap {
+  margin-top: 14px;
+}
+
+.remote-duty-table-wrap table th {
+  min-width: 220px;
+}
+
+.remote-duty-table-wrap tbody tr.is-selected {
+  box-shadow: inset 4px 0 0 var(--orange);
+  background: color-mix(in srgb, var(--panel-soft) 74%, var(--orange));
+}
 
 .rank-list {
   display: grid;
@@ -1382,7 +1454,8 @@ html[data-shell="module"] .layout {
   }
 
   .surface-lab,
-  .county-map-grid {
+  .county-map-grid,
+  .remote-duty-grid {
     grid-template-columns: minmax(0, 1fr);
   }
 
@@ -1453,6 +1526,8 @@ html[data-shell="module"] .layout {
   .context-metrics,
   .context-grid,
   .locality-highlights,
+  .remote-duty-grid,
+  .remote-duty-metrics,
   .raise-panel-grid,
   .forecast-grid,
   .probability-row,

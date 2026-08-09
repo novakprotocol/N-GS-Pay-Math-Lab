@@ -35,6 +35,7 @@
       <nav class="nav-list" aria-label="Mobile">
         <a href="#calculator">Pay Table</a>
         <a href="#locality-highlights">Locality Picks</a>
+        <a href="#remote-duty">VA Remote Posts</a>
         <a href="#locality-map">County Map</a>
         <a href="#pay-surface">Raise Lab</a>
         <a href="#inflation">Inflation Check</a>
@@ -54,6 +55,7 @@
       <nav class="nav-list">
         <a href="#calculator">Pay Table</a>
         <a href="#locality-highlights">Locality Picks</a>
+        <a href="#remote-duty">VA Remote Posts</a>
         <a href="#locality-map">County Map</a>
         <a href="#pay-surface">Raise Lab</a>
         <a href="#inflation">Inflation Check</a>
@@ -145,6 +147,45 @@
       </section>
 
 
+
+      <section class="section remote-duty-section" id="remote-duty">
+        <div class="section-inner">
+          <p class="kicker">VA Remote Posts</p>
+          <h2>Philippines, St. Croix, territories, and nonforeign VA duty stations</h2>
+          <p class="section-lede">Selected grade, step, year, locality rules, and cap drive the pay chart. Visible VA employee counts come from OPM Federal Workforce Data June 2026 duty-station rows; redacted or missing public rows are called out instead of guessed.</p>
+          <div class="form-grid remote-duty-form">
+            <div class="field wide-field"><label for="remoteDutyLocation">Location</label><select id="remoteDutyLocation"></select></div>
+            <div class="field"><label for="remoteDutySort">Sort table by</label><select id="remoteDutySort"><option value="pay" selected>Selected pay</option><option value="count">Visible VA count</option><option value="locality">Locality/COLA</option></select></div>
+          </div>
+          <div class="remote-duty-grid">
+            <div class="highlight-card remote-duty-focus">
+              <div class="chart-head">
+                <h3 id="remoteDutyName">Remote duty station</h3>
+                <div class="chart-metric"><strong id="remoteDutyPay">$0</strong><span id="remoteDutyMeta">selected pay</span></div>
+              </div>
+              <div class="remote-duty-metrics">
+                <div class="mini-metric"><span>OPM locality</span><strong id="remoteDutyLocality">N/A</strong></div>
+                <div class="mini-metric"><span>Visible VA rows</span><strong id="remoteDutyEmployees">N/A</strong></div>
+                <div class="mini-metric"><span>Visible GS rows</span><strong id="remoteDutyGsRows">N/A</strong></div>
+                <div class="mini-metric"><span>Nonforeign COLA</span><strong id="remoteDutyCola">N/A</strong></div>
+              </div>
+              <p class="detail-line" id="remoteDutyNote">OPM duty-station data will render after the app loads.</p>
+            </div>
+            <div class="chart-card remote-duty-chart-card">
+              <div class="chart-head">
+                <h3 id="remoteDutyChartTitle">Selected pay by post</h3>
+                <div class="chart-metric"><strong id="remoteDutyChartMetric">0 posts</strong><span>OPM/federal sources only</span></div>
+              </div>
+              <canvas id="remoteDutyCanvas" width="980" height="430" role="img" aria-describedby="remoteDutyChartDescription">Your browser does not support Canvas.</canvas>
+              <p id="remoteDutyChartDescription" class="fine-print">Foreign rows use GS base pay only; territories use OPM Rest of U.S. locality unless Alaska or Hawaii has its own locality schedule.</p>
+            </div>
+          </div>
+          <div class="table-wrap remote-duty-table-wrap">
+            <table id="remoteDutyTable"></table>
+          </div>
+          <p class="fine-print" id="remoteDutySourceNote">Counts are OPM FWD visible VA employment rows, not official VA facility staffing rosters.</p>
+        </div>
+      </section>
 
       <section class="section county-map-section" id="locality-map">
         <div class="section-inner">
@@ -410,7 +451,7 @@
           <h2>Source notes and limitations</h2>
           <p class="section-lede">Official and reconstructed values are visibly distinguished. Reconstructed values are never described as official published tables.</p>
           <ol class="source-list" id="sourceList"></ol>
-          <p class="fine-print" id="buildMeta">Build n-gs-pay-math-lab-v0.01 | commit a63671b7cc225ea166ef01995cf980bf301a2c40</p>
+          <p class="fine-print" id="buildMeta">Build n-gs-pay-math-lab-v0.01 | commit 480720d18a05ce4c995fdd530569da0978a1c355</p>
         </div>
       </section>
 
