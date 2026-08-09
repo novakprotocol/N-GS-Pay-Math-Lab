@@ -1620,7 +1620,7 @@
     const state = row.state_abbr || "N/A";
     const cpt = row.largest_single_procedure_cpt || "No numeric procedure count";
     const office = row.office_outpatient_visit_99214_unique_patients ? Number(row.office_outpatient_visit_99214_unique_patients).toLocaleString() : "N/A";
-    return `<tr><th scope="row">#${index + 1} ${math.escapeHtml(row.name || row.facility_label)}<span>${math.escapeHtml(row.facility_label)} | VISN ${math.escapeHtml(row.visn || "N/A")} | Station ${math.escapeHtml(row.station || "N/A")} | ${math.escapeHtml(state)}</span></th><td>${vaFacilityMetricText(row, sort)}</td><td>${Number(row.largest_single_procedure_unique_patients || 0).toLocaleString()}<span>${math.escapeHtml(cpt)}</span></td><td>${office}</td><td>${Number(row.procedure_count_sum_not_unique || 0).toLocaleString()}<span>not unique; double-counts likely</span></td><td>${Number(row.numeric_procedure_rows || 0).toLocaleString()} numeric / ${Number(row.under_100_procedure_rows || 0).toLocaleString()} under 100</td></tr>`;
+    return `<tr><th scope="row">#${index + 1} ${math.escapeHtml(row.name || row.facility_label)}<span>${math.escapeHtml(row.facility_label)} | VISN ${math.escapeHtml(row.visn || "N/A")} | Station ${math.escapeHtml(row.station || "N/A")} | ${math.escapeHtml(state)}</span></th><td class="metric-cell">${vaFacilityMetricText(row, sort)}</td><td class="metric-cell">${Number(row.largest_single_procedure_unique_patients || 0).toLocaleString()}</td><td class="procedure-cell">${math.escapeHtml(cpt)}</td><td class="metric-cell">${office}</td><td class="metric-cell">${Number(row.procedure_count_sum_not_unique || 0).toLocaleString()}<span>not unique; double-counts likely</span></td><td>${Number(row.numeric_procedure_rows || 0).toLocaleString()} numeric<span>${Number(row.under_100_procedure_rows || 0).toLocaleString()} under 100</span></td></tr>`;
   }
 
   function renderVaFacilityUtilization() {
@@ -1641,7 +1641,7 @@
     const source = data.source || {};
     const limits = Array.isArray(source.limitations) ? source.limitations.join(" ") : "Procedure records are not additive.";
     setText(els.vaFacilityNote, `${source.patient_count_grain || "Facility-by-procedure records"}. ${limits}`);
-    els.vaFacilityTable.innerHTML = `<thead><tr><th>Administrative parent facility</th><th>Selected metric</th><th>Largest single procedure</th><th>99214 office visit</th><th>Procedure-count sum</th><th>Procedure coverage</th></tr></thead><tbody>${rows.map((row, index) => vaFacilityTableRow(row, index, sort)).join("")}</tbody>`;
+    els.vaFacilityTable.innerHTML = `<thead><tr><th>Administrative parent facility</th><th>Selected count</th><th>Largest single-procedure count</th><th>Largest procedure code / label</th><th>99214 office-visit count</th><th>Procedure-count sum</th><th>Procedure coverage</th></tr></thead><tbody>${rows.map((row, index) => vaFacilityTableRow(row, index, sort)).join("")}</tbody>`;
   }
 
   function renderFederalStatePressure() {
