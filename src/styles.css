@@ -920,6 +920,19 @@ main {
   margin-top: 0;
 }
 
+.agency-child-list {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+.agency-child-note {
+  margin: 0 0 8px;
+  color: var(--muted);
+  font-size: 0.86rem;
+  font-weight: 750;
+}
+
 .mini-metric {
   min-width: 0;
   border-left: 3px solid var(--cyan);

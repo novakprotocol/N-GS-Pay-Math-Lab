@@ -7,7 +7,7 @@
   <meta name="description" content="N-GS Pay Math Lab reconstructs and verifies General Schedule base-pay math from 1977 through 2026.">
   <title>N-GS Pay Math Lab</title>
   <link rel="icon" href="../assets/brand/favicon.png">
-  <link rel="stylesheet" href="../styles.css?v=n-gs-pay-math-lab-v0.01-7b0c27fc09c2">
+  <link rel="stylesheet" href="../styles.css?v=n-gs-pay-math-lab-v0.01-132ac952c176">
 </head>
 <body>
   <header class="topbar">
@@ -265,15 +265,16 @@
               </div>
               <div class="chart-metric"><strong id="agencyPressureMetric">0 groups</strong><span>OPM visible public records</span></div>
             </div>
-            <p class="section-lede">Switch between department-level OPM agency records and OPM component records, then choose any agency or component to compare against the ranked view.</p>
+            <p class="section-lede">Pick a parent agency, break it into OPM sub-agencies/components, then rank or compare the visible payroll and high-grade concentration.</p>
             <div class="source-strip source-strip-three agency-pressure-source-strip">
               <span><b>Source</b> OPM Federal Workforce Data public employment snapshot</span>
-              <span><b>Grouping</b> agency and component fields, not guessed org charts</span>
-              <span><b>Selection</b> chosen row is highlighted in the chart and full table</span>
+              <span><b>Grouping</b> OPM agency and agency-subelement fields, not guessed org charts</span>
+              <span><b>Breakdown</b> parent agency selector filters component/sub-agency rows</span>
             </div>
             <div class="form-grid agency-pressure-form">
-              <div class="field"><label for="agencyPressureLevel">Group by</label><select id="agencyPressureLevel"><option value="agency" selected>Agency / department</option><option value="component">Component / bureau</option></select></div>
-              <div class="field wide-field"><label for="agencyPressureSort">Rank agencies by</label><select id="agencyPressureSort"><option value="payroll" selected>Total visible payroll</option><option value="high-share">GS-13+ plus SES percentage</option><option value="ses-share">SES percentage</option><option value="high-payroll">GS-13+ plus SES visible payroll</option><option value="average-pay">Average visible pay</option><option value="employees">Visible public records</option></select></div>
+              <div class="field wide-field"><label for="agencyPressureParent">Break down agency</label><select id="agencyPressureParent"></select></div>
+              <div class="field"><label for="agencyPressureLevel">View</label><select id="agencyPressureLevel"><option value="agency" selected>Agency / department</option><option value="component">Sub-agencies / components</option></select></div>
+              <div class="field wide-field"><label for="agencyPressureSort">Rank rows by</label><select id="agencyPressureSort"><option value="payroll" selected>Total visible payroll</option><option value="high-share">GS-13+ plus SES percentage</option><option value="ses-share">SES percentage</option><option value="high-payroll">GS-13+ plus SES visible payroll</option><option value="average-pay">Average visible pay</option><option value="employees">Visible public records</option></select></div>
               <div class="field wide-field"><label for="agencyPressureFocus">Compare selected</label><select id="agencyPressureFocus"></select></div>
             </div>
             <div class="agency-pressure-kpis" aria-label="Agency breakdown headline metrics">
@@ -290,9 +291,10 @@
                 <em id="agencyPressureFocusMeta">highlighted where it appears</em>
               </div>
               <div class="agency-kpi-card">
-                <span>High-grade lens</span>
-                <strong>GS-13+ / SES</strong>
-                <b>ranking options compare concentration and payroll</b>
+                <span>Sub-agencies</span>
+                <strong id="agencyPressureParentValue">0</strong>
+                <b id="agencyPressureParentName">Choose agency</b>
+                <em id="agencyPressureParentMeta">OPM component rows loaded</em>
               </div>
               <div class="agency-kpi-card">
                 <span>Dollar totals</span>
@@ -310,9 +312,10 @@
               <div class="agency-code-key" id="agencyPressureCodeKey" aria-label="OPM agency and component code definitions"></div>
             </div>
             <details class="data-dropdown agency-focus-dropdown">
-              <summary><span>Open selected comparison</span><span>selected row vs ranked leaders</span></summary>
+              <summary><span>Open selected comparison and sub-agencies</span><span>selected row, leaders, component breakdown</span></summary>
               <div class="dropdown-body">
                 <div class="rank-list" id="agencyPressureExamples"></div>
+                <div class="rank-list agency-child-list" id="agencyPressureChildren"></div>
               </div>
             </details>
             <details class="data-dropdown agency-pressure-explain">
@@ -322,7 +325,7 @@
               </div>
             </details>
             <details class="data-dropdown">
-              <summary><span>Open all agency/component records</span><span>Full OPM agency breakdown</span></summary>
+              <summary><span>Open ranked agency/component rows</span><span>filtered by selected parent agency when viewing components</span></summary>
               <div class="table-wrap agency-pressure-table-wrap">
                 <table id="agencyPressureTable"></table>
               </div>
@@ -786,7 +789,7 @@
           <details class="advanced-toggle" data-advanced-panel="sources">
             <summary><span><strong>Open source notes</strong><b>official source list, reconstruction limits, build commit</b></span></summary>
           <ol class="source-list" id="sourceList"></ol>
-          <p class="fine-print" id="buildMeta">Build n-gs-pay-math-lab-v0.01 | commit 7b0c27fc09c26a2403a8eb02e692dedd216599ff</p>
+          <p class="fine-print" id="buildMeta">Build n-gs-pay-math-lab-v0.01 | commit 132ac952c176e37209b05ccd14ea53de89db9417</p>
           </details>
 
         </div>
@@ -795,10 +798,10 @@
     </main>
   </div>
 
-  <script src="../data/pay-data.js?v=n-gs-pay-math-lab-v0.01-7b0c27fc09c2"></script>
-  <script src="../evidence/size-comparison.js?v=n-gs-pay-math-lab-v0.01-7b0c27fc09c2"></script>
-  <script src="../data-loader.js?v=n-gs-pay-math-lab-v0.01-7b0c27fc09c2"></script>
-  <script src="../formulas.js?v=n-gs-pay-math-lab-v0.01-7b0c27fc09c2"></script>
-  <script src="../app.js?v=n-gs-pay-math-lab-v0.01-7b0c27fc09c2"></script>
+  <script src="../data/pay-data.js?v=n-gs-pay-math-lab-v0.01-132ac952c176"></script>
+  <script src="../evidence/size-comparison.js?v=n-gs-pay-math-lab-v0.01-132ac952c176"></script>
+  <script src="../data-loader.js?v=n-gs-pay-math-lab-v0.01-132ac952c176"></script>
+  <script src="../formulas.js?v=n-gs-pay-math-lab-v0.01-132ac952c176"></script>
+  <script src="../app.js?v=n-gs-pay-math-lab-v0.01-132ac952c176"></script>
 </body>
 </html>

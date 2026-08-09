@@ -56,6 +56,7 @@
     costPressureSavingsValue: $("costPressureSavingsValue"),
     costPressureSavingsArea: $("costPressureSavingsArea"),
     costPressureSavingsSummary: $("costPressureSavingsSummary"),
+    agencyPressureParent: $("agencyPressureParent"),
     agencyPressureLevel: $("agencyPressureLevel"),
     agencyPressureSort: $("agencyPressureSort"),
     agencyPressureFocus: $("agencyPressureFocus"),
@@ -66,8 +67,12 @@
     agencyPressureFocusName: $("agencyPressureFocusName"),
     agencyPressureFocusValue: $("agencyPressureFocusValue"),
     agencyPressureFocusMeta: $("agencyPressureFocusMeta"),
+    agencyPressureParentName: $("agencyPressureParentName"),
+    agencyPressureParentValue: $("agencyPressureParentValue"),
+    agencyPressureParentMeta: $("agencyPressureParentMeta"),
     agencyPressureSummary: $("agencyPressureSummary"),
     agencyPressureExamples: $("agencyPressureExamples"),
+    agencyPressureChildren: $("agencyPressureChildren"),
     agencyPressureChartTitle: $("agencyPressureChartTitle"),
     agencyPressureChartMetric: $("agencyPressureChartMetric"),
     agencyPressureCanvas: $("agencyPressureCanvas"),
@@ -785,11 +790,67 @@
     return math.DATA.federalAgencyPressure || {};
   }
 
-
-  function agencyPressureGroups(level) {
+  function agencyPressureAllGroups(level) {
     const data = federalAgencyPressureData();
     const key = level === "component" ? "components" : "agencies";
     return Array.isArray(data[key]) ? data[key] : [];
+  }
+
+  function agencyPressureParentDefault() {
+    const agencies = agencyPressureAllGroups("agency");
+    if (agencies.some((row) => row.agency_code === "VA")) return "VA";
+    const leader = agencies.slice().sort((a, b) => Number(b.total_visible_adjusted_basic_pay) - Number(a.total_visible_adjusted_basic_pay))[0];
+    return leader ? leader.agency_code : "all";
+  }
+
+  function agencyPressureParentRow(parentCode) {
+    if (!parentCode || parentCode === "all") return null;
+    return agencyPressureAllGroups("agency").find((row) => row.agency_code === parentCode) || null;
+  }
+
+  function agencyPressureParentName(parentCode) {
+    const row = agencyPressureParentRow(parentCode);
+    if (!row) return "All parent agencies";
+    return `${row.agency_code || "N/A"} | ${row.agency_name || "N/A"}`;
+  }
+
+  function agencyPressureParentShortName(parentCode) {
+    const row = agencyPressureParentRow(parentCode);
+    if (!row) return "all parent agencies";
+    return row.agency_code || row.agency_name || "selected agency";
+  }
+
+  function fillAgencyPressureParentOptions() {
+    if (!els.agencyPressureParent) return;
+    const agencies = agencyPressureAllGroups("agency")
+      .slice()
+      .sort((a, b) => String(a.agency_name || "").localeCompare(String(b.agency_name || "")) || String(a.agency_code || "").localeCompare(String(b.agency_code || "")));
+    const current = els.agencyPressureParent.value;
+    const currentExists = current === "all" || agencies.some((row) => row.agency_code === current);
+    els.agencyPressureParent.innerHTML = "";
+    els.agencyPressureParent.appendChild(option("All parent agencies", "all"));
+    agencies.forEach((row) => els.agencyPressureParent.appendChild(option(`${row.agency_code || "N/A"} | ${row.agency_name || "N/A"}`, row.agency_code || "N/A")));
+    const fallback = currentExists ? current : agencyPressureParentDefault();
+    els.agencyPressureParent.value = fallback || "all";
+  }
+
+  function selectedAgencyPressureParentCode() {
+    return (els.agencyPressureParent && els.agencyPressureParent.value) || agencyPressureParentDefault();
+  }
+
+  function agencyPressureChildComponents(parentCode) {
+    const components = agencyPressureAllGroups("component");
+    if (!parentCode || parentCode === "all") return components;
+    return components.filter((row) => row.agency_code === parentCode);
+  }
+
+  function agencyPressureGroups(level) {
+    if (level === "component") return agencyPressureChildComponents(selectedAgencyPressureParentCode());
+    return agencyPressureAllGroups("agency");
+  }
+
+  function agencyPressureVisiblePayroll(rows) {
+    return rows.reduce((sum, row) => sum + (Number(row.total_visible_adjusted_basic_pay) || 0), 0);
   }
 
   function agencyPressureMinimum(level, sort) {
@@ -836,7 +897,7 @@
       els.agencyPressureCodeKey.innerHTML = "";
       return;
     }
-    const label = level === "component" ? "component" : "agency";
+    const label = level === "component" ? "component/sub-agency" : "agency";
     els.agencyPressureCodeKey.innerHTML = `<div class="code-key-note"><strong>OPM</strong> = Office of Personnel Management. <strong>GS</strong> = General Schedule. <strong>SES</strong> = Senior Executive Service. Chart labels are OPM ${label} codes.</div><div class="code-key-grid">${chartRows.map((row) => agencyPressureCodeKeyRow(row, level)).join("")}</div>`;
   }
 
@@ -857,32 +918,36 @@
     return compactMoney(value);
   }
 
-  function agencyPressureRows(level, sort) {
-    const minimum = agencyPressureMinimum(level, sort);
-    return agencyPressureGroups(level)
+  function agencyPressureRowsFrom(groups, level, sort, useMinimum = true) {
+    const minimum = useMinimum ? agencyPressureMinimum(level, sort) : 0;
+    return groups
       .filter((row) => Number(row.employee_count) >= minimum)
       .slice()
       .sort((a, b) => agencyPressureMetricValue(b, sort) - agencyPressureMetricValue(a, sort) || Number(b.total_visible_adjusted_basic_pay) - Number(a.total_visible_adjusted_basic_pay) || String(agencyPressureName(a, level)).localeCompare(String(agencyPressureName(b, level))));
   }
 
-  function agencyPressureFind(code, level) {
-    return agencyPressureGroups(level).find((row) => agencyPressureCode(row, level) === code) || null;
+  function agencyPressureRows(level, sort) {
+    return agencyPressureRowsFrom(agencyPressureGroups(level), level, sort);
+  }
+
+  function agencyPressureChildRows(parentCode, sort, useMinimum = false) {
+    return agencyPressureRowsFrom(agencyPressureChildComponents(parentCode), "component", sort, useMinimum);
+  }
+
+  function agencyPressureFind(code, level, useAll = false) {
+    const source = useAll ? agencyPressureAllGroups(level) : agencyPressureGroups(level);
+    return source.find((row) => agencyPressureCode(row, level) === code) || null;
   }
 
   function agencyPressureFocusDefault(level) {
     const groups = agencyPressureGroups(level);
     if (level === "agency") {
-      const va = agencyPressureFind("VA", "agency");
+      const parentCode = selectedAgencyPressureParentCode();
+      if (parentCode && parentCode !== "all" && agencyPressureFind(parentCode, "agency", true)) return parentCode;
+      const va = agencyPressureFind("VA", "agency", true);
       if (va) return "VA";
     }
-    if (level === "component") {
-      const vaComponent = groups
-        .filter((row) => row.agency_code === "VA")
-        .slice()
-        .sort((a, b) => Number(b.total_visible_adjusted_basic_pay) - Number(a.total_visible_adjusted_basic_pay))[0];
-      if (vaComponent) return agencyPressureCode(vaComponent, level);
-    }
-    const leader = agencyPressureRows(level, "payroll")[0] || groups[0];
+    const leader = agencyPressureRowsFrom(groups, level, "payroll", false)[0] || groups[0];
     return leader ? agencyPressureCode(leader, level) : "";
   }
 
@@ -939,6 +1004,25 @@
     addItem("Payroll", payrollLeader);
     addItem("High GS", highLeader);
     els.agencyPressureExamples.innerHTML = items.map((item) => agencyPressureComparisonRow(item, rows, level, sort, selectedCode)).join("");
+  }
+
+  function agencyPressureChildListRow(row, index, sort) {
+    return `<div class="rank-row"><span class="rank-index">#${index + 1}</span><span class="rank-main"><span class="rank-title">${math.escapeHtml(agencyPressureName(row, "component"))}</span><span class="rank-meta">${Number(row.employee_count).toLocaleString()} visible records | avg pay ${compactMoney(row.average_visible_adjusted_basic_pay)} | GS-13+ plus SES ${sharePercent(row.high_grade_ses_share)}</span></span><span class="rank-value">${agencyPressureMetricText(row, sort)}</span></div>`;
+  }
+
+  function renderAgencyPressureChildren(parentCode, sort) {
+    if (!els.agencyPressureChildren) return;
+    if (!parentCode || parentCode === "all") {
+      els.agencyPressureChildren.innerHTML = `<p class="agency-child-note">Choose a parent agency to list its OPM agency-subelement rows here.</p>`;
+      return;
+    }
+    const childRows = agencyPressureChildRows(parentCode, sort, false);
+    const parentName = agencyPressureParentName(parentCode);
+    if (!childRows.length) {
+      els.agencyPressureChildren.innerHTML = `<p class="agency-child-note">${math.escapeHtml(parentName)} has no separate OPM agency-subelement rows in this snapshot.</p>`;
+      return;
+    }
+    els.agencyPressureChildren.innerHTML = `<p class="agency-child-note">Sub-agencies/components under ${math.escapeHtml(parentName)} from OPM agency_subelement fields.</p>${childRows.slice(0, 10).map((row, index) => agencyPressureChildListRow(row, index, sort)).join("")}`;
   }
 
   function agencyPressureTableRow(row, index, level, selectedCode) {
@@ -1007,17 +1091,22 @@
     const snapshot = data.snapshot || {};
     const level = els.agencyPressureLevel ? els.agencyPressureLevel.value : "agency";
     const sort = els.agencyPressureSort ? els.agencyPressureSort.value : "payroll";
-    const groups = agencyPressureGroups(level);
-    if (!groups.length) {
+    if (!agencyPressureAllGroups(level).length) {
       setText(els.agencyPressureMetric, "No OPM data");
       setText(els.agencyPressureSummary, "No OPM agency aggregate is loaded.");
       els.agencyPressureTable.innerHTML = "";
       if (els.agencyPressureExamples) els.agencyPressureExamples.innerHTML = "";
+      if (els.agencyPressureChildren) els.agencyPressureChildren.innerHTML = "";
       if (els.agencyPressureCodeKey) els.agencyPressureCodeKey.innerHTML = "";
       return;
     }
-    fillAgencyPressureFocusOptions(level);
+    fillAgencyPressureParentOptions();
+    const parentCode = selectedAgencyPressureParentCode();
+    const parentComponents = agencyPressureChildComponents(parentCode);
+    const parentComponentPayroll = agencyPressureVisiblePayroll(parentComponents);
+    const groups = agencyPressureGroups(level);
     const rows = agencyPressureRows(level, sort);
+    fillAgencyPressureFocusOptions(level);
     const selectedRow = selectedAgencyPressureRow(level);
     const selectedCode = selectedRow ? agencyPressureCode(selectedRow, level) : "";
     const payrollLeader = agencyPressureRows(level, "payroll")[0];
@@ -1025,8 +1114,12 @@
     const highPayrollLeader = agencyPressureRows(level, "high-payroll")[0];
     const top = rows[0];
     const minimum = agencyPressureMinimum(level, sort);
-    const groupLabel = level === "component" ? "components" : "agencies";
-    setText(els.agencyPressureMetric, `${groups.length} ${groupLabel} | ${compactMoney(snapshot.visible_annualized_adjusted_basic_pay)} visible`);
+    const groupLabel = level === "component" ? (parentCode === "all" ? "components" : "sub-agencies") : "agencies";
+    const parentContext = level === "component" && parentCode !== "all" ? ` under ${agencyPressureParentShortName(parentCode)}` : "";
+    setText(els.agencyPressureMetric, `${groups.length} ${groupLabel} | ${compactMoney(agencyPressureVisiblePayroll(groups))} visible`);
+    setText(els.agencyPressureParentValue, parentCode === "all" ? `${agencyPressureAllGroups("agency").length} agencies` : `${parentComponents.length} components`);
+    setText(els.agencyPressureParentName, agencyPressureParentName(parentCode));
+    setText(els.agencyPressureParentMeta, parentCode === "all" ? `${agencyPressureAllGroups("component").length} component rows across all parents` : `${compactMoney(parentComponentPayroll)} visible component payroll`);
     setText(els.agencyPressureTopName, top ? agencyPressureName(top, level) : "No agency records");
     setText(els.agencyPressureTopValue, top ? agencyPressureMetricText(top, sort) : "N/A");
     setText(els.agencyPressureTopMeta, costPressureSortLabel(sort));
@@ -1034,17 +1127,19 @@
     setText(els.agencyPressureFocusName, selectedRow ? agencyPressureName(selectedRow, level) : "Choose a row");
     setText(els.agencyPressureFocusValue, selectedRow ? agencyPressureMetricText(selectedRow, sort) : "N/A");
     setText(els.agencyPressureFocusMeta, selectedRow ? `${selectedRank >= 0 ? `rank #${selectedRank + 1}` : "outside current rank filter"} | ${Number(selectedRow.employee_count).toLocaleString()} visible records` : "highlighted where it appears");
-    setText(els.agencyPressureChartTitle, `${level === "component" ? "Component" : "Agency"} pressure ranked by ${costPressureSortLabel(sort)}`);
+    setText(els.agencyPressureChartTitle, `${level === "component" ? "Sub-agency/component" : "Agency"} pressure${parentContext} ranked by ${costPressureSortLabel(sort)}`);
     setText(els.agencyPressureChartMetric, `${rows.length} ranked${minimum ? ` | min ${minimum.toLocaleString()} records` : ""}`);
     const highText = highLeader ? `${agencyPressureName(highLeader, level)} has the highest GS-13+ plus SES concentration among ${groupLabel} with at least ${agencyPressureMinimum(level, "high-share").toLocaleString()} visible public records.` : "No high-grade concentration leader is available.";
     const payrollText = payrollLeader ? `${agencyPressureName(payrollLeader, level)} carries the largest visible payroll at ${compactMoney(payrollLeader.total_visible_adjusted_basic_pay)}.` : "No payroll leader is available.";
     const highPayrollText = highPayrollLeader ? ` ${agencyPressureName(highPayrollLeader, level)} carries the largest high GS+SES visible payroll at ${compactMoney(highPayrollLeader.high_grade_ses_visible_payroll)}.` : "";
-    setText(els.agencyPressureSummary, `${payrollText} ${highText}${highPayrollText} Use the selector to compare any loaded OPM agency or component against the ranked leaders.`);
+    const breakdownText = parentCode === "all" ? "Use Break down agency to narrow components to one parent agency." : `${agencyPressureParentName(parentCode)} breaks into ${parentComponents.length} loaded OPM component/sub-agency rows totaling ${compactMoney(parentComponentPayroll)} visible component payroll.`;
+    setText(els.agencyPressureSummary, `${payrollText} ${highText}${highPayrollText} ${breakdownText}`);
     renderAgencyPressureComparison(rows, level, sort, selectedRow, payrollLeader, highLeader);
-    setText(els.agencyPressureNote, `OPM FWD employment snapshot ${snapshot.year}-${snapshot.month}, published ${snapshot.published}. ${Number(snapshot.pay_redacted_rows || 0).toLocaleString()} pay records are redacted; dollar totals use only numeric annualized_adjusted_basic_pay records. Agency and component names are the OPM fields in the public snapshot.`);
+    renderAgencyPressureChildren(parentCode, sort);
+    setText(els.agencyPressureNote, `OPM FWD employment snapshot ${snapshot.year}-${snapshot.month}, published ${snapshot.published}. ${Number(snapshot.pay_redacted_rows || 0).toLocaleString()} pay records are redacted; dollar totals use only numeric annualized_adjusted_basic_pay records. Sub-agency breakdown uses OPM agency_subelement fields filtered by parent agency_code.`);
     renderAgencyPressureChart(rows, level, sort, selectedCode);
     renderAgencyPressureCodeKey(agencyPressureChartRows(rows, level, selectedCode), level);
-    els.agencyPressureTable.innerHTML = `<thead><tr><th>${level === "component" ? "Component / bureau" : "Agency / department"}</th><th>Visible payroll</th><th>Visible records</th><th>Average pay</th><th>GS-13 to GS-15</th><th>SES</th><th>High GS + SES</th><th>High GS + SES payroll</th></tr></thead><tbody>${rows.map((row, index) => agencyPressureTableRow(row, index, level, selectedCode)).join("")}</tbody>`;
+    els.agencyPressureTable.innerHTML = `<thead><tr><th>${level === "component" ? "Sub-agency / component" : "Agency / department"}</th><th>Visible payroll</th><th>Visible records</th><th>Average pay</th><th>GS-13 to GS-15</th><th>SES</th><th>High GS + SES</th><th>High GS + SES payroll</th></tr></thead><tbody>${rows.map((row, index) => agencyPressureTableRow(row, index, level, selectedCode)).join("")}</tbody>`;
   }
 
 
@@ -3333,6 +3428,7 @@
       if (els.remoteDutyLocation) els.remoteDutyLocation.value = "vi-saint-croix";
       if (els.remoteDutySort) els.remoteDutySort.value = "pay";
       if (els.costPressureSort) els.costPressureSort.value = "payroll";
+      if (els.agencyPressureParent) els.agencyPressureParent.value = "VA";
       if (els.agencyPressureLevel) els.agencyPressureLevel.value = "agency";
       if (els.agencyPressureSort) els.agencyPressureSort.value = "payroll";
       if (els.statePressureSort) els.statePressureSort.value = "outlier-score";
@@ -3371,7 +3467,7 @@
         renderAll();
       });
     }
-    [els.localityMapCounty, els.localityMapFocus, els.remoteDutyLocation, els.remoteDutySort, els.costPressureSort, els.agencyPressureLevel, els.agencyPressureSort, els.agencyPressureFocus, els.statePressureSort, els.statePressureAgency, els.statePressureGrade, els.statePressureFocus, els.vaContractSort, els.vaContractFocus, els.vaFacilitySort, els.vaFacilityState].filter(Boolean).forEach((el) => el.addEventListener("change", renderAll));
+    [els.localityMapCounty, els.localityMapFocus, els.remoteDutyLocation, els.remoteDutySort, els.costPressureSort, els.agencyPressureParent, els.agencyPressureLevel, els.agencyPressureSort, els.agencyPressureFocus, els.statePressureSort, els.statePressureAgency, els.statePressureGrade, els.statePressureFocus, els.vaContractSort, els.vaContractFocus, els.vaFacilitySort, els.vaFacilityState].filter(Boolean).forEach((el) => el.addEventListener("change", renderAll));
     if (els.localityMapCanvas) {
       els.localityMapCanvas.addEventListener("click", (event) => {
         if (!localityMapTargets.length) return;
