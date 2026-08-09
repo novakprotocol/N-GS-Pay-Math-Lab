@@ -7,7 +7,7 @@
   <meta name="description" content="N-GS Pay Math Lab reconstructs and verifies General Schedule base-pay math from 1977 through 2026.">
   <title>N-GS Pay Math Lab</title>
   <link rel="icon" href="assets/brand/favicon.png">
-  <link rel="stylesheet" href="styles.css?v=n-gs-pay-math-lab-v0.01-d0c04524fa16">
+  <link rel="stylesheet" href="styles.css?v=n-gs-pay-math-lab-v0.01-d67964e14f0d">
 </head>
 <body>
   <header class="topbar">
@@ -36,6 +36,7 @@
         <a href="#calculator">Pay Table</a>
         <a href="#locality-highlights">Locality Picks</a>
         <a href="#cost-pressure">Cost Pressure</a>
+        <a href="#state-pressure">State Audit</a>
         <a href="#locality-map">County Map</a>
         <a href="#remote-duty">VA Remote Posts</a>
         <a href="#pay-surface">Raise Lab</a>
@@ -57,6 +58,7 @@
         <a href="#calculator">Pay Table</a>
         <a href="#locality-highlights">Locality Picks</a>
         <a href="#cost-pressure">Cost Pressure</a>
+        <a href="#state-pressure">State Audit</a>
         <a href="#locality-map">County Map</a>
         <a href="#remote-duty">VA Remote Posts</a>
         <a href="#pay-surface">Raise Lab</a>
@@ -221,6 +223,61 @@
               <table id="agencyPressureTable"></table>
             </div>
             <p class="fine-print" id="agencyPressureNote">OPM redacted pay rows are excluded from group dollar totals.</p>
+          </div>
+          <div class="state-pressure-block" id="state-pressure">
+            <div class="chart-head">
+              <div>
+                <p class="kicker table-kicker">State Audit</p>
+                <h3>Payroll stacking, agency spread, VA medical spend, and density by state</h3>
+              </div>
+              <div class="chart-metric"><strong id="statePressureMetric">0 states</strong><span>OPM + Census + VA</span></div>
+            </div>
+            <p class="section-lede">State rows combine OPM visible payroll and employment, Census land area, Census income-tax collection flags, and VA FY2024 GDX medical-care expenditure geography. Flags are screening indicators for review, not accusations.</p>
+            <div class="form-grid state-pressure-form">
+              <div class="field wide-field"><label for="statePressureSort">Rank states by</label><select id="statePressureSort"><option value="payroll" selected>Total visible payroll</option><option value="payroll-density">Visible payroll per sq. mile</option><option value="employees">Federal employee rows</option><option value="employee-density">Employees per sq. mile</option><option value="agencies">Agency count</option><option value="components">Component count</option><option value="high-share">GS-13+ plus SES percentage</option><option value="ses-share">SES percentage</option><option value="va-medical">VA FY24 medical care</option><option value="va-medical-density">VA medical care per sq. mile</option><option value="flag-count">Audit flag count</option></select></div>
+              <div class="field wide-field"><label for="statePressureFocus">Focus</label><select id="statePressureFocus"><option value="all" selected>All states</option><option value="watch">Watch/audit flags only</option><option value="no-tax">No Census T40 income-tax collection</option><option value="va-medical">Top VA medical-care states</option><option value="dense-high-grade">Dense high-grade overlap</option></select></div>
+            </div>
+            <div class="state-pressure-grid">
+              <div class="highlight-card pressure-readout-card">
+                <div class="chart-head">
+                  <h3 id="statePressureTopName">Top state</h3>
+                  <div class="chart-metric"><strong id="statePressureTopValue">$0</strong><span id="statePressureTopMeta">selected ranking</span></div>
+                </div>
+                <p class="detail-line" id="statePressureSummary">State audit data will render after the app loads.</p>
+                <div class="rank-list" id="statePressureFlags"></div>
+              </div>
+              <div class="chart-card state-pressure-chart-card">
+                <div class="chart-head">
+                  <h3 id="statePressureChartTitle">State pressure</h3>
+                  <div class="chart-metric"><strong id="statePressureChartMetric">0 rows</strong><span>visible OPM rows</span></div>
+                </div>
+                <canvas id="statePressureCanvas" width="980" height="430" role="img" aria-describedby="statePressureDescription">Your browser does not support Canvas.</canvas>
+                <p id="statePressureDescription" class="fine-print">Bar length follows the selected ranking. Thin markers show high GS+SES share and VA medical-care density context.</p>
+              </div>
+            </div>
+            <div class="table-wrap state-pressure-table-wrap">
+              <table id="statePressureTable"></table>
+            </div>
+            <p class="fine-print" id="statePressureNote">OPM redacted pay rows are excluded from dollar totals. Audit flags are outlier/context markers, not legal findings.</p>
+            <div class="va-facility-block" id="va-facility-utilization">
+              <div class="chart-head">
+                <div>
+                  <p class="kicker table-kicker">VA Facility Utilization</p>
+                  <h3>Official facility-by-procedure patient counts without fake totals</h3>
+                </div>
+                <div class="chart-metric"><strong id="vaFacilityMetric">0 facilities</strong><span>FY25 procedure file</span></div>
+              </div>
+              <p class="section-lede">VA publishes unique patient counts by CPT/HCPCS procedure and administrative parent facility. This table shows facility-level signals from those procedure rows and keeps the non-additive limitation visible.</p>
+              <div class="form-grid va-facility-form">
+                <div class="field wide-field"><label for="vaFacilitySort">Rank facilities by</label><select id="vaFacilitySort"><option value="largest-procedure" selected>Largest single-procedure count</option><option value="office-99214">Office/outpatient visit 99214</option><option value="procedure-sum">Procedure-count sum (not unique)</option><option value="numeric-rows">Numeric procedure rows</option></select></div>
+                <div class="field"><label for="vaFacilityState">State</label><select id="vaFacilityState"><option value="" selected>All states</option></select></div>
+              </div>
+              <p class="detail-line" id="vaFacilitySummary">VA facility utilization data will render after the app loads.</p>
+              <div class="table-wrap va-facility-table-wrap">
+                <table id="vaFacilityTable"></table>
+              </div>
+              <p class="fine-print" id="vaFacilityNote">Facility procedure rows are not total veterans served; summing rows would double count patients.</p>
+            </div>
           </div>
         </div>
       </section>
@@ -527,17 +584,17 @@
           <h2>Source notes and limitations</h2>
           <p class="section-lede">Official and reconstructed values are visibly distinguished. Reconstructed values are never described as official published tables.</p>
           <ol class="source-list" id="sourceList"></ol>
-          <p class="fine-print" id="buildMeta">Build n-gs-pay-math-lab-v0.01 | commit d0c04524fa16c8f7fe45b35265de48807d144363</p>
+          <p class="fine-print" id="buildMeta">Build n-gs-pay-math-lab-v0.01 | commit d67964e14f0d99bac8602d8bc939cf5558446776</p>
         </div>
       </section>
 
     </main>
   </div>
 
-  <script src="data/pay-data.js?v=n-gs-pay-math-lab-v0.01-d0c04524fa16"></script>
-  <script src="evidence/size-comparison.js?v=n-gs-pay-math-lab-v0.01-d0c04524fa16"></script>
-  <script src="data-loader.js?v=n-gs-pay-math-lab-v0.01-d0c04524fa16"></script>
-  <script src="formulas.js?v=n-gs-pay-math-lab-v0.01-d0c04524fa16"></script>
-  <script src="app.js?v=n-gs-pay-math-lab-v0.01-d0c04524fa16"></script>
+  <script src="data/pay-data.js?v=n-gs-pay-math-lab-v0.01-d67964e14f0d"></script>
+  <script src="evidence/size-comparison.js?v=n-gs-pay-math-lab-v0.01-d67964e14f0d"></script>
+  <script src="data-loader.js?v=n-gs-pay-math-lab-v0.01-d67964e14f0d"></script>
+  <script src="formulas.js?v=n-gs-pay-math-lab-v0.01-d67964e14f0d"></script>
+  <script src="app.js?v=n-gs-pay-math-lab-v0.01-d67964e14f0d"></script>
 </body>
 </html>

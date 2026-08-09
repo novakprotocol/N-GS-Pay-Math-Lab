@@ -517,6 +517,51 @@ main {
   box-shadow: inset 4px 0 0 var(--orange);
   background: color-mix(in srgb, var(--panel-soft) 74%, var(--orange));
 }
+
+.state-pressure-block {
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+}
+
+.state-pressure-form,
+.va-facility-form {
+  margin-bottom: 14px;
+}
+
+.state-pressure-grid {
+  display: grid;
+  grid-template-columns: minmax(320px, 0.82fr) minmax(520px, 1.18fr);
+  gap: 14px;
+  align-items: stretch;
+}
+
+.state-pressure-chart-card canvas {
+  display: block;
+  width: 100%;
+  height: 390px;
+}
+
+.state-pressure-table-wrap,
+.va-facility-table-wrap {
+  margin-top: 14px;
+}
+
+.state-pressure-table-wrap table th,
+.va-facility-table-wrap table th {
+  min-width: 260px;
+}
+
+.state-pressure-table-wrap tbody tr.is-watch {
+  box-shadow: inset 4px 0 0 var(--orange);
+  background: color-mix(in srgb, var(--panel-soft) 74%, var(--orange));
+}
+
+.va-facility-block {
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+}
 .remote-duty-section {
   background:
     linear-gradient(135deg, color-mix(in srgb, var(--panel-soft) 92%, var(--blue)), color-mix(in srgb, var(--panel) 90%, var(--teal))),
@@ -1535,6 +1580,7 @@ html[data-shell="module"] .layout {
   .surface-lab,
   .cost-pressure-grid,
   .agency-pressure-grid,
+  .state-pressure-grid,
   .county-map-grid,
   .remote-duty-grid {
     grid-template-columns: minmax(0, 1fr);
@@ -1613,6 +1659,7 @@ html[data-shell="module"] .layout {
   .locality-highlights,
   .cost-pressure-grid,
   .agency-pressure-grid,
+  .state-pressure-grid,
   .pressure-stat-grid,
   .remote-duty-grid,
   .remote-duty-metrics,

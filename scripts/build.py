@@ -67,6 +67,7 @@ def combined_pay_data() -> dict[str, Any]:
         "vaDutyStations": read_json(ROOT / "data" / "va-duty-stations.json"),
         "federalCostPressure": read_json(ROOT / "data" / "federal-cost-pressure.json"),
         "federalAgencyPressure": read_json(ROOT / "data" / "federal-agency-pressure.json"),
+        "federalStatePressure": read_json(ROOT / "data" / "federal-state-pressure.json"),
         "sources": read_json(ROOT / "data" / "sources.json"),
     }
 

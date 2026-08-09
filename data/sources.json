@@ -130,6 +130,36 @@
       "note": "Used to identify the Saint Croix VA Clinic location; employee counts are from OPM FWD duty-station rows, not from the VA facility page."
     },
     {
+      "id": "census-2025-state-gazetteer",
+      "title": "Census 2025 State Gazetteer",
+      "url": "https://www2.census.gov/geo/docs/maps-data/data/gazetteer/2025_Gazetteer/2025_Gaz_state_national.zip",
+      "note": "Used for state land-area normalization: employees, visible payroll, agency counts, and VA medical-care dollars per land square mile."
+    },
+    {
+      "id": "va-gdx-fy2024",
+      "title": "VA FY2024 Geographic Distribution of VA Expenditures",
+      "url": "https://www.va.gov/vetdata/Expenditures.asp",
+      "note": "Used for state-level VA direct, indirect, and medical-care expenditure context. The FY2024 workbook uses a revised methodology with Veteran address-linked geography where available."
+    },
+    {
+      "id": "va-gdx-fy2024-workbook",
+      "title": "VA GDX FY2024 workbook",
+      "url": "https://www.va.gov/VETDATA/docs/GDX/GDX_FY24.xlsx",
+      "note": "Used for state direct and indirect expenditure fields converted from the workbook state sheets into dollars."
+    },
+    {
+      "id": "va-unique-patients-by-procedure-fy2025",
+      "title": "VA FY2025 UniquePatientsByProcedure",
+      "url": "https://www.data.va.gov/dataset/UniquePatientsByProcedure_FY25/9fni-rrk3",
+      "note": "Used for administrative parent facility-by-procedure unique-patient counts. The file is not summed into total facility patients because VA states national totals do not equal summed locations and the rows are procedure-level."
+    },
+    {
+      "id": "va-vetdata-glossary-unique-patients",
+      "title": "VA NCVAS glossary: Unique Patients",
+      "url": "https://www.va.gov/vetdata/glossary.asp",
+      "note": "Used for the caution that a Veteran patient may be counted as unique in each division from which care is received."
+    },
+    {
       "id": "federal-reserve-z1",
       "title": "Federal Reserve Z.1 Financial Accounts CSV package",
       "url": "https://www.federalreserve.gov/releases/z1/default.htm",

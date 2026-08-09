@@ -66,6 +66,25 @@
     agencyPressureCanvas: $("agencyPressureCanvas"),
     agencyPressureTable: $("agencyPressureTable"),
     agencyPressureNote: $("agencyPressureNote"),
+    statePressureSort: $("statePressureSort"),
+    statePressureFocus: $("statePressureFocus"),
+    statePressureMetric: $("statePressureMetric"),
+    statePressureTopName: $("statePressureTopName"),
+    statePressureTopValue: $("statePressureTopValue"),
+    statePressureTopMeta: $("statePressureTopMeta"),
+    statePressureSummary: $("statePressureSummary"),
+    statePressureFlags: $("statePressureFlags"),
+    statePressureChartTitle: $("statePressureChartTitle"),
+    statePressureChartMetric: $("statePressureChartMetric"),
+    statePressureCanvas: $("statePressureCanvas"),
+    statePressureTable: $("statePressureTable"),
+    statePressureNote: $("statePressureNote"),
+    vaFacilitySort: $("vaFacilitySort"),
+    vaFacilityState: $("vaFacilityState"),
+    vaFacilityMetric: $("vaFacilityMetric"),
+    vaFacilitySummary: $("vaFacilitySummary"),
+    vaFacilityTable: $("vaFacilityTable"),
+    vaFacilityNote: $("vaFacilityNote"),
     remoteDutyLocation: $("remoteDutyLocation"),
     remoteDutySort: $("remoteDutySort"),
     remoteDutyName: $("remoteDutyName"),
@@ -319,6 +338,7 @@
     syncLocalityFromArea();
     fillLocalityMapStates();
     fillLocalityCountyOptions();
+    fillVaFacilityStates();
     fillRemoteDutyOptions("vi-saint-croix");
   }
 
@@ -900,9 +920,285 @@
     if (els.agencyPressureExamples) els.agencyPressureExamples.innerHTML = agencyPressureWatchRows().map(agencyPressureExampleRow).join("");
     setText(els.agencyPressureNote, `OPM FWD employment snapshot ${snapshot.year}-${snapshot.month}, published ${snapshot.published}. ${Number(snapshot.pay_redacted_rows || 0).toLocaleString()} pay rows are redacted; dollar totals use only numeric annualized_adjusted_basic_pay rows. FBI is component DJ02 under DOJ in OPM agency_subelement fields.`);
     renderAgencyPressureChart(rows, level, sort);
-    els.agencyPressureTable.innerHTML = `<thead><tr><th>${level === "component" ? "Component / bureau" : "Agency / department"}</th><th>Visible payroll</th><th>Visible rows</th><th>Average pay</th><th>GS-13 to GS-15</th><th>SES</th><th>High GS + SES</th><th>High GS + SES payroll</th></tr></thead><tbody>${rows.slice(0, 25).map((row, index) => agencyPressureTableRow(row, index, level)).join("")}</tbody>`;
+    els.agencyPressureTable.innerHTML = `<thead><tr><th>${level === "component" ? "Component / bureau" : "Agency / department"}</th><th>Visible payroll</th><th>Visible rows</th><th>Average pay</th><th>GS-13 to GS-15</th><th>SES</th><th>High GS + SES</th><th>High GS + SES payroll</th></tr></thead><tbody>${rows.map((row, index) => agencyPressureTableRow(row, index, level)).join("")}</tbody>`;
   }
 
+
+  function federalStatePressureData() {
+    return math.DATA.federalStatePressure || {};
+  }
+
+  function statePressureStates() {
+    const data = federalStatePressureData();
+    return Array.isArray(data.states) ? data.states : [];
+  }
+
+  function statePressureCode(row) {
+    return row ? row.state_abbr || "N/A" : "N/A";
+  }
+
+  function statePressureName(row) {
+    if (!row) return "N/A";
+    return `${row.state_abbr || "N/A"} | ${row.state_name || "N/A"}`;
+  }
+
+  function statePressureFlagCount(row) {
+    return Array.isArray(row && row.audit_flags) ? row.audit_flags.length : 0;
+  }
+
+  function statePressureMetricValue(row, sort) {
+    if (!row) return 0;
+    const gdx = row.va_gdx_fy24 || {};
+    if (sort === "payroll-density") return Number(row.visible_payroll_per_land_sq_mi) || 0;
+    if (sort === "employees") return Number(row.employee_count) || 0;
+    if (sort === "employee-density") return Number(row.employees_per_land_sq_mi) || 0;
+    if (sort === "agencies") return Number(row.agency_count) || 0;
+    if (sort === "components") return Number(row.component_count) || 0;
+    if (sort === "high-share") return Number(row.high_grade_ses_share) || 0;
+    if (sort === "ses-share") return Number(row.ses_share) || 0;
+    if (sort === "va-medical") return Number(gdx.medical_care) || 0;
+    if (sort === "va-medical-density") return Number(gdx.medical_care_per_land_sq_mi) || 0;
+    if (sort === "flag-count") return statePressureFlagCount(row);
+    return Number(row.total_visible_adjusted_basic_pay) || 0;
+  }
+
+  function statePressureSortLabel(sort) {
+    const labels = {
+      payroll: "total visible payroll",
+      "payroll-density": "visible payroll per sq. mile",
+      employees: "federal employee rows",
+      "employee-density": "employees per sq. mile",
+      agencies: "agency count",
+      components: "component count",
+      "high-share": "GS-13+ plus SES percentage",
+      "ses-share": "SES percentage",
+      "va-medical": "VA FY24 medical care",
+      "va-medical-density": "VA medical care per sq. mile",
+      "flag-count": "audit flag count"
+    };
+    return labels[sort] || labels.payroll;
+  }
+
+  function statePressureMetricText(row, sort) {
+    const value = statePressureMetricValue(row, sort);
+    if (sort === "high-share" || sort === "ses-share") return sharePercent(value);
+    if (sort === "employees" || sort === "agencies" || sort === "components" || sort === "flag-count") return value.toLocaleString();
+    if (sort === "employee-density") return `${value.toLocaleString(undefined, { maximumFractionDigits: 1 })}/sq mi`;
+    if (sort === "payroll-density" || sort === "va-medical-density") return `${compactMoney(value)}/sq mi`;
+    return compactMoney(value);
+  }
+
+  function statePressureFocusMatch(row, focus) {
+    const flags = Array.isArray(row.audit_flags) ? row.audit_flags : [];
+    if (focus === "watch") return flags.some((flag) => flag.level === "watch" || flag.level === "audit");
+    if (focus === "no-tax") return Boolean(row.no_census_t40_income_tax_collection);
+    if (focus === "va-medical") return Number(row.va_medical_care_rank) <= 5;
+    if (focus === "dense-high-grade") return flags.some((flag) => flag.code === "dense_high_grade_overlap");
+    return true;
+  }
+
+  function statePressureRows(sort, focus) {
+    return statePressureStates()
+      .filter((row) => statePressureFocusMatch(row, focus))
+      .slice()
+      .sort((a, b) => statePressureMetricValue(b, sort) - statePressureMetricValue(a, sort) || Number(b.total_visible_adjusted_basic_pay) - Number(a.total_visible_adjusted_basic_pay) || String(a.state_abbr).localeCompare(String(b.state_abbr)));
+  }
+
+  function statePressureFlagRow(flag) {
+    return `<div class="rank-row"><span class="rank-index">${math.escapeHtml(String(flag.level || "flag").toUpperCase())}</span><span class="rank-main"><span class="rank-title">${math.escapeHtml(flag.label || flag.code || "Audit flag")}</span><span class="rank-meta">${math.escapeHtml(flag.code || "context")}</span></span></div>`;
+  }
+
+  function stateTopAgencyText(row) {
+    const agencies = Array.isArray(row.top_agencies_by_visible_payroll) ? row.top_agencies_by_visible_payroll : [];
+    const top = agencies[0];
+    return top ? `${top.agency_code || "N/A"} ${top.agency_name || "N/A"} ${compactMoney(top.visible_payroll)}` : "No visible agency payroll detail";
+  }
+
+  function statePressureTableRow(row, index) {
+    const gdx = row.va_gdx_fy24 || {};
+    const flags = Array.isArray(row.audit_flags) ? row.audit_flags : [];
+    const flagText = flags.length ? flags.map((flag) => flag.code).join(", ") : "none";
+    const classes = flags.some((flag) => flag.level === "watch" || flag.level === "audit") ? "is-watch" : "";
+    const taxText = row.no_census_t40_income_tax_collection ? " | Census T40 no state income-tax collection" : "";
+    return `<tr class="${classes}"><th scope="row">#${index + 1} ${math.escapeHtml(statePressureName(row))}<span>${math.escapeHtml(stateTopAgencyText(row))}${taxText}</span></th><td>${compactMoney(row.total_visible_adjusted_basic_pay)}</td><td>${Number(row.employee_count).toLocaleString()}</td><td>${Number(row.agency_count).toLocaleString()} / ${Number(row.component_count).toLocaleString()}</td><td>${Number(row.land_sq_mi).toLocaleString()} sq mi | ${compactMoney(row.visible_payroll_per_land_sq_mi)}/sq mi</td><td>${sharePercent(row.high_grade_ses_share)} | SES ${sharePercent(row.ses_share, 2)}</td><td>${compactMoney(gdx.medical_care || 0)}<span>${compactMoney(gdx.total_va_expenditure || 0)} total VA GDX</span></td><td>${math.escapeHtml(flagText)}</td></tr>`;
+  }
+
+  function renderStatePressureChart(rows, sort) {
+    const canvas = els.statePressureCanvas;
+    if (!canvas) return;
+    const colors = themeColors(canvas);
+    const { ctx, width, height } = canvasMetrics(canvas, 390);
+    clearCanvas(ctx, width, height, colors);
+    const top = rows.slice(0, 14);
+    if (!top.length) return;
+    const left = Math.min(190, Math.max(116, width * 0.25));
+    const right = 36;
+    const topPad = 28;
+    const rowH = Math.max(24, (height - topPad - 30) / top.length);
+    const chartW = Math.max(90, width - left - right);
+    const maxValue = Math.max(...top.map((row) => statePressureMetricValue(row, sort)), 1);
+    const maxMedicalDensity = Math.max(...top.map((row) => Number(row.va_gdx_fy24 && row.va_gdx_fy24.medical_care_per_land_sq_mi) || 0), 1);
+    ctx.fillStyle = rgbaColor(colors.panel, 0.78);
+    ctx.strokeStyle = rgbaColor(colors.line, 0.72);
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.roundRect(8, 8, width - 16, height - 16, 8);
+    ctx.fill();
+    ctx.stroke();
+    ctx.font = "800 12px Segoe UI, system-ui, sans-serif";
+    ctx.textBaseline = "middle";
+    top.forEach((row, index) => {
+      const y = topPad + index * rowH + rowH / 2;
+      const flags = Array.isArray(row.audit_flags) ? row.audit_flags : [];
+      const watch = flags.some((flag) => flag.level === "watch" || flag.level === "audit");
+      const barW = Math.max(3, (statePressureMetricValue(row, sort) / maxValue) * chartW);
+      ctx.fillStyle = watch ? colors.orange : (index < 3 ? colors.teal : colors.blue);
+      ctx.globalAlpha = watch ? 0.93 : 0.72;
+      ctx.beginPath();
+      ctx.roundRect(left, y - rowH * 0.27, barW, rowH * 0.36, 5);
+      ctx.fill();
+      ctx.globalAlpha = 1;
+      const highW = Math.max(2, Math.min(chartW, (Number(row.high_grade_ses_share) || 0) * chartW));
+      ctx.fillStyle = rgbaColor(colors.orange, 0.35);
+      ctx.beginPath();
+      ctx.roundRect(left, y + rowH * 0.1, highW, Math.max(3, rowH * 0.11), 4);
+      ctx.fill();
+      const medicalW = Math.max(2, Math.min(chartW, ((Number(row.va_gdx_fy24 && row.va_gdx_fy24.medical_care_per_land_sq_mi) || 0) / maxMedicalDensity) * chartW));
+      ctx.fillStyle = rgbaColor(colors.teal, 0.32);
+      ctx.beginPath();
+      ctx.roundRect(left, y + rowH * 0.25, medicalW, Math.max(3, rowH * 0.1), 4);
+      ctx.fill();
+      ctx.fillStyle = colors.ink;
+      ctx.textAlign = "right";
+      ctx.fillText(statePressureCode(row), left - 10, y - 2);
+      ctx.fillStyle = colors.muted;
+      ctx.font = "700 10px Segoe UI, system-ui, sans-serif";
+      ctx.fillText(`${Number(row.employee_count).toLocaleString()} rows`, left - 10, y + 12);
+      ctx.font = "800 12px Segoe UI, system-ui, sans-serif";
+      ctx.textAlign = "left";
+      ctx.fillStyle = colors.ink;
+      ctx.fillText(statePressureMetricText(row, sort), Math.min(width - 120, left + barW + 8), y - 4);
+      ctx.fillStyle = colors.muted;
+      ctx.font = "700 10px Segoe UI, system-ui, sans-serif";
+      ctx.fillText(`${Number(row.agency_count).toLocaleString()} agencies | high ${sharePercent(row.high_grade_ses_share)}`, Math.min(width - 190, left + barW + 8), y + 12);
+      ctx.font = "800 12px Segoe UI, system-ui, sans-serif";
+    });
+  }
+
+  function vaFacilityData() {
+    const data = federalStatePressureData().va_facility_patient_data || {};
+    return {
+      source: data,
+      facilities: Array.isArray(data.facilities) ? data.facilities : []
+    };
+  }
+
+  function fillVaFacilityStates() {
+    if (!els.vaFacilityState) return;
+    const current = els.vaFacilityState.value;
+    const states = Array.from(new Set(vaFacilityData().facilities.map((facility) => facility.state_abbr).filter(Boolean))).sort();
+    els.vaFacilityState.innerHTML = "";
+    els.vaFacilityState.appendChild(option("All states", ""));
+    states.forEach((state) => els.vaFacilityState.appendChild(option(state, state)));
+    els.vaFacilityState.value = states.includes(current) ? current : "";
+  }
+
+  function vaFacilityMetricValue(row, sort) {
+    if (!row) return 0;
+    if (sort === "office-99214") return Number(row.office_outpatient_visit_99214_unique_patients) || 0;
+    if (sort === "procedure-sum") return Number(row.procedure_count_sum_not_unique) || 0;
+    if (sort === "numeric-rows") return Number(row.numeric_procedure_rows) || 0;
+    return Number(row.largest_single_procedure_unique_patients) || 0;
+  }
+
+  function vaFacilityRows(sort, state) {
+    return vaFacilityData().facilities
+      .filter((row) => !state || row.state_abbr === state)
+      .slice()
+      .sort((a, b) => vaFacilityMetricValue(b, sort) - vaFacilityMetricValue(a, sort) || String(a.name).localeCompare(String(b.name)));
+  }
+
+  function vaFacilitySortLabel(sort) {
+    const labels = {
+      "largest-procedure": "largest single-procedure unique-patient count",
+      "office-99214": "office/outpatient visit 99214 unique patients",
+      "procedure-sum": "procedure-count sum, not unique",
+      "numeric-rows": "numeric procedure rows"
+    };
+    return labels[sort] || labels["largest-procedure"];
+  }
+
+  function vaFacilityMetricText(row, sort) {
+    const value = vaFacilityMetricValue(row, sort);
+    if (sort === "procedure-sum") return value.toLocaleString();
+    if (sort === "numeric-rows") return `${value.toLocaleString()} rows`;
+    return value ? value.toLocaleString() : "N/A";
+  }
+
+  function vaFacilityTableRow(row, index, sort) {
+    const state = row.state_abbr || "N/A";
+    const cpt = row.largest_single_procedure_cpt || "No numeric procedure count";
+    const office = row.office_outpatient_visit_99214_unique_patients ? Number(row.office_outpatient_visit_99214_unique_patients).toLocaleString() : "N/A";
+    return `<tr><th scope="row">#${index + 1} ${math.escapeHtml(row.name || row.facility_label)}<span>${math.escapeHtml(row.facility_label)} | VISN ${math.escapeHtml(row.visn || "N/A")} | Station ${math.escapeHtml(row.station || "N/A")} | ${math.escapeHtml(state)}</span></th><td>${vaFacilityMetricText(row, sort)}</td><td>${Number(row.largest_single_procedure_unique_patients || 0).toLocaleString()}<span>${math.escapeHtml(cpt)}</span></td><td>${office}</td><td>${Number(row.procedure_count_sum_not_unique || 0).toLocaleString()}<span>not unique; double-counts likely</span></td><td>${Number(row.numeric_procedure_rows || 0).toLocaleString()} numeric / ${Number(row.under_100_procedure_rows || 0).toLocaleString()} under 100</td></tr>`;
+  }
+
+  function renderVaFacilityUtilization() {
+    if (!els.vaFacilityTable) return;
+    const data = vaFacilityData();
+    const sort = els.vaFacilitySort ? els.vaFacilitySort.value : "largest-procedure";
+    const state = els.vaFacilityState ? els.vaFacilityState.value : "";
+    const rows = vaFacilityRows(sort, state);
+    if (!data.facilities.length) {
+      setText(els.vaFacilityMetric, "No facility data");
+      setText(els.vaFacilitySummary, "No VA facility-by-procedure data is loaded.");
+      els.vaFacilityTable.innerHTML = "";
+      return;
+    }
+    const top = rows[0];
+    setText(els.vaFacilityMetric, `${rows.length.toLocaleString()} facilities`);
+    setText(els.vaFacilitySummary, top ? `${top.name} leads this view by ${vaFacilitySortLabel(sort)} at ${vaFacilityMetricText(top, sort)}. These are procedure-level patient counts, not total facility veterans served.` : "No facility rows match the current filter.");
+    const source = data.source || {};
+    const limits = Array.isArray(source.limitations) ? source.limitations.join(" ") : "Procedure rows are not additive.";
+    setText(els.vaFacilityNote, `${source.patient_count_grain || "Facility-by-procedure counts"}. ${limits}`);
+    els.vaFacilityTable.innerHTML = `<thead><tr><th>Administrative parent facility</th><th>Selected metric</th><th>Largest single procedure</th><th>99214 office visit</th><th>Procedure-count sum</th><th>Procedure coverage</th></tr></thead><tbody>${rows.map((row, index) => vaFacilityTableRow(row, index, sort)).join("")}</tbody>`;
+  }
+
+  function renderFederalStatePressure() {
+    if (!els.statePressureTable) return;
+    const data = federalStatePressureData();
+    const states = statePressureStates();
+    const snapshot = data.snapshot || {};
+    if (!states.length) {
+      setText(els.statePressureMetric, "No state data");
+      setText(els.statePressureSummary, "No federal state-pressure aggregate is loaded.");
+      els.statePressureTable.innerHTML = "";
+      renderVaFacilityUtilization();
+      return;
+    }
+    const sort = els.statePressureSort ? els.statePressureSort.value : "payroll";
+    const focus = els.statePressureFocus ? els.statePressureFocus.value : "all";
+    const rows = statePressureRows(sort, focus);
+    const payrollLeader = statePressureRows("payroll", "all")[0];
+    const densityLeader = statePressureRows("payroll-density", "all")[0];
+    const agencyLeader = statePressureRows("agencies", "all")[0];
+    const vaMedicalLeader = statePressureRows("va-medical", "all")[0];
+    const top = rows[0];
+    setText(els.statePressureMetric, `${states.length} states | ${compactMoney(snapshot.visible_annualized_adjusted_basic_pay)} visible`);
+    setText(els.statePressureTopName, top ? statePressureName(top) : "No state rows");
+    setText(els.statePressureTopValue, top ? statePressureMetricText(top, sort) : "N/A");
+    setText(els.statePressureTopMeta, statePressureSortLabel(sort));
+    setText(els.statePressureChartTitle, `States ranked by ${statePressureSortLabel(sort)}`);
+    setText(els.statePressureChartMetric, `${rows.length} shown${focus !== "all" ? " | filtered" : ""}`);
+    setText(els.statePressureSummary, `${statePressureName(payrollLeader)} has the largest visible OPM payroll. ${statePressureName(densityLeader)} has the highest visible payroll per land sq. mile. ${statePressureName(agencyLeader)} has the most distinct OPM agencies. ${statePressureName(vaMedicalLeader)} leads VA FY24 medical-care expenditure. These are audit/outlier screens, not misconduct determinations.`);
+    if (els.statePressureFlags) {
+      const flags = top && Array.isArray(top.audit_flags) ? top.audit_flags : [];
+      els.statePressureFlags.innerHTML = flags.length ? flags.map(statePressureFlagRow).join("") : '<p class="fine-print">No flags on the selected top row.</p>';
+    }
+    setText(els.statePressureNote, `OPM FWD ${snapshot.year}-${snapshot.month}, published ${snapshot.published}; Census 2025 state gazetteer land area; VA FY24 GDX state expenditure rows joined: ${Number(snapshot.va_gdx_fy24_state_rows_joined || 0).toLocaleString()}. ${Number(snapshot.state_assigned_pay_redacted_rows || snapshot.pay_redacted_rows || 0).toLocaleString()} state-assigned OPM pay rows and ${Number(snapshot.opm_all_pay_redacted_rows || 0).toLocaleString()} all-OPM pay rows are redacted; redacted dollar values are excluded from dollar totals.`);
+    renderStatePressureChart(rows, sort);
+    els.statePressureTable.innerHTML = `<thead><tr><th>State</th><th>Visible payroll</th><th>Employee rows</th><th>Agencies / components</th><th>Land and payroll density</th><th>High grade / SES</th><th>VA FY24 GDX</th><th>Audit flags</th></tr></thead><tbody>${rows.map((row, index) => statePressureTableRow(row, index)).join("")}</tbody>`;
+    renderVaFacilityUtilization();
+  }
   function vaDutyStationData() {
     const data = math.DATA.vaDutyStations || {};
     return {
@@ -2551,6 +2847,7 @@
     renderLocalityHighlights(input);
     renderFederalCostPressure(input);
     renderAgencyPressure();
+    renderFederalStatePressure();
     renderRemoteDutyStations(input);
     renderLocalityMap(input);
     renderTrace(result);
@@ -2608,6 +2905,10 @@
       if (els.costPressureSort) els.costPressureSort.value = "payroll";
       if (els.agencyPressureLevel) els.agencyPressureLevel.value = "agency";
       if (els.agencyPressureSort) els.agencyPressureSort.value = "payroll";
+      if (els.statePressureSort) els.statePressureSort.value = "payroll";
+      if (els.statePressureFocus) els.statePressureFocus.value = "all";
+      if (els.vaFacilitySort) els.vaFacilitySort.value = "largest-procedure";
+      if (els.vaFacilityState) els.vaFacilityState.value = "";
       if (els.contextStart) els.contextStart.value = "1977";
       if (els.contextEnd) els.contextEnd.value = "2026";
       if (els.contextView) els.contextView.value = "selected";
@@ -2636,7 +2937,7 @@
         renderAll();
       });
     }
-    [els.localityMapCounty, els.localityMapFocus, els.remoteDutyLocation, els.remoteDutySort, els.costPressureSort, els.agencyPressureLevel, els.agencyPressureSort].filter(Boolean).forEach((el) => el.addEventListener("change", renderAll));
+    [els.localityMapCounty, els.localityMapFocus, els.remoteDutyLocation, els.remoteDutySort, els.costPressureSort, els.agencyPressureLevel, els.agencyPressureSort, els.statePressureSort, els.statePressureFocus, els.vaFacilitySort, els.vaFacilityState].filter(Boolean).forEach((el) => el.addEventListener("change", renderAll));
     if (els.localityMapCanvas) {
       els.localityMapCanvas.addEventListener("click", (event) => {
         if (!localityMapTargets.length) return;
