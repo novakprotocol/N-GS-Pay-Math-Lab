@@ -427,6 +427,92 @@ main {
   gap: 14px;
 }
 
+.advanced-toggle {
+  margin-top: 18px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--panel) 94%, var(--bg));
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.advanced-toggle > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 16px;
+  cursor: pointer;
+  color: var(--ink);
+  list-style: none;
+}
+
+.advanced-toggle > summary::-webkit-details-marker {
+  display: none;
+}
+
+.advanced-toggle > summary::after {
+  content: "+";
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  flex: 0 0 auto;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--panel-soft);
+  color: var(--cyan);
+  font-size: 1.18rem;
+  font-weight: 850;
+  line-height: 1;
+}
+
+.advanced-toggle[open] > summary {
+  border-bottom: 1px solid var(--line);
+}
+
+.advanced-toggle[open] > summary::after {
+  content: "-";
+}
+
+.advanced-toggle > summary span {
+  min-width: 0;
+}
+
+.advanced-toggle > summary strong,
+.advanced-toggle > summary b {
+  display: block;
+  line-height: 1.3;
+}
+
+.advanced-toggle > summary strong {
+  font-size: 1rem;
+  font-weight: 850;
+}
+
+.advanced-toggle > summary b {
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 0.84rem;
+  font-weight: 750;
+}
+
+.advanced-toggle[open] {
+  padding-bottom: 14px;
+}
+
+.advanced-toggle[open] > *:not(summary) {
+  margin-left: 14px;
+  margin-right: 14px;
+}
+
+.advanced-toggle[open] > .fine-print:last-child,
+.advanced-toggle[open] > .context-footnotes:last-child,
+.advanced-toggle[open] > .columns:last-child {
+  margin-bottom: 0;
+}
+
 .locality-highlights .data-dropdown {
   margin-top: 0;
 }
@@ -2367,6 +2453,8 @@ html[data-shell="module"] .layout {
             <span><b>Dollar rule</b> visible adjusted basic pay only</span>
             <span><b>RUS model</b> locality-only scenario, not a staffing plan</span>
           </div>
+          <details class="advanced-toggle" data-advanced-panel="cost-pressure">
+            <summary><span><strong>Open advanced cost and agency tools</strong><b>OPM locality payroll, RUS model, agency pressure</b></span></summary>
           <div class="form-grid cost-pressure-form">
             <div class="field wide-field"><label for="costPressureSort">Rank areas by</label><select id="costPressureSort"><option value="payroll" selected>Total visible payroll</option><option value="rus-savings">Modeled savings at RUS</option><option value="high-share">GS-13+ plus SES percentage</option><option value="ses-share">SES percentage</option><option value="high-payroll">GS-13+ plus SES visible payroll</option><option value="average-pay">Average visible pay</option><option value="employees">Visible public records</option></select></div>
           </div>
@@ -2483,6 +2571,7 @@ html[data-shell="module"] .layout {
             </details>
             <p class="fine-print" id="agencyPressureNote">OPM redacted pay records are excluded from group dollar totals.</p>
           </div>
+          </details>
 
         </div>
       </section>
@@ -2496,6 +2585,8 @@ html[data-shell="module"] .layout {
             <span><b>VA.gov</b> facility links only where an official VA page is loaded</span>
             <span><b>Local build</b> bundled static data; no live browser calls</span>
           </div>
+          <details class="advanced-toggle" data-advanced-panel="remote-duty">
+            <summary><span><strong>Open advanced remote-post tools</strong><b>location ranking, pay model, COLA, visible VA counts</b></span></summary>
           <div class="form-grid remote-duty-form">
             <div class="field wide-field"><label for="remoteDutyLocation">Location</label><select id="remoteDutyLocation"></select></div>
             <div class="field"><label for="remoteDutySort">Rank posts by</label><select id="remoteDutySort"><option value="pay" selected>Selected pay</option><option value="count">Visible VA count</option><option value="locality">Locality/COLA</option></select></div>
@@ -2544,6 +2635,8 @@ html[data-shell="module"] .layout {
               <table id="remoteDutyTable"></table>
             </div>
           </details>
+          </details>
+
         </div>
       </section>
 
@@ -2564,6 +2657,8 @@ html[data-shell="module"] .layout {
               <span><b>VA</b> FY2024 GDX/facilities, VetPop FY2026</span>
               <span><b>Local build</b> bundled static JSON; no live browser calls</span>
             </div>
+            <details class="advanced-toggle" data-advanced-panel="state-pressure">
+              <summary><span><strong>Open advanced state audit tools</strong><b>payroll map, VA contracts, facilities, denominators</b></span></summary>
             <div class="form-grid state-pressure-form">
               <div class="field wide-field"><label for="statePressureSort">Map / rank metric</label><select id="statePressureSort"><option value="outlier-score" selected>Multi-denominator pressure</option><option value="payroll">Total visible payroll</option><option value="payroll-share">Percent of visible payroll dollars</option><option value="payroll-per-resident">Visible payroll per resident</option><option value="payroll-vs-pop">Payroll share vs population share</option><option value="employees">Federal public records</option><option value="employees-per-100k">Federal records per 100k residents</option><option value="payroll-density">Visible payroll per sq. mile</option><option value="employee-density">Employees per sq. mile</option><option value="agencies">Agency count</option><option value="components">Component count</option><option value="high-share">GS-13+ plus SES percentage</option><option value="ses-share">SES percentage</option><option value="va-medical">VA FY24 medical care</option><option value="va-medical-per-veteran">VA medical care per Veteran</option><option value="va-total-per-veteran">VA total expenditure per Veteran</option><option value="va-medical-vs-vets">VA medical share vs Veteran share</option><option value="va-facilities">VA facility/site count</option><option value="facilities-per-veteran">VA facilities per 100k Veterans</option><option value="veterans-per-facility">Veterans per VA facility/site</option><option value="medical-per-facility">VA medical care per facility/site</option><option value="va-medical-density">VA medical care per sq. mile</option><option value="flag-count">Review flag count</option></select></div>
               <div class="field wide-field"><label for="statePressureAgency">Agency view</label><select id="statePressureAgency"><option value="all" selected>All agencies</option></select></div>
@@ -2671,6 +2766,8 @@ html[data-shell="module"] .layout {
               </details>
               <p class="fine-print" id="vaFacilityNote">Facility procedure records are not total veterans served; summing records would double count patients.</p>
             </div>
+            </details>
+
           </div>
         </div>
       </section>
@@ -2680,6 +2777,8 @@ html[data-shell="module"] .layout {
           <p class="kicker">Raise Lab</p>
           <h2>Raise intelligence, pressure years, and career money</h2>
           <p class="section-lede">The selected pay cell drives career totals, historical raise pressure, best and worst administrations, conflict-era comparisons, CPI pressure, and a clearly labeled historical analog estimate for the next raise.</p>
+          <details class="advanced-toggle" data-advanced-panel="pay-surface">
+            <summary><span><strong>Open advanced raise lab</strong><b>career money, 3D surface, analog years, president/conflict tables</b></span></summary>
           <div class="surface-lab raise-lab">
             <div class="surface-stage">
               <div class="surface-head">
@@ -2737,6 +2836,8 @@ html[data-shell="module"] .layout {
               </div>
             </aside>
           </div>
+          </details>
+
         </div>
       </section>
 
@@ -2746,6 +2847,8 @@ html[data-shell="module"] .layout {
           <p class="kicker">Inflation Check</p>
           <h2>Did the selected pay keep up with prices?</h2>
           <p class="section-lede" id="inflationSummary">Inflation comparison will render after the data loads.</p>
+          <details class="advanced-toggle" data-advanced-panel="inflation">
+            <summary><span><strong>Open advanced inflation check</strong><b>selected pay versus CPI target and buying power</b></span></summary>
           <div class="inflation-grid">
             <div class="metric"><span>Actual change</span><strong id="inflationActual">0%</strong></div>
             <div class="metric"><span>CPI change</span><strong id="inflationTarget">0%</strong></div>
@@ -2759,6 +2862,8 @@ html[data-shell="module"] .layout {
             </div>
             <svg id="inflationChart" viewBox="0 0 980 340" role="img" aria-label="Inflation adjusted pay chart"></svg>
           </div>
+          </details>
+
         </div>
       </section>
 
@@ -2769,6 +2874,8 @@ html[data-shell="module"] .layout {
           <p class="kicker">Historical Context Lab</p>
           <h2>Raises, prices, presidents, conflict eras, and federal market proxy</h2>
           <p class="section-lede" id="contextSummary">Historical context will render after the data loads.</p>
+          <details class="advanced-toggle" data-advanced-panel="context-lab">
+            <summary><span><strong>Open advanced history lab</strong><b>presidents, party, conflict eras, CPI and market proxy</b></span></summary>
           <div class="form-grid context-form">
             <div class="field"><label for="contextStart">From</label><select id="contextStart"></select></div>
             <div class="field"><label for="contextEnd">To</label><select id="contextEnd"></select></div>
@@ -2809,6 +2916,8 @@ html[data-shell="module"] .layout {
             <p id="marketProxyNote"></p>
             <p id="contextWarning"></p>
           </div>
+          </details>
+
         </div>
       </section>
 
@@ -2819,6 +2928,8 @@ html[data-shell="module"] .layout {
           <p class="kicker">Fifty-Year Ledger</p>
           <h2 id="ledgerTitle">Fifty-year ledger</h2>
           <p class="section-lede">Each record is recalculated for the selected grade and step, with official and reconstructed statuses kept separate.</p>
+          <details class="advanced-toggle" data-advanced-panel="ledger">
+            <summary><span><strong>Open advanced fifty-year ledger</strong><b>trend chart and full recalculated year table</b></span></summary>
           <div class="chart-card">
             <div class="chart-head">
               <h3 id="chartTitle">GS-12 Step 10 | 1977-2026</h3>
@@ -2829,6 +2940,8 @@ html[data-shell="module"] .layout {
           <div class="table-wrap">
             <table id="ledgerTable"></table>
           </div>
+          </details>
+
         </div>
       </section>
 
@@ -2838,6 +2951,8 @@ html[data-shell="module"] .layout {
         <div class="section-inner">
           <p class="kicker">Formula Proof</p>
           <h2>Visible formulas, substituted numbers, and rounding order</h2>
+          <details class="advanced-toggle" data-advanced-panel="formula-proof">
+            <summary><span><strong>Open advanced formula proof</strong><b>status model, rounding trace, substituted numbers</b></span></summary>
           <div class="proof-grid">
             <div class="proof-box"><span class="tag">Official table</span><p>Complete annual fixture table used only when the source provides every cell.</p></div>
             <div class="proof-box"><span class="tag">Official checkpoint</span><p>Published anchor used to reconstruct surrounding years.</p></div>
@@ -2846,6 +2961,8 @@ html[data-shell="module"] .layout {
           </div>
           <ul class="trace-list" id="traceList"></ul>
           <pre class="sr-output" id="tracePlain"></pre>
+          </details>
+
         </div>
       </section>
 
@@ -2856,6 +2973,8 @@ html[data-shell="module"] .layout {
           <p class="kicker">Math vs. Files</p>
           <h2>The formula is smaller than the paperwork&mdash;and easier to prove.</h2>
           <p class="section-lede" id="sizeStamp">Size measurements will appear after the evidence script runs.</p>
+          <details class="advanced-toggle" data-advanced-panel="math-vs-files">
+            <summary><span><strong>Open advanced size proof</strong><b>package bytes, file table, formula-versus-static comparison</b></span></summary>
           <div class="size-totals">
             <div class="total-box"><span>Calculation package without brand imagery</span><strong data-size-total="core">Measured</strong></div>
             <div class="total-box"><span>Complete deployed package with brand imagery</span><strong data-size-total="complete">Measured</strong></div>
@@ -2874,6 +2993,8 @@ html[data-shell="module"] .layout {
               <p>Small files do not prove a formula is correct. The proof comes from visible equations, source notes, deterministic generation, official checkpoints, cell-by-cell audits, and tests that fail when the status model or rounding behavior drifts.</p>
             </div>
           </div>
+          </details>
+
         </div>
       </section>
 
@@ -2883,6 +3004,8 @@ html[data-shell="module"] .layout {
         <div class="section-inner">
           <p class="kicker">Validation</p>
           <h2>Required proof cases</h2>
+          <details class="advanced-toggle" data-advanced-panel="validation">
+            <summary><span><strong>Open advanced validation cases</strong><b>official cells, shortcut failures, RUS annual and hourly proof</b></span></summary>
           <div class="validation-grid">
             <div class="audit-box"><span>2026 official cells</span><strong id="auditExact">0 / 150</strong></div>
             <div class="audit-box"><span>Shortcut failures</span><strong id="auditWrong">0 / 150</strong></div>
@@ -2890,6 +3013,8 @@ html[data-shell="module"] .layout {
             <div class="audit-box"><span>2026 Rest of U.S. hourly</span><strong id="auditHourly">$0.00</strong></div>
           </div>
           <p class="fine-print">The incorrect shortcut audit multiplies each 2025 cell by 1.01 and rounds directly; the failures show why annual Step 1 and step calculations must remain explicit.</p>
+          </details>
+
         </div>
       </section>
 
@@ -2900,8 +3025,12 @@ html[data-shell="module"] .layout {
           <p class="kicker">Sources</p>
           <h2>Source notes and limitations</h2>
           <p class="section-lede">Official and reconstructed values are visibly distinguished. Reconstructed values are never described as official published tables.</p>
+          <details class="advanced-toggle" data-advanced-panel="sources">
+            <summary><span><strong>Open source notes</strong><b>official source list, reconstruction limits, build commit</b></span></summary>
           <ol class="source-list" id="sourceList"></ol>
-          <p class="fine-print" id="buildMeta">Build n-gs-pay-math-lab-v0.01 | commit 7b43cfd89bc0325d1d105ccd32137ec8ba1089e1</p>
+          <p class="fine-print" id="buildMeta">Build n-gs-pay-math-lab-v0.01 | commit 307d8d93febcc0b4fbcb49f10bffe19cac301067</p>
+          </details>
+
         </div>
       </section>
 
@@ -6427,6 +6556,18 @@ window.NGSPaySizeReceipt = {"calculation_package_without_brand_imagery":4796873,
     applyTheme(saved === "dark" ? "dark" : "light");
   }
 
+  function openAdvancedPanelForHash() {
+    const hash = window.location.hash ? decodeURIComponent(window.location.hash.slice(1)) : "";
+    if (!hash) return false;
+    const target = document.getElementById(hash);
+    if (!target) return false;
+    const panel = target.matches && target.matches(".advanced-toggle") ? target : (target.closest && target.closest(".advanced-toggle")) || target.querySelector(".advanced-toggle");
+    if (!panel) return false;
+    if (!panel.open) panel.open = true;
+    window.requestAnimationFrame(() => target.scrollIntoView({ block: "start" }));
+    return true;
+  }
+
   function bindEvents() {
     els.run.addEventListener("click", renderAll);
     els.reset.addEventListener("click", () => {
@@ -6556,6 +6697,15 @@ window.NGSPaySizeReceipt = {"calculation_package_without_brand_imagery":4796873,
       event.preventDefault();
       renderAll();
     });
+    document.querySelectorAll(".advanced-toggle").forEach((panel) => {
+      panel.addEventListener("toggle", () => {
+        if (panel.open) window.requestAnimationFrame(renderAll);
+      });
+    });
+    document.querySelectorAll('a[href^="#"]').forEach((link) => {
+      link.addEventListener("click", () => window.setTimeout(openAdvancedPanelForHash, 0));
+    });
+    window.addEventListener("hashchange", () => window.setTimeout(openAdvancedPanelForHash, 0));
     window.addEventListener("resize", () => {
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(renderAll, 90);
@@ -6576,6 +6726,7 @@ window.NGSPaySizeReceipt = {"calculation_package_without_brand_imagery":4796873,
         els.navDrawer.hidden = true;
       }
     });
+    openAdvancedPanelForHash();
   }
 
   fillControls();

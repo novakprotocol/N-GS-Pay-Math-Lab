@@ -3194,6 +3194,18 @@
     applyTheme(saved === "dark" ? "dark" : "light");
   }
 
+  function openAdvancedPanelForHash() {
+    const hash = window.location.hash ? decodeURIComponent(window.location.hash.slice(1)) : "";
+    if (!hash) return false;
+    const target = document.getElementById(hash);
+    if (!target) return false;
+    const panel = target.matches && target.matches(".advanced-toggle") ? target : (target.closest && target.closest(".advanced-toggle")) || target.querySelector(".advanced-toggle");
+    if (!panel) return false;
+    if (!panel.open) panel.open = true;
+    window.requestAnimationFrame(() => target.scrollIntoView({ block: "start" }));
+    return true;
+  }
+
   function bindEvents() {
     els.run.addEventListener("click", renderAll);
     els.reset.addEventListener("click", () => {
@@ -3323,6 +3335,15 @@
       event.preventDefault();
       renderAll();
     });
+    document.querySelectorAll(".advanced-toggle").forEach((panel) => {
+      panel.addEventListener("toggle", () => {
+        if (panel.open) window.requestAnimationFrame(renderAll);
+      });
+    });
+    document.querySelectorAll('a[href^="#"]').forEach((link) => {
+      link.addEventListener("click", () => window.setTimeout(openAdvancedPanelForHash, 0));
+    });
+    window.addEventListener("hashchange", () => window.setTimeout(openAdvancedPanelForHash, 0));
     window.addEventListener("resize", () => {
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(renderAll, 90);
@@ -3343,6 +3364,7 @@
         els.navDrawer.hidden = true;
       }
     });
+    openAdvancedPanelForHash();
   }
 
   fillControls();
